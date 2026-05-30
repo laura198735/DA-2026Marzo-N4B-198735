@@ -1,0 +1,109 @@
+﻿<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login Jugador</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <main class="login-page">
+
+    <section class="login-shell" aria-label="Panel de login jugador">
+
+      <div class="login-card">
+
+        <div class="login-header">
+          <div class="icon" aria-hidden="true">&#x1F40E;</div>
+          <h1>Login Jugador</h1>
+          <p>Ingresá tus credenciales</p>
+        </div>
+
+        <form id="formLoginAdmin" class="login-form">
+
+          <div class="form-group">
+            <label class="input-label" for="nombre">
+              <span class="input-icon" aria-hidden="true">👤</span>
+              <input id="nombre" name="nombre" type="text" placeholder="Usuario" autocomplete="username" required />
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label class="input-label" for="password">
+              <span class="input-icon" aria-hidden="true">🔒</span>
+              <input id="password" name="password" type="password" placeholder="Contraseña" autocomplete="current-password" required />
+            </label>
+          </div>
+
+          <p id="mensajeError" class="error hidden" role="alert"></p>
+
+          <button class="login-button" type="submit" id="btnLogin">
+            Ingresar
+          </button>
+
+        </form>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <script type="module">
+    import '/CommandDispatcher.js';
+
+    const formLoginAdmin = document.getElementById("formLoginAdmin");
+    const nombre = document.getElementById("nombre");
+    const password = document.getElementById("password");
+    const mensajeError = document.getElementById("mensajeError");
+
+    function mostrarError(texto) {
+      mensajeError.textContent = texto;
+      mensajeError.classList.remove("hidden");
+    }
+
+    function ocultarError() {
+      mensajeError.textContent = "";
+      mensajeError.classList.add("hidden");
+    }
+
+    formLoginAdmin.addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      ocultarError();
+
+      const datosLogin = {
+        nombre: nombre.value.trim(),
+        password: password.value.trim()
+      };
+
+      if (!datosLogin.nombre || !datosLogin.password) {
+        mostrarError("Ingresá usuario y contraseña.");
+        return;
+      }
+
+      try {
+        await dispatcher.submit('/loginJugador', datosLogin);
+      } catch (error) {
+        mostrarError('Acceso denegado');
+        console.error(error);
+      }
+    });
+
+    try {
+      dispatcher.registerView('login-jugador', {
+        handleCommand(command) {
+          if (command.id === 'error') {
+            mostrarError(command.parametro || 'Acceso denegado');
+          }
+          if (command.id === 'redirigir' || command.id === 'redirigirJugador') {
+            window.location.href = command.parametro;
+          }
+        }
+      });
+    } catch (e) {}
+  </script>
+</body>
+</html>
+

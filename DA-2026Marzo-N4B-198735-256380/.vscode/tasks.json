@@ -1,0 +1,290 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "noop",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop"
+			]
+		},
+		{
+			"label": "noop2",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop2"
+			]
+		},
+		{
+			"label": "noop3",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop3"
+			]
+		},
+		{
+			"label": "noop4",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop4"
+			]
+		},
+		{
+			"label": "noop5",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop5"
+			]
+		},
+		{
+			"label": "noop6",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop6"
+			]
+		},
+		{
+			"label": "noop7",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop7"
+			]
+		},
+		{
+			"label": "noop8",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop8"
+			]
+		},
+		{
+			"label": "noop9",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop9"
+			]
+		},
+		{
+			"label": "noop10",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop10"
+			]
+		},
+		{
+			"label": "noop11",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop11"
+			]
+		},
+		{
+			"label": "noop",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "noop2",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop2"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "noop3",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop3"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "noop4",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop4"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "noop5",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop5"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "noop6",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop6"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "noop7",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop7"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "noop8",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop8"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "noop9",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop9"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "noop10",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop10"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "noop11",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop11"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "noop",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "noop2",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop2"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "noop3",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop3"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "noop4",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop4"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "noop5",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop5"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "noop6",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop6"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "noop7",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop7"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "noop8",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop8"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "noop9",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop9"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "noop-test",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "noop2",
+			"type": "shell",
+			"command": "echo",
+			"args": [
+				"noop2"
+			]
+		}
+	]
+}

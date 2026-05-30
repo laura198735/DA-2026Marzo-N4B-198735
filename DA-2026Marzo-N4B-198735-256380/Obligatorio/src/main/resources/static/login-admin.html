@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Login Administrador</title>
+
+  <!-- Tu archivo CSS externo -->
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+
+<body>
+
+  <main class="login-page">
+
+    <section class="login-shell" aria-label="Panel de login administrador">
+
+      <div class="login-card">
+
+        <div class="login-header">
+          <div class="icon" aria-hidden="true">🐴</div>
+          <h1>Login Administrador</h1>
+          <p>Ingresa tus credenciales para acceder al tablero.</p>
+        </div>
+
+        <!-- Formulario de login -->
+        <form id="formLoginAdmin" class="login-form">
+
+          <div class="form-group">
+            <label class="input-label" for="nombre">
+              <span class="input-icon" aria-hidden="true">👤</span>
+
+              <input 
+                id="nombre" 
+                name="nombre" 
+                type="text" 
+                placeholder="Usuario" 
+                autocomplete="username" 
+                required 
+              />
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label class="input-label" for="password">
+              <span class="input-icon" aria-hidden="true">🔒</span>
+
+              <input 
+                id="password" 
+                name="password" 
+                type="password" 
+                placeholder="Password" 
+                autocomplete="current-password" 
+                required 
+              />
+            </label>
+          </div>
+
+          <!-- Mensaje de error -->
+          <p id="mensajeError" class="error hidden" role="alert"></p>
+
+          <button class="login-button" type="submit" id="btnLogin">
+            Ingresar
+          </button>
+
+        </form>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- JavaScript usando CommandDispatcher -->
+  <script type="module">
+    import dispatcher from  './CommandDispatcher.js';
+
+    // ================================
+    // 1. Elementos del HTML
+    // ================================
+
+    const formLoginAdmin = document.getElementById('formLoginAdmin');
+    const inputNombre = document.getElementById('nombre');
+    const inputPassword = document.getElementById('password');
+    const mensajeError = document.getElementById('mensajeError');
+    const btnLogin = document.getElementById('btnLogin');
+
+    // ================================
+    // 2. Funciones auxiliares de vista
+    // ================================
+
+    function mostrarError(texto) {
+      mensajeError.textContent = texto;
+      mensajeError.classList.remove('hidden');
+    }
+
+    function ocultarError() {
+      mensajeError.textContent = '';
+      mensajeError.classList.add('hidden');
+    }
+
+    function bloquearBoton() {
+      btnLogin.disabled = true;
+      btnLogin.textContent = 'Ingresando...';
+    }
+
+    function desbloquearBoton() {
+      btnLogin.disabled = false;
+      btnLogin.textContent = 'Ingresar';
+    }
+
+    // ================================
+    // 3. Registro de la vista
+    // ================================
+
+    const view = dispatcher.registerView('loginAdmin', {
+   
+      urlInicio: null,
+
+      onError: (status, texto) => {
+        desbloquearBoton();
+        mostrarError(`Error ${status}: ${texto}`);
+      },
+
+      onException: (msg) => {
+        desbloquearBoton();
+        mostrarError(msg);
+      }
+    });
+
+    // ================================
+    // 4. Handlers que responde el backend
+    // ================================
+
+    view.handler('redirigir-tablero-admin', (url) => {
+      window.location.href = url;
+    });
+
+   
+    view.handler('error', (mensaje) => {
+      desbloquearBoton();
+      mostrarError(mensaje);
+    });
+
+
+    view.handler('limpiarError', () => {
+      ocultarError();
+    });
+
+    // Iniciamos la vista
+    dispatcher.startView(view);
+
+    // ================================
+    // 5. Envío del formulario
+    // ================================
+
+    formLoginAdmin.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      ocultarError();
+
+      const nombre = inputNombre.value.trim();
+      const password = inputPassword.value.trim();
+
+      if (nombre === '' || password === '') {
+        mostrarError('Debes ingresar usuario y contraseña.');
+        return;
+      }
+
+      bloquearBoton();
+
+
+      dispatcher.submit('/login-admin', {
+        nombre: nombre,
+        password: password
+      });
+    });
+  </script>
+
+</body>
+
+</html>

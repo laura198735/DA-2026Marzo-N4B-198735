@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tablero de Control del Administrador</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="page-shell">
+    <header class="hero-title" aria-labelledby="titulo-principal">
+      <h1 id="titulo-principal">CU: Tablero de control del administrador</h1>
+    </header>
+
+    <section class="dashboard" aria-label="Tablero de control">
+      <div class="dashboard__top">
+        <div>
+          <h2>Tablero de Control</h2>
+          <p>Resumen general de la jornada seleccionada</p>
+        </div>
+
+        <div class="day-selector" aria-label="Selector de jornada">
+          <button class="day-selector__button" aria-label="Jornada anterior">◀</button>
+          <div class="day-selector__content">
+            <span>Jornada</span>
+            <strong>Jueves 17 de abril de 2026</strong>
+          </div>
+          <button class="day-selector__button" aria-label="Jornada siguiente">▶</button>
+        </div>
+      </div>
+
+      <section class="kpi-grid" aria-label="Indicadores principales">
+        <article class="kpi-card kpi-card--money">
+          <span>Total apostado</span>
+          <strong>$2.847.500</strong>
+        </article>
+        <article class="kpi-card kpi-card--money">
+          <span>Total pagado</span>
+          <strong>$1.983.200</strong>
+        </article>
+        <article class="kpi-card kpi-card--money">
+          <span>Comisiones</span>
+          <strong>$284.750</strong>
+        </article>
+        <article class="kpi-card kpi-card--money">
+          <span>Balance general</span>
+          <strong>$864.300</strong>
+        </article>
+        <article class="kpi-card">
+          <span>Carreras totales</span>
+          <strong>10</strong>
+        </article>
+        <article class="kpi-card">
+          <span>Finalizadas</span>
+          <strong>6</strong>
+        </article>
+        <article class="kpi-card kpi-card--danger">
+          <span>Faltan correr</span>
+          <strong>4</strong>
+        </article>
+      </section>
+
+      <section class="panel" aria-labelledby="finalizadas-title">
+        <div class="section-heading">
+          <h3 id="finalizadas-title"><span class="section-icon section-icon--success">✓</span>Carreras Finalizadas</h3>
+          <span class="pill pill--success">6 carreras</span>
+        </div>
+
+        <div class="table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>N°</th>
+                <th>Hora fin.</th>
+                <th>Caballos</th>
+                <th>Total apostado</th>
+                <th>Total pagado</th>
+                <th>Caballo ganador</th>
+                <th>Dividendo final</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="N°">6</td>
+                <td data-label="Hora fin.">17:42</td>
+                <td data-label="Caballos">8</td>
+                <td data-label="Total apostado" class="money">$412.000</td>
+                <td data-label="Total pagado" class="money">$287.400</td>
+                <td data-label="Caballo ganador" class="winner">🏅 Tormenta del Sur</td>
+                <td data-label="Dividendo final" class="strong">$ 5,40</td>
+              </tr>
+              <tr>
+                <td data-label="N°">5</td>
+                <td data-label="Hora fin.">16:55</td>
+                <td data-label="Caballos">10</td>
+                <td data-label="Total apostado" class="money">$538.000</td>
+                <td data-label="Total pagado" class="money">$376.600</td>
+                <td data-label="Caballo ganador" class="winner">🏅 Viento Pampeano</td>
+                <td data-label="Dividendo final" class="strong">$ 3,20</td>
+              </tr>
+              <tr>
+                <td data-label="N°">4</td>
+                <td data-label="Hora fin.">16:10</td>
+                <td data-label="Caballos">9</td>
+                <td data-label="Total apostado" class="money">$489.500</td>
+                <td data-label="Total pagado" class="money">$342.650</td>
+                <td data-label="Caballo ganador" class="winner">🏅 Don Cornelio</td>
+                <td data-label="Dividendo final" class="strong">$ 7,80</td>
+              </tr>
+              <tr>
+                <td data-label="N°">3</td>
+                <td data-label="Hora fin.">15:20</td>
+                <td data-label="Caballos">8</td>
+                <td data-label="Total apostado" class="money">$397.000</td>
+                <td data-label="Total pagado" class="money">$278.000</td>
+                <td data-label="Caballo ganador" class="winner">🏅 La Estrella</td>
+                <td data-label="Dividendo final" class="strong">$ 4,60</td>
+              </tr>
+              <tr>
+                <td data-label="N°">2</td>
+                <td data-label="Hora fin.">14:35</td>
+                <td data-label="Caballos">7</td>
+                <td data-label="Total apostado" class="money">$523.000</td>
+                <td data-label="Total pagado" class="money">$366.100</td>
+                <td data-label="Caballo ganador" class="winner">🏅 Rayo de Fuego</td>
+                <td data-label="Dividendo final" class="strong">$ 2,90</td>
+              </tr>
+              <tr>
+                <td data-label="N°">1</td>
+                <td data-label="Hora fin.">13:48</td>
+                <td data-label="Caballos">6</td>
+                <td data-label="Total apostado" class="money">$488.000</td>
+                <td data-label="Total pagado" class="money">$332.450</td>
+                <td data-label="Caballo ganador" class="winner">🏅 Bruma Serrana</td>
+                <td data-label="Dividendo final" class="strong">$ 6,10</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel panel--next" aria-labelledby="proximas-title">
+        <div class="section-heading">
+          <h3 id="proximas-title"><span class="section-icon section-icon--warning">⏳</span>Próximas Carreras</h3>
+          <span class="pill pill--warning">4 pendientes</span>
+        </div>
+
+        <div class="table-wrap">
+          <table class="admin-table admin-table--next">
+            <thead>
+              <tr>
+                <th>N°</th>
+                <th>Estado</th>
+                <th>Caballos</th>
+                <th>Total apostado</th>
+                <th>Apuestas</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="N°">7</td>
+                <td data-label="Estado"><span class="status status--open">Abierta</span></td>
+                <td data-label="Caballos">8</td>
+                <td data-label="Total apostado" class="money">$187.500</td>
+                <td data-label="Apuestas">124</td>
+                <td data-label="Acción"><button class="action-button">Gestionar</button></td>
+              </tr>
+              <tr>
+                <td data-label="N°">8</td>
+                <td data-label="Estado"><span class="status status--closed">Cerrada</span></td>
+                <td data-label="Caballos">10</td>
+                <td data-label="Total apostado" class="money">$95.000</td>
+                <td data-label="Apuestas">67</td>
+                <td data-label="Acción"><button class="action-button">Gestionar</button></td>
+              </tr>
+              <tr>
+                <td data-label="N°">9</td>
+                <td data-label="Estado"><span class="status status--defined">Definida</span></td>
+                <td data-label="Caballos">9</td>
+                <td data-label="Total apostado" class="money">$42.000</td>
+                <td data-label="Apuestas">28</td>
+                <td data-label="Acción"><button class="action-button">Gestionar</button></td>
+              </tr>
+              <tr>
+                <td data-label="N°">10</td>
+                <td data-label="Estado"><span class="status status--defined">Definida</span></td>
+                <td data-label="Caballos">7</td>
+                <td data-label="Total apostado" class="money">$15.500</td>
+                <td data-label="Apuestas">11</td>
+                <td data-label="Acción"><button class="action-button">Gestionar</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+  </main>
+</body>
+</html>
