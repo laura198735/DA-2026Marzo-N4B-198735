@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MalaPATA - Tablero Jugador</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dashboard">
+    <header class="dashboard__top">
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <img src="https://img.icons8.com/ios-filled/50/ffd700/horse-racing.png" alt="Logo" style="height: 38px;">
+            <span style="font-size: 1.5rem; font-weight: 900; color: #f5b914; letter-spacing: 1px;">MalaPATA</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 18px;">
+            <span style="background: #024b37; color: #fff; padding: 7px 18px; border-radius: 999px; font-weight: 900;">Saldo <span class="money">$14.850</span></span>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span class="pill pill--warning" style="font-size: 1.1rem;">CM</span>
+                <span style="font-weight: 900; color: #fff;">Carlos Méndez</span>
+            </div>
+            <a href="#" style="color: #fff; text-decoration: underline; font-weight: 700;">Cerrar sesión</a>
+        </div>
+    </header>
+    <section class="dashboard__top" style="margin-bottom: 0;">
+        <div style="background: #10243a; border-radius: 12px; padding: 18px 32px; width: 100%; display: flex; align-items: center; gap: 40px;">
+            <div>
+                <span style="color: #8e989b; font-size: 0.95rem;">JUGADOR</span>
+                <div style="font-size: 1.3rem; font-weight: 900; color: #fff;">Carlos Andrés Méndez</div>
+            </div>
+            <div class="kpi-grid" style="flex: 1; gap: 24px;">
+                <div class="kpi-card kpi-card--money">
+                    <span>SALDO ACTUAL</span>
+                    <strong>$14.850</strong>
+                </div>
+                <div class="kpi-card">
+                    <span>TOTAL APOSTADO</span>
+                    <strong>$32.500</strong>
+                </div>
+                <div class="kpi-card">
+                    <span>TOTAL GANADO</span>
+                    <strong>$41.200</strong>
+                </div>
+            </div>
+        </div>
+    </section>
+    <main>
+        <section class="panel">
+            <div class="section-heading">
+                <h3><span class="section-icon section-icon--success">🏇</span> Carreras Disponibles para Apostar</h3>
+            </div>
+            <div style="display: flex; gap: 24px; flex-wrap: wrap;">
+                <!-- Carrera 1 -->
+                <div class="kpi-card" style="min-width: 320px; background: #15304c; color: #fff;">
+                    <div class="carrera-header" style="display: flex; align-items: center; gap: 12px;">
+                        <span class="numero-carrera" style="background: #ffc847; color: #151515; font-weight: 900; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">7</span>
+                        <div>
+                            <div style="font-weight: 900; font-size: 1.1rem;">Gran Premio del Litoral</div>
+                            <div style="font-size: 0.9rem; color: #ffd700;">Jue 17 abr 2026</div>
+                        </div>
+                    </div>
+                    <table class="admin-table" style="margin: 14px 0 10px; background: transparent;">
+                        <thead>
+                            <tr><th>N°</th><th>Caballo</th><th>Dividendo</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>Relámpago Celeste</td><td>3.20</td></tr>
+                            <tr><td>2</td><td>Fuerza Norteña</td><td>4.80</td></tr>
+                            <tr><td>3</td><td>Sombra de Luna</td><td>6.50</td></tr>
+                            <tr><td>4</td><td>El Paisano</td><td>2.90</td></tr>
+                            <tr><td>5</td><td>Tormenta del Sur</td><td>5.40</td></tr>
+                            <tr><td>6</td><td>Chaqui Real</td><td>5.40</td></tr>
+                            <tr><td>7</td><td>Cielo Pampeano</td><td>11.20</td></tr>
+                            <tr><td>8</td><td>Trueno Negro</td><td>7.80</td></tr>
+                        </tbody>
+                    </table>
+                    <button class="action-button" style="width: 100%; margin-top: 8px;">Apostar</button>
+                </div>
+                <!-- Carrera 2 -->
+                <div class="kpi-card" style="min-width: 320px; background: #15304c; color: #fff;">
+                    <div class="carrera-header" style="display: flex; align-items: center; gap: 12px;">
+                        <span class="numero-carrera" style="background: #ffc847; color: #151515; font-weight: 900; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">9</span>
+                        <div>
+                            <div style="font-weight: 900; font-size: 1.1rem;">Clásico Río de la Plata</div>
+                            <div style="font-size: 0.9rem; color: #ffd700;">Jue 17 abr 2026</div>
+                        </div>
+                    </div>
+                    <table class="admin-table" style="margin: 14px 0 10px; background: transparent;">
+                        <thead>
+                            <tr><th>N°</th><th>Caballo</th><th>Dividendo</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>La Pampa Libre</td><td>3.10</td></tr>
+                            <tr><td>2</td><td>Viento Sur</td><td>S/E</td></tr>
+                            <tr><td>3</td><td>Estancia Real</td><td>8.40</td></tr>
+                            <tr><td>4</td><td>Querubín</td><td>2.40</td></tr>
+                            <tr><td>5</td><td>Río Dulce</td><td>6.90</td></tr>
+                            <tr><td>6</td><td>Porteño</td><td>12.30</td></tr>
+                            <tr><td>7</td><td>El Chaparral</td><td>12.80</td></tr>
+                            <tr><td>8</td><td>Brisa Campestre</td><td>9.70</td></tr>
+                        </tbody>
+                    </table>
+                    <button class="action-button" style="width: 100%; margin-top: 8px;">Apostar</button>
+                </div>
+                <!-- Carrera 3 -->
+                <div class="kpi-card" style="min-width: 320px; background: #15304c; color: #fff;">
+                    <div class="carrera-header" style="display: flex; align-items: center; gap: 12px;">
+                        <span class="numero-carrera" style="background: #ffc847; color: #151515; font-weight: 900; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">10</span>
+                        <div>
+                            <div style="font-weight: 900; font-size: 1.1rem;">Copa San Martín</div>
+                            <div style="font-size: 0.9rem; color: #ffd700;">Jue 17 abr 2026</div>
+                        </div>
+                    </div>
+                    <table class="admin-table" style="margin: 14px 0 10px; background: transparent;">
+                        <thead>
+                            <tr><th>N°</th><th>Caballo</th><th>Dividendo</th></tr>
+                        </thead>
+                        <tbody>//actualizar
+                            <tr><td>1</td><td>Libertad Gaucha</td><td>4.50</td></tr>
+                            <tr><td>2</td><td>Pampero Bravío</td><td>7.20</td></tr>
+                            <tr><td>3</td><td>El Correntino</td><td>3.80</td></tr>
+                            <tr><td>4</td><td>Luna Criolla</td><td>S/E</td></tr>
+                            <tr><td>5</td><td>Rey del Turf</td><td>2.60</td></tr>
+                            <tr><td>6</td><td>Gaucho de Oro</td><td>15.00</td></tr>
+                            <tr><td>7</td><td>Viento Cálido</td><td>6.10</td></tr>
+                        </tbody>
+                    </table>
+                    <button class="action-button" style="width: 100%; margin-top: 8px;">Apostar</button>
+                </div>
+            </div>
+        </section>
+        <section class="panel">
+            <div class="section-heading">
+                <h3><span class="section-icon section-icon--success">🎯</span> Tipos de Apuesta disponibles</h3>
+            </div>
+            <div style="display: flex; gap: 12px; margin-bottom: 18px;">
+                <span class="pill pill--warning">Simple</span>
+                <span class="pill pill--success">Triple</span>
+                <span class="pill pill--success">Super</span>
+            </div>
+        </section>
+        <section class="panel">
+            <div class="section-heading">
+                <h3><span class="section-icon section-icon--success">📝</span> Mis Apuestas</h3>
+            </div>
+            <div class="table-wrap">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>FECHA</th>
+                            <th>N° CARRERA</th>
+                            <th>CARRERA</th>
+                            <th>N° CABALLO</th>
+                            <th>CABALLO</th>
+                            <th>MONTO APOSTADO</th>
+                            <th>TIPO</th>
+                            <th>DIVIDENDO FINAL</th>
+                            <th>MONTO COBRADO</th>
+                            <th>ESTADO</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>17/04/2026</td><td>7</td><td>Gran Premio del Litoral</td><td>4</td><td>El Paisano</td><td class="money">$1.500</td><td>Simple</td><td>—</td><td>—</td><td><span class="status status--open">POR CORRER</span></td>
+                        </tr>
+                        <tr>
+                            <td>17/04/2026</td><td>6</td><td>Sprint del Centro</td><td>3</td><td>Tormenta del Sur</td><td class="money">$2.000</td><td>Simple</td><td>5.40</td><td class="money">$10.800</td><td><span class="status pill--success">FINALIZADA</span></td>
+                        </tr>
+                        <tr>
+                            <td>17/04/2026</td><td>5</td><td>Premio Independencia</td><td>1</td><td>Viento Pampeano</td><td class="money">$1.000</td><td>Triple</td><td>—</td><td>—</td><td><span class="status pill--warning">FINALIZADA</span></td>
+                        </tr>
+                        <tr>
+                            <td>16/04/2026</td><td>4</td><td>Clásico del Norte</td><td>3</td><td>Don Cornelio</td><td class="money">$3.500</td><td>Super</td><td>7.80</td><td class="money">$27.300</td><td><span class="status pill--success">FINALIZADA</span></td>
+                        </tr>
+                        <tr>
+                            <td>16/04/2026</td><td>5</td><td>Copa Fundación</td><td>5</td><td>Bruma Serrana</td><td class="money">$500</td><td>Super</td><td>—</td><td>—</td><td><span class="status pill--warning">FINALIZADA</span></td>
+                        </tr>
+                        <tr>
+                            <td>15/04/2026</td><td>8</td><td>Premio Mayor</td><td>1</td><td>Rayo de Fuego</td><td class="money">$2.500</td><td>Simple</td><td>2.90</td><td class="money">$7.250</td><td><span class="status pill--success">FINALIZADA</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</body

@@ -1,11 +1,13 @@
 ﻿<!doctype html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login Jugador</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
 
   <main class="login-page">
@@ -15,30 +17,32 @@
       <div class="login-card">
 
         <div class="login-header">
-          <div class="icon" aria-hidden="true">&#x1F40E;</div>
+          <div class="icon" aria-hidden="true"></div>
           <h1>Login Jugador</h1>
           <p>Ingresá tus credenciales</p>
         </div>
 
-        <form id="formLoginAdmin" class="login-form">
+        <form id="formLoginJugador" class="login-form">
 
           <div class="form-group">
             <label class="input-label" for="nombre">
-              <span class="input-icon" aria-hidden="true">👤</span>
-              <input id="nombre" name="nombre" type="text" placeholder="Usuario" autocomplete="username" required />
+              <span class="input-icon" aria-hidden="true"><i class="fa-regular fa-horse"></i></i>
+              </span>
+              <input id="nombre-jugador" name="nombre" type="text" placeholder="Usuario" autocomplete="username" required />
             </label>
           </div>
 
           <div class="form-group">
             <label class="input-label" for="password">
-              <span class="input-icon" aria-hidden="true">🔒</span>
-              <input id="password" name="password" type="password" placeholder="Contraseña" autocomplete="current-password" required />
+              <span class="input-icon" aria-hidden="true"><i class="fa-regular fa-lock"></i></span>
+              <input id="password-jugador" name="password" type="password" placeholder="Contraseña"
+                autocomplete="current-password" required />
             </label>
           </div>
 
           <p id="mensajeError" class="error hidden" role="alert"></p>
 
-          <button class="login-button" type="submit" id="btnLogin">
+          <button class="login-button" type="submit" id="btnLoginjugador">
             Ingresar
           </button>
 
@@ -50,60 +54,116 @@
 
   </main>
 
+  <!-- JavaScript usando CommandDispatcher -->
   <script type="module">
-    import '/CommandDispatcher.js';
+    import dispatcher from  './CommandDispatcher.js';
 
-    const formLoginAdmin = document.getElementById("formLoginAdmin");
-    const nombre = document.getElementById("nombre");
-    const password = document.getElementById("password");
-    const mensajeError = document.getElementById("mensajeError");
+    // ================================
+    // 1. Elementos del HTML
+    // ================================
+
+    const formLoginJugador = document.getElementById('formLoginJugador');
+    const inputNombre = document.getElementById('nombre-jugador');
+    const inputPassword = document.getElementById('password-jugador');
+    const mensajeError = document.getElementById('mensajeError');
+    const btnLogin = document.getElementById('btnLoginjugador');
+
+    // ================================
+    // 2. Funciones auxiliares de vista
+    // ================================
+    function limpiarFormulario() {
+      inputNombre.value = '';
+      inputPassword.value = '';
+    }
 
     function mostrarError(texto) {
       mensajeError.textContent = texto;
-      mensajeError.classList.remove("hidden");
+      mensajeError.classList.remove('hidden');
     }
 
     function ocultarError() {
-      mensajeError.textContent = "";
-      mensajeError.classList.add("hidden");
+      mensajeError.textContent = '';
+      mensajeError.classList.add('hidden');
     }
 
-    formLoginAdmin.addEventListener("submit", async function (event) {
+    function bloquearBoton() {
+      btnLogin.disabled = true;
+      btnLogin.textContent = 'Ingresando...';
+    }
+
+    function desbloquearBoton() {
+      btnLogin.disabled = false;
+      btnLogin.textContent = 'Ingresar';
+    }
+
+    // ================================
+    // 3. Registro de la vista
+    // ================================
+
+    const view = dispatcher.registerView('loginJugador', {
+   
+      urlInicio: null,
+
+      onError: (status, texto) => {
+        desbloquearBoton();
+        mostrarError(`Error ${status}: ${texto}`);
+      },
+
+      onException: (msg) => {
+        desbloquearBoton();
+        mostrarError(msg);
+      }
+    });
+
+    // ================================
+    // 4. Handlers que responde el backend
+    // ================================
+
+    view.handler('redirigir-tablero-jugador', (url) => {
+      window.location.href = url;
+    });
+
+   
+    view.handler('error', (mensaje) => {
+      desbloquearBoton();
+      mostrarError(mensaje);
+    });
+
+
+    view.handler('limpiarError', () => {
+      ocultarError();
+    });
+
+    // Iniciamos la vista
+    dispatcher.startView(view);
+
+    // ================================
+    // 5. Envío del formulario
+    // ================================
+
+    formLoginJugador.addEventListener('submit', (event) => {
       event.preventDefault();
 
       ocultarError();
 
-      const datosLogin = {
-        nombre: nombre.value.trim(),
-        password: password.value.trim()
-      };
+      const nombre = inputNombre.value.trim();
+      const password = inputPassword.value.trim();
 
-      if (!datosLogin.nombre || !datosLogin.password) {
-        mostrarError("Ingresá usuario y contraseña.");
+      if (nombre === '' || password === '') {
+        mostrarError('Debes ingresar usuario y contraseña.');
         return;
       }
 
-      try {
-        await dispatcher.submit('/loginJugador', datosLogin);
-      } catch (error) {
-        mostrarError('Acceso denegado');
-        console.error(error);
-      }
-    });
+      bloquearBoton();
 
-    try {
-      dispatcher.registerView('login-jugador', {
-        handleCommand(command) {
-          if (command.id === 'error') {
-            mostrarError(command.parametro || 'Acceso denegado');
-          }
-          if (command.id === 'redirigir' || command.id === 'redirigirJugador') {
-            window.location.href = command.parametro;
-          }
-        }
+
+      dispatcher.submit('/login-jugador', {
+        nombre: nombre,
+        password: password
       });
-    } catch (e) {}
+    });
   </script>
-</body>
-</html>
 
+</body>
+
+</html>

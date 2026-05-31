@@ -1,8 +1,7 @@
 package ort.da.Obligatorio.presentadores;
 
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpSession;
@@ -13,10 +12,10 @@ import ort.da.Obligatorio.excepciones.AutenticacionException;
 import ort.da.Obligatorio.servicios.FachadaServicios;
 
 @RestController
+@RequestMapping("/login-admin")
 public class LoginAdminPresentador {
-
    
-    @PostMapping("/login-admin")
+    @PostMapping()
     public Commands login(HttpSession session, CredencialDto credencialDto) {
         try {
             Credencial credencial = credencialDto.toCredencial();

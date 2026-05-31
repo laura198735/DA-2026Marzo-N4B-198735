@@ -32,7 +32,7 @@ public class Jugador extends Usuario {
     }
 
     public void setSaldo(double nuevoSaldo) {
-        // TODO Auto-generated method stub
+   
         throw new UnsupportedOperationException("Unimplemented method 'setSaldo'");
     }
     //actualiza saldo después de  que jugador apuesta

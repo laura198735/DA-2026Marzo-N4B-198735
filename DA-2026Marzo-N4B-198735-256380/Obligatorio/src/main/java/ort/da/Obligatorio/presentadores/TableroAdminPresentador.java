@@ -24,7 +24,6 @@ public class TableroAdminPresentador {
 @GetMapping()
     public Commands mostrarTablero(HttpSession session) throws ObligatorioException {
 
-        // 1. Recuperamos el usuario administrador guardado en sesión.
         Usuario usuarioAdministrador = (Usuario) session.getAttribute("usuarioLogueado");
 
         if (usuarioAdministrador == null) {
@@ -32,10 +31,10 @@ public class TableroAdminPresentador {
                     new Command("redirigirLogin", "/login-admin.html"));
         }
 
-        // 2. Pedimos los datos a la Fachada.
+    
         Jornada jornadaActual = FachadaServicios.getInstancia().getJornadaActual();
 
-        // 3. Devolvemos comandos claros para el frontend.
+
         return Commands.create(
                 new Command("mostrarJornadaActual", jornadaActual));
     }   
@@ -43,7 +42,7 @@ public class TableroAdminPresentador {
     @PostMapping()
     public Commands cargarDatosTablero(HttpSession session) throws ObligatorioException {
 
-        // 1. Recuperamos el usuario administrador guardado en sesión.
+
         Usuario usuarioAdministrador = (Usuario) session.getAttribute("usuarioLogueado");
 
         if (usuarioAdministrador == null) {
