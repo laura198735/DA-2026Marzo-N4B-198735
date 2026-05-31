@@ -3,6 +3,7 @@ package ort.da.Obligatorio.servicios;
 import java.util.ArrayList;
 import java.util.List;
 
+import ort.da.Obligatorio.dominio.Carrera;
 import ort.da.Obligatorio.dominio.Credencial;
 import ort.da.Obligatorio.dominio.Jornada;
 import ort.da.Obligatorio.dominio.Modalidad;
@@ -64,5 +65,45 @@ public class FachadaServicios {
             throw new ObligatorioException("No hay jornadas disponibles para calcular el total apostado.");
         }
         return jornadaActual.getTotalApostado();
+    }
+
+    public double getTotalPagado() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getTotalPagado'");
+    }
+
+    public double getTotalComisionesJornada() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getTotalComisionesJornada'");
+    }
+
+    public int getCantidadCarrerasJornada() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getCantidadCarrerasJornada'");
+    }
+
+    public double getBalanceJornada() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getBalanceJornada'");
+    }
+
+    public int getCantidadCarrerasPendientesJornada() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getCantidadCarrerasPendientesJornada'");
+    }
+
+    public int getCantidadCarrerasFinalizadasJornada() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getCantidadCarrerasFinalizadasJornada'");
+    }
+
+    public List<Carrera> getResultadosCarrerasJornada() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getResultadosCarrerasJornada'");
+    }
+
+    public List<Carrera> getProximasCarrerasJornada() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getProximasCarrerasJornada'");
     }
 }

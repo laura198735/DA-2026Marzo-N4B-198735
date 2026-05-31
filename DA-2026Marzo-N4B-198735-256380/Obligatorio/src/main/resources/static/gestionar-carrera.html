@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionar Carrera - Gran Premio del Litoral</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body style="background: #f4f7f8; color: #253034;">
+    <nav style="margin-bottom: 32px;">
+  <div style="display: flex; gap: 32px; justify-content: center;">
+    <!-- Card Gestionar Carrera -->
+    <a href="gestionar-carrera.html" style="text-decoration: none;">
+      <div style="background: #15304c; border-radius: 18px; box-shadow: 0 4px 18px rgba(16,36,58,0.10); padding: 28px 38px; min-width: 220px; display: flex; flex-direction: column; align-items: center; transition: transform 0.18s, box-shadow 0.18s;">
+        <span style="font-size: 2.2rem; color: #ffc847; margin-bottom: 10px;">🏁</span>
+        <span style="color: #fff; font-weight: 900; font-size: 1.18rem;">Gestionar Carrera</span>
+      </div>
+    </a>
+    <!-- Card Tablero Administrador -->
+    <a href="tablero-administrador.html" style="text-decoration: none;">
+      <div style="background: #15304c; border-radius: 18px; box-shadow: 0 4px 18px rgba(16,36,58,0.10); padding: 28px 38px; min-width: 220px; display: flex; flex-direction: column; align-items: center; transition: transform 0.18s, box-shadow 0.18s;">
+        <span style="font-size: 2.2rem; color: #4f5f6f; margin-bottom: 10px;">📊</span>
+        <span style="color: #fff; font-weight: 900; font-size: 1.18rem;">Tablero Administrador</span>
+      </div>
+    </a>
+    <!-- Card Logout -->
+    <a href="login-admin.html" style="text-decoration: none;">
+      <div style="background: #e53c4f; border-radius: 18px; box-shadow: 0 4px 18px rgba(16,36,58,0.10); padding: 28px 38px; min-width: 220px; display: flex; flex-direction: column; align-items: center; transition: transform 0.18s, box-shadow 0.18s;">
+        <span style="font-size: 2.2rem; color: #fff; margin-bottom: 10px;">⏻</span>
+        <span style="color: #fff; font-weight: 900; font-size: 1.18rem;">Logout</span>
+      </div>
+    </a>
+  </div>
+</nav>
+    <div class="page-shell" style="max-width: 1100px; margin: 32px auto;">
+        <!-- Header Carrera -->
+        <div
+            style="display: flex; align-items: center; justify-content: space-between; background: #15304c; border-radius: 14px 14px 0 0; padding: 24px 32px 18px 32px;">
+            <div style="display: flex; align-items: center; gap: 18px;">
+                <span class="numero-carrera"
+                    style="background: #ffc847; color: #151515; font-weight: 900; border-radius: 50%; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">7</span>
+                <div>
+                    <div style="font-size: 1.5rem; font-weight: 900; color: #fff;">Gran Premio del Litoral</div>
+                    <div style="margin-top: 4px;">
+                        <span
+                            style="background: #e6f9ff; color: #0edbff; font-weight: 900; border-radius: 999px; padding: 4px 16px; font-size: 1rem; display: inline-flex; align-items: center; gap: 6px;">
+                            <span
+                                style="display: inline-block; width: 10px; height: 10px; background: #0edbff; border-radius: 50%;"></span>
+                            ABIERTA
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div style="color: #fff; font-size: 1.2rem; font-weight: 900;">TOTAL APOSTADO <span
+                    style="color: #ffc847;">$187.500</span></div>
+        </div>
+        <!-- Acciones Carrera -->
+        <div
+            style="background: #fff; padding: 22px 32px 18px 32px; border-radius: 0 0 14px 14px; border-bottom: 1px solid #e9eef2;">
+            <div style="display: flex; align-items: center; gap: 18px; margin-bottom: 18px;">
+                <button
+                    style="background: #1ca94c; color: #fff; font-weight: 900; border: none; border-radius: 6px; padding: 10px 22px; font-size: 1rem; cursor: pointer;">▶
+                    Abrir Carrera</button>
+                <button
+                    style="background: #ffc847; color: #151515; font-weight: 900; border: none; border-radius: 6px; padding: 10px 22px; font-size: 1rem; cursor: pointer;">⏸
+                    Cerrar Carrera</button>
+                <span style="font-weight: 700; color: #888;">Finalizar carrera con ganador:</span>
+                <select style="padding: 8px 16px; border-radius: 6px; border: 1px solid #d7dcdd; font-size: 1rem;">
+                    <option>— Elegir caballo —</option>
+                    <option>Relámpago Celeste</option>
+                    <option>Fuerza Norteña</option>
+                    <option>Sombra de Luna</option>
+                    <option>El Paisano</option>
+                    <option>Tormenta del Sur</option>
+                    <option>Chaqui Real</option>
+                    <option>Cielo Pampeano</option>
+                    <option>Trueno Negro</option>
+                </select>
+                <button
+                    style="background: #e53c4f; color: #fff; font-weight: 900; border: none; border-radius: 6px; padding: 10px 22px; font-size: 1rem; cursor: pointer; display: flex; align-items: center; gap: 6px;">🚩
+                    Finalizar Carrera y Pagar</button>
+                <span style="color: #b48a00; font-size: 1.1rem; display: flex; align-items: center; gap: 6px;"><span
+                        style="font-size: 1.3rem;">⚠️</span> Esta acción pagará automáticamente a todos los jugadores
+                    que apostaron al ganador.</span>
+            </div>
+        </div>
+        <!-- Tabla de Caballos Participantes -->
+        <div
+            style="background: #fff; border-radius: 0 0 14px 14px; padding: 0 32px 24px 32px; border-bottom: 1px solid #e9eef2;">
+            <div
+                style="font-weight: 900; color: #253034; font-size: 1.1rem; margin: 18px 0 10px 0; display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 1.3rem;">🏇</span> Caballos Participantes
+            </div>
+            <table class="admin-table" style="background: #fff;">
+                <thead>
+                    <tr>
+                        <th>N°</th>
+                        <th>NOMBRE DEL CABALLO</th>
+                        <th>DIVIDENDO ACTUAL</th>
+                        <th>TOTAL APOSTADO</th>
+                        <th>CANTIDAD DE APUESTAS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Relámpago Celeste</td>
+                        <td><b>$ 3,20</b></td>
+                        <td style="color: #018653; font-weight: 900;">$52.000</td>
+                        <td>34</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Fuerza Norteña</td>
+                        <td><b>$ 4,80</b></td>
+                        <td style="color: #018653; font-weight: 900;">$31.500</td>
+                        <td>21</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Sombra de Luna</td>
+                        <td><b>$ 6,50</b></td>
+                        <td style="color: #018653; font-weight: 900;">$18.000</td>
+                        <td>12</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>El Paisano</td>
+                        <td><b>$ 2,90</b></td>
+                        <td style="color: #018653; font-weight: 900;">$47.000</td>
+                        <td>31</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>Tormenta del Sur</td>
+                        <td><b>$ 9,10</b></td>
+                        <td style="color: #018653; font-weight: 900;">$12.500</td>
+                        <td>8</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>Chaqui Real</td>
+                        <td><b>$ 5,40</b></td>
+                        <td style="color: #018653; font-weight: 900;">$9.000</td>
+                        <td>6</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>Cielo Pampeano</td>
+                        <td><b>$ 11,20</b></td>
+                        <td style="color: #018653; font-weight: 900;">$7.500</td>
+                        <td>5</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>Trueno Negro</td>
+                        <td><b>$ 7,80</b></td>
+                        <td style="color: #018653; font-weight: 900;">$10.000</td>
+                        <td>7</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Precondición -->
+        <div
+            style="background: #fff; border-radius: 0 0 14px 14px; padding: 18px 32px 24px 32px; border-bottom: 1px solid #e9eef2; margin-bottom: 18px;">
+            <span style="font-weight: 900; font-size: 1.1rem;">Precondición:</span> Hay una carrera seleccionada
+        </div>
+    </div>
+    <script type="module">
+        import dispatcher from "/CommandDispatcher.js";
+
+        dispatcher.registerView({
+            urlInicio: "/gestionar-carrera.html",
+            handlers: {
+                mostrarCarrera: (param) => {
+
+                    if (param && param.nombre) { //
+                        document.querySelector(".page-shell div[style*='font-size: 1.5rem']").textContent = param.nombre;
+                    }
+                    //  if (param && param.estado) { //
+                    //      document.querySelector(".page-shell span[style*='background: #e6f9ff']").innerHTML =
+                    //           `<span style="display: inline-block; width: 10px; height: 10px; background: #0edbff; border-radius: 50%;"></span> ${param.estado}`;
+                    //  }
+
+
+                    cerrarCarrera: () => {
+
+                    }
+
+                    finalizarCarrera: () => {
+
+                    }
+                }
+            }
+        });
+
+        document.querySelector("button[style*='#1ca94c']").addEventListener("click", () => {
+            dispatcher.submit("/gestionar-carrera/abrir");
+        });
+        document.querySelector("button[style*='#ffc847']").addEventListener("click", () => {
+            dispatcher.submit("/gestionar-carrera/cerrar");
+        });
+       /** document.querySelector("button[style*='#e53c4f']").addEventListener("click", () => {
+            const select = document.querySelector("select");
+            const ganador = select.value;
+            if (ganador && ganador !== "— Elegir caballo —") {
+                dispatcher.submit("/gestionar-carrera/finalizar", { ganador });
+            }
+        });*/
+
+    </script>
+
+
+</body>
+
+</html>

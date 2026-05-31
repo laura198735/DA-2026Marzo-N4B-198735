@@ -15,22 +15,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/login-jugador")//ruta para acceder al login del jugador
+@RequestMapping("/login-jugador") // ruta para acceder al login del jugador
 public class LoginJugadorPresentador {
-  
+
     public LoginJugadorPresentador() {
     }
-
-    @GetMapping()
+    @GetMapping()//maneja la carga inicial del formulario de login
     public Commands mostrarTablero(HttpSession session) throws ObligatorioException {
-        //recupera el jugador guardado en sesion
-                Usuario usuarioJugador = (Usuario) session.getAttribute("usuarioLogueado");
-        //si no hay jugador en sesion, redirige al login
+        // recupera el jugador guardado en sesion
+        Usuario usuarioJugador = (Usuario) session.getAttribute("usuarioLogueado");
+        // si no hay jugador en sesion, redirige al login
         if (usuarioJugador == null) {
             return Commands.create(
-                    new Command("redirigirLogin", "/login-jugador.html"));
+                    new Command("redirigir-login-jugador", "/login-jugador.html"));
         }
-
 
         Jornada jornadaActual = FachadaServicios.getInstancia().getJornadaActual();
 
@@ -38,20 +36,19 @@ public class LoginJugadorPresentador {
                 new Command("mostrarJornadaActual", jornadaActual));
     }
 
-    @PostMapping()
+    @PostMapping()//maneja el submit del login
     public Commands cargarDatosTablero(HttpSession session) throws ObligatorioException {
 
         Usuario usuarioJugador = (Usuario) session.getAttribute("usuarioLogueado");
 
         if (usuarioJugador == null) {
             return Commands.create(
-                    new Command("redirigirLogin", "/login-jugador.html"));
+                    new Command("redirigir-login-jugador", "/login-jugador.html"));
         }
 
-           //ver que contiene el tablero
-    double totalApostado = FachadaServicios.getInstancia().getTotalApostado();
+        // ver que contiene el tablero
+        double totalApostado = FachadaServicios.getInstancia().getTotalApostado();
 
-        
         return Commands.create(
                 new Command("mostrarTotalApostado", totalApostado));
     }
