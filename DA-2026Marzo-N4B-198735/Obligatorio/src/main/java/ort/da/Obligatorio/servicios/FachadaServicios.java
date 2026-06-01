@@ -58,9 +58,12 @@ public class FachadaServicios {
         return jornadaActual.getTotalApostado();
     }
 
-    public double getTotalPagado() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getTotalPagado'");
+    public double getTotalPagado() throws ObligatorioException {
+        Jornada jornadaActual = servicioJornada.getJornadaActual();
+        if (jornadaActual == null) {
+            throw new ObligatorioException("No hay jornadas disponibles para calcular el total pagado.");
+        }
+        return jornadaActual.getTotalPagado();
     }
 
     public double getTotalComisionesJornada() {
@@ -96,5 +99,14 @@ public class FachadaServicios {
     public List<Carrera> getProximasCarrerasJornada() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getProximasCarrerasJornada'");
+    }
+
+    // Delegator for obtaining the current jornada
+    public Jornada getJornadaActual() throws ObligatorioException {
+        try {
+            return servicioJornada.getJornadaActual();
+        } catch (Exception e) {
+            throw new ObligatorioException("Error al obtener la jornada actual: " + e.getMessage());
+        }
     }
 }

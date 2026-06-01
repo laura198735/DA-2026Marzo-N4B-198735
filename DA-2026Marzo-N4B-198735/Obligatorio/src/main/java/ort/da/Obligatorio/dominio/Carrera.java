@@ -61,12 +61,27 @@ public class Carrera {
     }
 
     public boolean esFinalizada() {
+        if (registros == null || registros.isEmpty()) {
+            return false;
+        }
         for (Participante registro : registros) {
-             {
-                return false; // Si algún registro no está finalizado, la carrera no está finalizada
+            if (registro.getEstadoCarrera() == null) {
+                return false; // Si algún registro no tiene estado, consideramos no finalizada
             }
         }
-        return true; // Todos los registros están finalizados, la carrera está finalizada
+        return true; // Todos los registros tienen estado, asumimos finalizada
     }
 
+    public double getTotalPagado() {
+        double total = 0.0;
+        for (Participante registro : registros) {
+            for (Apuesta apuesta : registro.getApuestas()) {
+                if (apuesta.isGanadora()) {
+                    double valorDividendo = registro.getDividendo() == null ? 0.0 : registro.getDividendo().getValor();
+                    total += apuesta.getMonto() * valorDividendo; // Se paga el monto apostado multiplicado por el valor del dividendo
+                }
+            }
+        }
+        return total;
+    }
 }

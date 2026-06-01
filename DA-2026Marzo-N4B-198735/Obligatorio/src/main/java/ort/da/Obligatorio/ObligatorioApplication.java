@@ -23,7 +23,11 @@ public class ObligatorioApplication {
 		crearDatosPrueba();
 		SpringApplication.run(ObligatorioApplication.class, args);
 	}
-
+/* 3 carreras con fecha del día actual en estado Definida y sin apuestas a ningún caballo. 
+o 2 carreras con fecha de una semana anterior a la fecha actual en estado Cerrada, con apuestas para 
+todos los caballos participantes (entre 10 y 20 apuestas para cada uno realizadas por jugadores 
+diferentes).  
+o 1 carrera con fecha de una semana posterior en estado Definida*/ 
 	public static void crearDatosPrueba() {
 
 		try {

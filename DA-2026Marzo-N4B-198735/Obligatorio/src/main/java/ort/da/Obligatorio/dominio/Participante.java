@@ -1,8 +1,8 @@
 package ort.da.Obligatorio.dominio;
 
 import java.util.List;
-
 import lombok.Getter;
+
 @Getter
 public class Participante {
     private Caballo caballo;

@@ -10,6 +10,7 @@ import ort.da.Obligatorio.excepciones.ObligatorioException;
 import ort.da.Obligatorio.servicios.FachadaServicios;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,8 +22,8 @@ public class LoginJugadorPresentador {
     public LoginJugadorPresentador() {
     }
 
-     @PostMapping()
-    public Commands login(HttpSession session, CredencialDto credencialDto) {
+    @PostMapping()
+    public Commands login(HttpSession session, @ModelAttribute CredencialDto credencialDto) {
         try {
             Credencial credencial = credencialDto.toCredencial();
             System.out.println("Nombre recibido: " + credencial.getNombre());
@@ -49,19 +50,6 @@ public class LoginJugadorPresentador {
         }
 
         return Commands.create(new Command("redirigir-tablero-jugador", "/tablero-jugador.html"));
-        // ver que contiene el tablero
-        double totalApostado = FachadaServicios.getInstancia().getTotalApostado();
-
-        return Commands.create(
-                new Command("mostrarTotalApostado", totalApostado));
-    }
-
-    @PostMapping("/logout")
-    public Commands logout(HttpSession session) {
-        FachadaServicios.getInstancia().logout((Login) session.getAttribute("loginUsuario"));
-        session.removeAttribute("loginUsuario");
-        session.invalidate();
-        return Commands.create(new Command("redirigir", "login.html"));
     }
 
 }
