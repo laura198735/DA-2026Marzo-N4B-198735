@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import ort.da.Obligatorio.dominio.Administrador;
 import ort.da.Obligatorio.dominio.Caballo;
 import ort.da.Obligatorio.dominio.Carrera;
-import ort.da.Obligatorio.dominio.Dividendo;
+
 //import ort.da.Obligatorio.dominio.Estado;
 import ort.da.Obligatorio.dominio.Jornada;
 import ort.da.Obligatorio.dominio.Jugador;
@@ -45,14 +45,13 @@ o 1 carrera con fecha de una semana posterior en estado Definida*/
 			Carrera carrera1 = new Carrera("Gran Premio Inaugural", new Date(System.currentTimeMillis()), 1000.0, null);
 			Carrera carrera2 = new Carrera("Clásico de Verano", new Date(System.currentTimeMillis()), 1200.0, null);
 
-			Dividendo dividendo = new Dividendo();
 			// EstadoCarrera type expected by Participante constructor — provide a simple subclass here
-			//EstadoCarrera estadoCarrera = new EstadoCarrera();
+			//EstadoCarrera estadoCarrera = new EstadoCarrera()
 
-			Participante rp1 = new Participante(caballo1, carrera1, dividendo);
-			Participante rp2 = new Participante(caballo2, carrera1, dividendo);
-			Participante rp3 = new Participante(caballo2, carrera2, dividendo);
-			Participante rp4 = new Participante(caballo3, carrera2, dividendo);
+			Participante rp1 = new Participante(caballo1, carrera1,  3.0);
+			Participante rp2 = new Participante(caballo2, carrera1, 5.0);
+			Participante rp3 = new Participante(caballo2, carrera2,  2.0);
+			Participante rp4 = new Participante(caballo3, carrera2, 8.0);
 
 			List<Object> datosPrueba = Arrays.asList(
 				administrador1,
