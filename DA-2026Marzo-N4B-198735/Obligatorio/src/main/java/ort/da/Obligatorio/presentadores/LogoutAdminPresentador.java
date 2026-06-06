@@ -1,10 +1,13 @@
 package ort.da.Obligatorio.presentadores;
 
+import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpSession;
 
-@Deprecated
+@RestController
+@Scope("session")
 public class LogoutAdminPresentador {
     @PostMapping("/logout-administrador")
     public Commands logout(HttpSession session) {

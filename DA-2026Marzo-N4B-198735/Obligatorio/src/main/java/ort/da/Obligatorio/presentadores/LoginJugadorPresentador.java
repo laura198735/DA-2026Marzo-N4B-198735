@@ -6,9 +6,10 @@ import ort.da.Obligatorio.dominio.Jornada;
 import ort.da.Obligatorio.dominio.Usuario;
 import ort.da.Obligatorio.dtos.CredencialDto;
 import ort.da.Obligatorio.excepciones.AutenticacionException;
-import ort.da.Obligatorio.excepciones.ObligatorioException;
+import ort.da.Obligatorio.excepciones.HipodromoException;
 import ort.da.Obligatorio.servicios.FachadaServicios;
 
+import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/login-jugador") // ruta para acceder al login del jugador
+@Scope("session") // Mantener el estado del usuario logueado en la sesión
 public class LoginJugadorPresentador {
 
     public LoginJugadorPresentador() {
@@ -40,7 +42,7 @@ public class LoginJugadorPresentador {
     }
 
     @GetMapping()
-    public Commands cargarDatosTablero(HttpSession session) throws ObligatorioException {
+    public Commands cargarDatosTablero(HttpSession session) throws HipodromoException {
 
         Usuario usuarioJugador = (Usuario) session.getAttribute("usuarioLogueado");
 

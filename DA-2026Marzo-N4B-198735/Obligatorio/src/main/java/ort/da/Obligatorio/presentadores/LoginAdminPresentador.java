@@ -1,5 +1,6 @@
 package ort.da.Obligatorio.presentadores;
 
+import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +14,7 @@ import ort.da.Obligatorio.servicios.FachadaServicios;
 
 @RestController
 @RequestMapping("/login-admin")
+@Scope("session")
 public class LoginAdminPresentador {
    
     @PostMapping()

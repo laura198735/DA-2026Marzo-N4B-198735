@@ -6,7 +6,7 @@ import java.util.List;
 
 import lombok.Getter;
 import ort.da.Obligatorio.dominio.Jornada;
-import ort.da.Obligatorio.excepciones.ObligatorioException;
+import ort.da.Obligatorio.excepciones.HipodromoException;
 
 @Getter
 public class ServicioJornada {
@@ -40,8 +40,8 @@ public class ServicioJornada {
     
     // Si no hay una fecha,
     // se asigna la fecha más próxima anterior a la fecha actual
-//devuelve la jornada actual o la jornada con fecha más cercana anterior a la fecha actual
-    public Jornada getJornadaActual() throws ObligatorioException {
+//devuelve la jornada actual o la jornada con fecha anterior más cercana a la fecha actual
+    public Jornada getJornadaActual() throws HipodromoException {
         try {
             Date fechaMasCercanaAnterior = this.obtenerFechaMasCercanaAnterior();
             for (Jornada jornada : this.getJornadas()) {
@@ -49,10 +49,15 @@ public class ServicioJornada {
                     return jornada;
                 }
             }
-            throw new ObligatorioException("No se encontró una jornada con la fecha más cercana anterior.");
+            throw new HipodromoException("No se encontró una jornada con la fecha más cercana anterior.");
         } catch (Exception e) {
-            throw new ObligatorioException("Error al obtener la jornada actual: " + e.getMessage());
+            throw new HipodromoException("Error al obtener la jornada actual: " + e.getMessage());
         }
     }
+    //obtener el balance de la jornada actual: total apostado - total pagado
+    public double getBalanceJornadaActual() throws HipodromoException {
+        return this.getJornadaActual().getBalanceJornada();
+    }
+
 
 }

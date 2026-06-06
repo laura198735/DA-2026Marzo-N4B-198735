@@ -1,6 +1,6 @@
 package ort.da.Obligatorio.dominio;
 
-import ort.da.Obligatorio.excepciones.ObligatorioException;
+import ort.da.Obligatorio.excepciones.HipodromoException;
 
 public class Simple extends Modalidad {
    
@@ -11,7 +11,7 @@ public class Simple extends Modalidad {
     double montoApostado;
 
     @Override
-    public double calcularCosto(double monto) throws ObligatorioException {
+    public double calcularCosto(double monto) throws HipodromoException {
         this.montoApostado = monto;
         //Jugador jugador = this.jugador; 
         //  jugador asociado a la apuesta

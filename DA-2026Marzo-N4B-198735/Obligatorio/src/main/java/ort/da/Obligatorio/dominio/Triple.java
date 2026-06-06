@@ -1,6 +1,6 @@
 package ort.da.Obligatorio.dominio;
 
-import ort.da.Obligatorio.excepciones.ObligatorioException;
+import ort.da.Obligatorio.excepciones.HipodromoException;
 
 public class Triple extends Modalidad{
     //     Se descuenta del saldo lo apostado multiplicado por 1.5 y en caso de ganar pagará monto
@@ -11,12 +11,12 @@ public class Triple extends Modalidad{
     Jugador jugador;
 
     @Override
-    public double calcularCosto(double monto) throws ObligatorioException {
+    public double calcularCosto(double monto) throws HipodromoException {
        this.montoApostado = monto;
         Jugador jugador = this.jugador; 
         //  jugador asociado a la apuesta
         if (jugador.getSaldo() < montoApostado) {  
-            throw new ObligatorioException("Saldo insuficiente para realizar la apuesta.");
+            throw new HipodromoException("Saldo insuficiente para realizar la apuesta.");
         }
             double nuevoSaldo = jugador.getSaldo() - montoApostado*1.5; // Restar el monto apostado*1.5
             // del saldo del jugador en modalidad Simple
@@ -25,7 +25,7 @@ public class Triple extends Modalidad{
     }
 
     @Override
-    public double calcularPago(Apuesta apuesta) throws ObligatorioException {
+    public double calcularPago(Apuesta apuesta) throws HipodromoException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'calcularPago'");
     }

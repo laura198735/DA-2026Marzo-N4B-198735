@@ -47,7 +47,9 @@ public class Participante {
         double valor = (totalApostadoEnCarrera * (1.0 - comision)) / totalApostadoAlCaballo;
         return valor;
     }
-
+    public List<Apuesta> getApuestas() {
+        return apuestas;
+    }
     /***
      * // Dividendo = (total apostado en la carrera - comisión) / total apostado al
      * // caballo

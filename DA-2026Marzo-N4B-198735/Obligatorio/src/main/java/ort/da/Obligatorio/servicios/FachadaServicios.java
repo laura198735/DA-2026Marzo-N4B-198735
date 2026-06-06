@@ -9,7 +9,7 @@ import ort.da.Obligatorio.dominio.Jornada;
 import ort.da.Obligatorio.dominio.Modalidad;
 import ort.da.Obligatorio.dominio.Usuario;
 import ort.da.Obligatorio.excepciones.AutenticacionException;
-import ort.da.Obligatorio.excepciones.ObligatorioException;
+import ort.da.Obligatorio.excepciones.HipodromoException;
 
 public class FachadaServicios {
     private static FachadaServicios instancia;
@@ -39,46 +39,37 @@ public class FachadaServicios {
         return servicioAutenticacion.autenticar(credencial);
     }
 
-    // Tablero Administrador
+    // **Tablero Administrador
 
-    public List<Jornada> getJornadas() throws ObligatorioException {
+    public List<Jornada> getJornadas() throws HipodromoException {
         try {
             return servicioJornada.getJornadas();
 
         } catch (Exception e) {
-            throw new ObligatorioException("Error al obtener las jornadas: " + e.getMessage());
+            throw new HipodromoException("Error al obtener las jornadas: " + e.getMessage());
         }
     }
 
-    public double getTotalApostado() throws ObligatorioException {
-        Jornada jornadaActual = servicioJornada.getJornadaActual();
-        if (jornadaActual == null) {
-            throw new ObligatorioException("No hay jornadas disponibles para calcular el total apostado.");
-        }
-        return jornadaActual.getTotalApostado();
+    public double getTotalApostado() throws HipodromoException {
+        return servicioJornada.getJornadaActual().getTotalApostado();
     }
 
-    public double getTotalPagado() throws ObligatorioException {
-        Jornada jornadaActual = servicioJornada.getJornadaActual();
-        if (jornadaActual == null) {
-            throw new ObligatorioException("No hay jornadas disponibles para calcular el total pagado.");
-        }
-        return jornadaActual.getTotalPagado();
+    public double getTotalPagado() throws HipodromoException {
+        return servicioJornada.getJornadaActual().getTotalPagado();
     }
 
-    public double getTotalComisionesJornada() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getTotalComisionesJornada'");
+    public double getTotalComisionesJornada() throws HipodromoException {
+        return servicioJornada.getJornadaActual().getTotalComisiones();
+    }
+
+    // total apostado - total pagado en la jornada
+    public double getBalanceJornada() throws HipodromoException {
+        return servicioJornada.getBalanceJornadaActual();
     }
 
     public int getCantidadCarrerasJornada() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getCantidadCarrerasJornada'");
-    }
-
-    public double getBalanceJornada() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getBalanceJornada'");
     }
 
     public int getCantidadCarrerasPendientesJornada() {
@@ -102,11 +93,11 @@ public class FachadaServicios {
     }
 
     // Delegator for obtaining the current jornada
-    public Jornada getJornadaActual() throws ObligatorioException {
+    public Jornada getJornadaActual() throws HipodromoException {
         try {
             return servicioJornada.getJornadaActual();
         } catch (Exception e) {
-            throw new ObligatorioException("Error al obtener la jornada actual: " + e.getMessage());
+            throw new HipodromoException("Error al obtener la jornada actual: " + e.getMessage());
         }
     }
 }

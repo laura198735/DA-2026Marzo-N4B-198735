@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpSession;
 import ort.da.Obligatorio.dominio.Carrera;
 import ort.da.Obligatorio.dominio.Jornada;
 import ort.da.Obligatorio.dominio.Usuario;
-import ort.da.Obligatorio.excepciones.ObligatorioException;
+import ort.da.Obligatorio.excepciones.HipodromoException;
 import ort.da.Obligatorio.servicios.FachadaServicios;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +25,7 @@ public class TableroAdminPresentador {
     }
 
     @GetMapping()
-    public Commands mostrarTablero(HttpSession session) throws ObligatorioException {
+    public Commands mostrarTablero(HttpSession session) throws HipodromoException {
 
         Usuario usuarioAdministrador = (Usuario) session.getAttribute("usuarioLogueado");
 
@@ -41,7 +41,7 @@ public class TableroAdminPresentador {
     }
 
     @PostMapping()
-    public Commands cargarDatosTablero(HttpSession session) throws ObligatorioException {
+    public Commands cargarDatosTablero(HttpSession session) throws HipodromoException {
 
         Usuario usuarioAdministrador = (Usuario) session.getAttribute("usuarioLogueado");
 

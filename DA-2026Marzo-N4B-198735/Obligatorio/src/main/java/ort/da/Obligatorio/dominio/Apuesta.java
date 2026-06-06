@@ -11,7 +11,8 @@ public class Apuesta {
     private Participante caballo; // El caballo al que se le apuesta
     private Carrera carrera;
     private boolean ganadora; // flag para marcar si la apuesta es ganadora
-
+    private double comision;
+    
     public Apuesta(double monto, Modalidad modalidad, Participante caballoApostado) {
         this.monto = monto;
         this.modalidad = modalidad;
