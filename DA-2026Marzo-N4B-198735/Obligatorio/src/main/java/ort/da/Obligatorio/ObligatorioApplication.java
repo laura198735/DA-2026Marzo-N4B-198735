@@ -42,16 +42,23 @@ o 1 carrera con fecha de una semana posterior en estado Definida*/
 			Caballo caballo3 = new Caballo("Centella", 5);
 
 			Jornada jornada1 = new Jornada();
-			Carrera carrera1 = new Carrera("Gran Premio Inaugural", new Date(System.currentTimeMillis()), 1000.0, null);
-			Carrera carrera2 = new Carrera("Clásico de Verano", new Date(System.currentTimeMillis()), 1200.0, null);
+			Jornada jornada2 = new Jornada(1, new Date(System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000L)); // hace una semana
+			Jornada jornada3 = new Jornada(2, new Date(System.currentTimeMillis() - 1* 24 * 60 * 60 * 1000L)); //hace 1 dia
+			Jornada jornada4 = new Jornada(3, new Date(System.currentTimeMillis())); // hoy		
+			Carrera carrera1 = new Carrera(1,"Gran Premio Inaugural", jornada1);
+			Carrera carrera2 = new Carrera(2,"Clásico de Verano", jornada2);
+			Carrera carrera3 = new Carrera(3,"Carrera del Futuro", jornada3);
+			Carrera carrera4 = new Carrera(4,"Carrera de Hoy", jornada4);
 
 			// EstadoCarrera type expected by Participante constructor — provide a simple subclass here
 			//EstadoCarrera estadoCarrera = new EstadoCarrera()
 
 			Participante rp1 = new Participante(caballo1, carrera1,  3.0);
-			Participante rp2 = new Participante(caballo2, carrera1, 5.0);
-			Participante rp3 = new Participante(caballo2, carrera2,  2.0);
-			Participante rp4 = new Participante(caballo3, carrera2, 8.0);
+			Participante rp2 = new Participante(caballo2, carrera1, .0);
+			Participante rp3 = new Participante(caballo2, carrera2,  0.0);
+			Participante rp4 = new Participante(caballo3, carrera2, 0.0);
+			Participante rp5 = new Participante(caballo1, carrera3,  3.0);
+			Participante rp6 = new Participante(caballo3, carrera4, 0.0);
 
 			List<Object> datosPrueba = Arrays.asList(
 				administrador1,
@@ -67,7 +74,9 @@ o 1 carrera con fecha de una semana posterior en estado Definida*/
 				rp1,
 				rp2,
 				rp3,
-				rp4
+				rp4,
+				rp5,
+				rp6
 			);
 
 			System.out.println("Datos de prueba creados exitosamente: " + datosPrueba.size() + " objetos.");
@@ -79,6 +88,8 @@ o 1 carrera con fecha de una semana posterior en estado Definida*/
 			System.out.println("Carrera 1: Gran Premio Inaugural con Relámpago #3 y Tornado #7");
 
 			System.out.println("Carrera 2: Clásico de Verano con Tornado #2 y Centella #5");
+			System.out.println("Carrera 3: Carrera del Futuro con Relámpago #3 y Centella #5");
+			System.out.println("Carrera 4: Carrera de Hoy con Tornado #7 y Centella #5");
 
 			// Agregar jornada de prueba al sistema
 			ort.da.Obligatorio.servicios.FachadaServicios.getInstancia().getJornadas().add(jornada1);
