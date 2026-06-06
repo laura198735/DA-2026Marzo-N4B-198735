@@ -13,78 +13,54 @@ import ort.da.Obligatorio.excepciones.ObligatorioException;
 @Setter
 public class Carrera {
 
-    private int numero;
+    private int numeroCarrera;
     private String nombre;
-    private Estado estado;
+    private IEstadoCarrera estadoCarrera;
+    private Jornada jornada;
 
     // Lista de registros y jornada correspondiente
-    public List<Participante> registros;
-    private Jornada jornada;
-    private IEstadoCarrera estadoCarrera;
+    private List<Participante> registros;
+
     private Caballo caballoGanador;
 
     public Carrera() {
 
     }
 
-    public Carrera(String nombre, Date fecha, double monto, Estado estado) {
+    public Carrera(int numeroCarrera, String nombre, Jornada jornada) {
         this.nombre = nombre;
-        this.estado = estado;
-        this.registros = new ArrayList<>();
+        this.numeroCarrera = numeroCarrera;
         this.jornada = new Jornada();
-
+        this.registros = new ArrayList<>();
+        this.estadoCarrera = new Definida(); // estado inicial de la carrera es "Definida"
     }
 
-    public void abrirCarrera() {
-        this.setEstadoCarrera(new Definida());
-        ; // estado inicial de la carrera es"Definida"
-    }
+    public void abrirCarrera() throws EstadoException {
+        estadoCarrera.abrirCarrera(this);
+    };
 
     public void cerrarCarrera() throws EstadoException {
         estadoCarrera.cerrarCarrera(this);
     };
-//ver si el ganador se asigna en carrera cerrada.
-    public int asignarGanador() throws EstadoException {
-        if(estadoCarrera instanceof Cerrada){//** */
-            return estadoCarrera.asignarGanador(this);
-        } else {
-            throw new EstadoException("No se puede asignar un ganador a una carrera que no está cerrada");
-        }
-    };;
 
+    // ganador.
+    public int asignarGanador() throws EstadoException {
+        return estadoCarrera.asignarGanador(this);
+    };
+
+    // **ver si se puede apostar */
     public boolean puedeApostar() {
         return estadoCarrera.puedeApostar(this);
     };
 
-    // **************TODO ver
-    public boolean esHabilitada(Caballo caballo) throws ObligatorioException {
-        if (registros == null || registros.isEmpty()) {
-            throw new ObligatorioException("La carrera no está habilitada para apostar.");
-        }
-        for (Participante registro : registros) {
-            if (esCaballoDelRegistro(registro, caballo)) {
-                return true; // El caballo está registrado en la carrera, por lo tanto está habilitada para
-                             // apostar
-            }
-        }
-
-        throw new ObligatorioException("La carrera no está habilitada para apostar.");
-    }
-
-    public boolean esCaballoDelRegistro(Participante registro, Caballo caballo) {
-        Caballo caballoRegistro = registro.getCaballo();
-        return caballo.equals(caballoRegistro);
-    }
-
-    public boolean esGanador(){
-        return caballoGanador != null;
-    }
-
+    // calcular apostado y pagado en carrera
     public double getTotalApostado() {
         double total = 0.0;
         for (Participante registro : registros) {
-            for (Apuesta apuesta : registro.getApuestas()) {
-                total += apuesta.getMonto();
+            if (registro.getApuestas() != null) {
+                for (Apuesta apuesta : registro.getApuestas()) {
+                    total += apuesta.getMonto();
+                }
             }
         }
         return total;
@@ -92,16 +68,22 @@ public class Carrera {
 
     public double getTotalPagado() {
         double total = 0.0;
+        if (registros == null) {
+            return total;
+        } // a través de los participantes llego al valorDividendo.
         for (Participante registro : registros) {
-            for (Apuesta apuesta : registro.getApuestas()) {
-                if (apuesta.isGanadora()) {
-                    double valorDividendo = registro.getDividendoActual();
-                    total += apuesta.getMonto() * valorDividendo; // Se paga el monto apostado multiplicado por el valor
-                                                                  // del dividendo
+            if (registro.getApuestas() != null) {
+                for (Apuesta apuesta : registro.getApuestas()) {
+                    if (apuesta.isGanadora()) {
+                        // Se paga el monto apostado multiplicado por el // valor
+                        // del dividendo
+                        double valorDividendo = registro.getDividendoActual();
+                        total += apuesta.getMonto() * valorDividendo;
+                    }
                 }
             }
+
         }
         return total;
     }
-
 }

@@ -12,8 +12,7 @@ public class Definida implements IEstadoCarrera {
 
     @Override
     public void cerrarCarrera(Carrera carrera) throws EstadoException  {
-        throw new EstadoException("No se puede cerrar una carrera en estado definido")// Implementación específica para la clase Definida
-    }
+        throw new EstadoException("No se puede cerrar una carrera en estado definido");}
 
     @Override
     public int asignarGanador(Carrera carrera) throws EstadoException {
