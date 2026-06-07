@@ -1,5 +1,6 @@
 package ort.da.Obligatorio.dominio;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -8,7 +9,7 @@ import lombok.Data;
 @Data
 public class Jornada {
     private int numero;
-    private Date fecha;
+    private Date dia;
     private List<Carrera> carreras;
 
     public Jornada() {
@@ -16,12 +17,26 @@ public class Jornada {
 
     public Jornada(int numero, Date fecha) {
         this.numero = numero;
-        this.fecha = fecha == null ? new Date() : fecha;
+        this.dia = fecha == null ? new Date() : fecha;
 
     }
 
-    public Date getFecha() {
-        return fecha;
+    public Jornada(Date dia) {// constructor para crear la jornada actual
+        this.dia = truncarHora(dia);
+    }
+
+    // truncarle la hora asi se puede comparar mas facil
+        public static Date truncarHora(Date date) {
+        if (date == null) {
+            return null;
+        }
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
     }
 
     // recorre las carreras de la jornada y suma el total apostado en c/u

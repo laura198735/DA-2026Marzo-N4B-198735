@@ -34,10 +34,19 @@ public class TableroAdminPresentador {
                     new Command("redirigirLogin", "/login-admin.html"));
         }
 
-        Jornada jornadaActual = FachadaServicios.getInstancia().getJornadaActual();
+        // Mantener jornadaActual en el estado de la vista (sesión)
+        Jornada jornadaActual = (Jornada) session.getAttribute("jornadaActual");
+        if (jornadaActual == null) {
+            List<Jornada> jornadas = FachadaServicios.getInstancia().getJornadas();
+            if (jornadas != null && !jornadas.isEmpty()) {
+                jornadaActual = jornadas.get(0);
+                session.setAttribute("jornadaActual", jornadaActual);
+            } else {
+                return Commands.create(new Command("error", "No hay jornadas disponibles"));
+            }
+        }
 
-        return Commands.create(
-                new Command("mostrarJornadaActual", jornadaActual));
+        return Commands.create(new Command("mostrarJornadaActual", jornadaActual));
     }
 
     @PostMapping()
@@ -50,14 +59,26 @@ public class TableroAdminPresentador {
                     new Command("redirigirLogin", "/login-admin.html"));
         }
 
-        // Pedimos los datos a la Fachada.
-        double totalApostado = FachadaServicios.getInstancia().getTotalApostado();
-        double totalPagado = FachadaServicios.getInstancia().getTotalPagado();
-        double totalComisionesJornada = FachadaServicios.getInstancia().getTotalComisionesJornada();
-        double balanceJornada = FachadaServicios.getInstancia().getBalanceJornada();
-        int cantidadCarreras = FachadaServicios.getInstancia().getCantidadCarrerasJornada();
-        int cantidadCarrerasFinalizadas = FachadaServicios.getInstancia().getCantidadCarrerasFinalizadasJornada();
-        int cantidadCarrerasPendientes = FachadaServicios.getInstancia().getCantidadCarrerasPendientesJornada();
+        // Obtener jornada actual del estado de la vista
+        Jornada jornadaActual = (Jornada) session.getAttribute("jornadaActual");
+        if (jornadaActual == null) {
+            List<Jornada> jornadas = FachadaServicios.getInstancia().getJornadas();
+            if (jornadas != null && !jornadas.isEmpty()) {
+                jornadaActual = jornadas.get(0);
+                session.setAttribute("jornadaActual", jornadaActual);
+            } else {
+                return Commands.create(new Command("error", "No hay jornadas disponibles"));
+            }
+        }
+
+        // Pedimos los datos a la Fachada (jornada-aware)
+        double totalApostado = FachadaServicios.getInstancia().getTotalApostado(jornadaActual);
+        double totalPagado = FachadaServicios.getInstancia().getTotalPagado(jornadaActual);
+        double totalComisionesJornada = FachadaServicios.getInstancia().getTotalComisionesJornada(jornadaActual);
+        double balanceJornada = FachadaServicios.getInstancia().getBalanceJornada(jornadaActual);
+        int cantidadCarreras = FachadaServicios.getInstancia().getCantidadCarrerasJornada(jornadaActual);
+        int cantidadCarrerasFinalizadas = FachadaServicios.getInstancia().getCantidadCarrerasFinalizadasJornada(jornadaActual);
+        int cantidadCarrerasPendientes = FachadaServicios.getInstancia().getCantidadCarrerasPendientesJornada(jornadaActual);
         /**todo: implementar en FachadaServicios
          * Carreras Finalizadas en la jornada actual ordenadas por número descendente
          * Información: numero, hora de
@@ -65,13 +86,13 @@ public class TableroAdminPresentador {
          * pagado, caballo ganador, dividendo final
          * del ganador
          */
-        List<Carrera> resultadosCarreras = FachadaServicios.getInstancia().getResultadosCarrerasJornada();
+        List<Carrera> resultadosCarreras = FachadaServicios.getInstancia().getResultadosCarrerasJornada(jornadaActual);
         /**todo: implementar en FachadaServicios
          * Próximas carreras– son las carreras que no están Finalizadas (Información:
          * numero, estado, cantidad de caballos,
          * total apostado, cantidad de apuestas)
         */
-        List<Carrera> proximasCarreras = FachadaServicios.getInstancia().getProximasCarrerasJornada();
+        List<Carrera> proximasCarreras = FachadaServicios.getInstancia().getProximasCarrerasJornada(jornadaActual);
         return Commands.create(
                 new Command("mostrarTotalApostado", totalApostado),
                 new Command("mostrarTotalPagado", totalPagado),

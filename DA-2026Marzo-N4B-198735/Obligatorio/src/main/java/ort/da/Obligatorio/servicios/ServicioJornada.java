@@ -6,7 +6,6 @@ import java.util.List;
 
 import lombok.Getter;
 import ort.da.Obligatorio.dominio.Jornada;
-import ort.da.Obligatorio.excepciones.HipodromoException;
 
 @Getter
 public class ServicioJornada {
@@ -22,42 +21,36 @@ public class ServicioJornada {
         return jornadas;
     }
 
-    /// ****si no hay jornada actual devuelve la mas cercana anterior
-    public Date obtenerFechaMasCercanaAnterior() {
-        Date fecha = new Date(); // Fecha actual
-        Date fechaMasCercana = null;
-        for (Jornada j : jornadas) {
-            if (j == null || j.getFecha() == null) continue;
-            if (j.getFecha().before(fecha)) { // Si la fecha de la jornada es anterior a la fecha actual
-                if (fechaMasCercana == null || j.getFecha().after(fechaMasCercana)) {
-                    fechaMasCercana = j.getFecha(); // actualiza la fecha mas cercana anterior
-                }
+    public Jornada getJornadaActual() {
+        Date hoy = Jornada.truncarHora(new Date());
+
+        for (Jornada jornada : jornadas) {
+            if (jornada == null || jornada.getDia() == null)
+                continue;
+            Date diaJ = Jornada.truncarHora(jornada.getDia());
+            if (diaJ == null)
+                continue;
+            // si la fecha de hoy es igual o posterior a la fecha de la jornada (solo fecha), entonces es la jornada actual
+            if (!hoy.before(diaJ)) {
+                return jornada;
             }
         }
-        return fechaMasCercana;
 
+        return null;
     }
     
-    // Si no hay una fecha,
-    // se asigna la fecha más próxima anterior a la fecha actual
-//devuelve la jornada actual o la jornada con fecha anterior más cercana a la fecha actual
-    public Jornada getJornadaActual() throws HipodromoException {
-        try {
-            Date fechaMasCercanaAnterior = this.obtenerFechaMasCercanaAnterior();
-            for (Jornada jornada : this.getJornadas()) {
-                if (jornada.getFecha().equals(fechaMasCercanaAnterior)) {
-                    return jornada;
-                }
-            }
-            throw new HipodromoException("No se encontró una jornada con la fecha más cercana anterior.");
-        } catch (Exception e) {
-            throw new HipodromoException("Error al obtener la jornada actual: " + e.getMessage());
-        }
+
+    // las jornadas se agregan en orden cronologico inverso
+    public void agregar(Jornada jornada) {
+        this.jornadas.add(jornada);
     }
-    //obtener el balance de la jornada actual: total apostado - total pagado
-    public double getBalanceJornadaActual() throws HipodromoException {
+
+    // obtener el balance de la jornada actual: total apostado - total pagado
+    public double getBalanceJornadaActual() {
         return this.getJornadaActual().getBalanceJornada();
     }
 
-
+    public int getCantidadCarrerasJornada() {
+        return this.getJornadaActual().getCantidadCarreras();
+    }
 }
