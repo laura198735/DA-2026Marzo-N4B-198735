@@ -29,5 +29,6 @@ public class Finalizada implements IEstadoCarrera {
     public void finalizarCarrera(Carrera carrera) throws EstadoException {
         carrera.setEstadoCarrera(this); // Cambia el estado de la carrera a "Finalizada"
     }
+   
 
 }

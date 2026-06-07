@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import lombok.Data;
+
 import ort.da.Obligatorio.dominio.Jornada;
 
 @Data
@@ -31,9 +32,13 @@ public class JornadaDto {
         return jornada;
     }
 
+    public static JornadaDto from(Jornada jornada) {
+        return new JornadaDto(jornada);
+    }
     public static List<JornadaDto> fromList(List<Jornada> jornadas) {
         return jornadas.stream()
-                .map(JornadaDto::new)
+                .map(JornadaDto::from)
                 .toList();
     }
+
 }

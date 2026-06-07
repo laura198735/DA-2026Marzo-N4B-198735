@@ -57,6 +57,12 @@ public class ServicioJornada {
         }
     }
 
+    public int getCantidadProximasCarrerasJornada(Jornada jornada) throws HipodromoException {
+        if (jornada == null)
+            throw new HipodromoException("No hay jornada seleccionada");
+        return jornada.getCantidadProximasCarrerasJornada();
+    }
+
     public double getTotalApostado(Jornada jornada) throws HipodromoException {
         if (jornada == null)
             throw new HipodromoException("No hay jornada seleccionada");
@@ -104,6 +110,19 @@ public class ServicioJornada {
         }
         return c;
     }
+
+    public int getCantidadCarrerasFinalizadasJornada(Jornada jornada) throws HipodromoException {
+        if (jornada == null)
+            throw new HipodromoException("No hay jornada seleccionada");
+        if (jornada.getCarreras() == null)
+            return 0;
+        int c = 0;
+        for (Carrera ca : jornada.getCarreras()) {
+            if (ca.getEstadoCarrera() instanceof Finalizada)
+                c++;
+        }
+        return c;
+    }
     public int getCantidadCProximasCarrerasJornada(Jornada jornada) throws HipodromoException {
         if (jornada == null)
             throw new HipodromoException("No hay jornada seleccionada");
@@ -116,7 +135,7 @@ public class ServicioJornada {
         }
         return c;
     }
-    public List<Carrera> getResultadosCarrerasJornada(Jornada jornada) throws HipodromoException {
+    public List<Carrera> getResultadosCarrerasJornadaOrdenadas(Jornada jornada) throws HipodromoException {
         if (jornada == null)
             throw new HipodromoException("No hay jornada seleccionada");
         List<Carrera> res = new ArrayList<>();
@@ -130,7 +149,11 @@ public class ServicioJornada {
         return res;
     }
 
-    public List<Carrera> getProximasCarrerasJornada(Jornada jornada) throws HipodromoException {
+    public List<Carrera> getResultadosCarrerasJornadaOrdenadas() throws HipodromoException {
+        return getResultadosCarrerasJornadaOrdenadas(getJornadaActual());
+    }
+
+    public List<Carrera> getListaProximasCarrerasJornada(Jornada jornada) throws HipodromoException {
         if (jornada == null)
             throw new HipodromoException("No hay jornada seleccionada");
         List<Carrera> res = new ArrayList<>();
@@ -143,16 +166,25 @@ public class ServicioJornada {
         return res;
     }
 
+    public List<Carrera> getListaProximasCarrerasJornada() throws HipodromoException {
+        return getListaProximasCarrerasJornada(getJornadaActual());
+    }
+
 
    
 
 //auxiliares
     public Jornada getJornadaPorFecha(Date fechaSeleccionada) {
         try {
+            if (fechaSeleccionada == null) {
+                return null;
+            }
+
+            Date fechaNormalizada = Jornada.truncarHora(fechaSeleccionada);
             List<Jornada> jornadas = getJornadas();
             if (jornadas != null) {
                 for (Jornada j : jornadas) {
-                    if (j.getDia() != null && j.getDia().equals(fechaSeleccionada)) {
+                    if (j.getDia() != null && Jornada.truncarHora(j.getDia()).equals(fechaNormalizada)) {
                         return j;
                     }
                 }

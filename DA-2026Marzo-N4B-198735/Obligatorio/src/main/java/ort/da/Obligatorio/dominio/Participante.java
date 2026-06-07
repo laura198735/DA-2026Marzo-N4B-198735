@@ -7,7 +7,7 @@ import lombok.Getter;
 public class Participante {
     private Caballo caballo;
     private Carrera carrera;
-    private Estado estadoCarrera;
+    private IEstadoCarrera estadoCarrera;
     private double dividendoActual;
     private double dividendoFinal;
     private List<Apuesta> apuestas;

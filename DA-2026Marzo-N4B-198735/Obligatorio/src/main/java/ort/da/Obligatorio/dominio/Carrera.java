@@ -1,6 +1,5 @@
 package ort.da.Obligatorio.dominio;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class Carrera {
     public Carrera(int numeroCarrera, String nombre, Jornada jornada) {
         this.nombre = nombre;
         this.numeroCarrera = numeroCarrera;
-        this.jornada = new Jornada();
+        this.jornada = jornada;
         this.registros = new ArrayList<>();
         this.estadoCarrera = new Definida(); // estado inicial de la carrera es "Definida"
     }
@@ -42,6 +41,9 @@ public class Carrera {
         estadoCarrera.cerrarCarrera(this);
     };
 
+    public boolean estaFinalizada() {
+        return estadoCarrera instanceof Finalizada;
+    }
     // ganador.
     public int asignarGanador() throws EstadoException {
         return estadoCarrera.asignarGanador(this);
@@ -74,7 +76,7 @@ public class Carrera {
             if (registro.getApuestas() != null) {
                 for (Apuesta apuesta : registro.getApuestas()) {
                     if (apuesta.isGanadora()) {
-                        // Se paga el monto apostado multiplicado por el // valor
+                        // Se paga el monto apostado multiplicado por el valor
                         // del dividendo
                         double valorDividendo = registro.getDividendoActual();
                         total += apuesta.getMonto() * valorDividendo;

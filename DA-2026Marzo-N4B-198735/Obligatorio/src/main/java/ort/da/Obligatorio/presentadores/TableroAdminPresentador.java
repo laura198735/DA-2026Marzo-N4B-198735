@@ -52,7 +52,8 @@ public class TableroAdminPresentador {
 
     /**
      * Fecha de la jornada actual (inicialmente es la jornada de la fecha actual o
-     * la más próxima anterior si no hay jornada en el día, luego podrá ser cambiada por el usuario)
+     * la más próxima anterior si no hay jornada en el día, luego podrá ser cambiada
+     * por el usuario)
      */
     // utiliza la jornada actual guardada en sesión para obtener los datos
     // correspondientes a esa jornada y enviarlos a la vista mediante Commands
@@ -70,8 +71,8 @@ public class TableroAdminPresentador {
         }
 
         Jornada jornadaSeleccionada = FachadaServicios
-            .getInstancia()
-            .getJornadaActual();
+                .getInstancia()
+                .getJornadaActual();
 
         if (jornadaSeleccionada == null) {
             return Commands.create(new Command("error", "No existe una jornada para la fecha seleccionada"));
@@ -111,63 +112,34 @@ public class TableroAdminPresentador {
         double totalPagado = FachadaServicios.getInstancia().getTotalPagado();
         double totalComisionesJornada = FachadaServicios.getInstancia().getTotalComisionesJornada();
         double balanceJornada = FachadaServicios.getInstancia().getBalanceJornada();
-        int cantidadCarrerasJornada  = FachadaServicios.getInstancia().getCantidadCarrerasJornada();
+        int cantidadCarrerasJornada = FachadaServicios.getInstancia().getCantidadCarrerasJornada();
         int cantidadCarrerasFinalizadas = FachadaServicios.getInstancia()
                 .cantidadCarrerasFinalizadasJornada();
-         //    * • Cantidad de carreras que faltan por correr en la jornada actual
+             
+        // * • Cantidad de carreras que faltan por correr en la jornada actual
         int cantidadProximasCarreras = FachadaServicios.getInstancia().getCantidadProximasCarrerasJornada();
-       List<Carrera> listaCarrerasFinalizadasOrdenadas = FachadaServicios.getInstancia().getResultadosCarrerasJornada();
-/*
-         * • Carreras Finalizadas en la jornada actual ordenadas por número descendente
-         * Información: numero, hora de
-         * finalización, cantidad de caballos que participaron, total apostado, total
-         * pagado, caballo ganador, dividendo final
-         * del ganador*/ 
+        
+        List<Carrera> proximasCarreras = FachadaServicios.getInstancia().getListaProximasCarrerasJornada();
 
-
-/**     * • Próximas carreras– son las carreras que no están Finalizadas (Información:
-         * numero, estado, cantidad de caballos,
-         * total apostado, cantidad de apuestas) */
-
-        /**
-         
-         * 2) Opcionalmente el administrador indica que desea avanzar o retroceder una
-         * jornada.
-         * 3) El sistema actualiza la información correspondiente a la jornada
-         * establecida por el usuario
-         * 
-         * 4) Opcionalmente el usuario indica que desea gestionar una de las carreras
-         * próximas a correrse.
-         * 5) El sistema ejecuta el caso de uso Gestionar una carrera para la carrera
-         * especificada.
-         */
-
-        /**
-         * implementar en FachadaServicios
-         * Carreras Finalizadas en la jornada actual ordenadas por número descendente
-         * Información: numero, hora de
-         * finalización, cantidad de caballos que participaron, total apostado, total
-         * pagado, caballo ganador, dividendo final
-         * del ganador
-         */
-        List<Carrera> resultadosCarreras = FachadaServicios.getInstancia().getResultadosCarrerasJornada() ;
+        List<Carrera> resultadosCarrerasOrdenadas = FachadaServicios.getInstancia().getResultadosCarrerasJornadaOrdenadas();
         /**
          * todo: implementar en FachadaServicios
          * Próximas carreras– son las carreras que no están Finalizadas (Información:
          * numero, estado, cantidad de caballos,
          * total apostado, cantidad de apuestas)
          */
-        List<Carrera> proximasCarreras = FachadaServicios.getInstancia().getListaProximasCarrerasJornada();
+       
         return Commands.create(
-            new Command("mostrarTotalApostado", totalApostado),
-            new Command("mostrarTotalPagado", totalPagado),
-            new Command("mostrarTotalComisionesJornada", totalComisionesJornada),
-            new Command("mostrarBalanceJornada", balanceJornada),
-            new Command("mostrarCantidadCarreras", cantidadCarrerasJornada),
-            new Command("mostrarCantidadCarrerasFinalizadas", cantidadCarrerasFinalizadas),
-            new Command("mostrarCantidadCarrerasPendientes", cantidadProximasCarreras),
-            new Command("mostrarCantidadProximasCarreras", cantidadProximasCarreras),
-            new Command("mostrarProximasCarreras", proximasCarreras),
-            new Command("mostrarResultadosCarreras", resultadosCarreras));
+                new Command("mostrarJornadaActual", new JornadaDto(jornadaActual)),
+                new Command("mostrarTotalApostado", totalApostado),
+                new Command("mostrarTotalPagado", totalPagado),
+                new Command("mostrarTotalComisionesJornada", totalComisionesJornada),
+                new Command("mostrarBalanceJornada", balanceJornada),
+                new Command("mostrarCantidadCarreras", cantidadCarrerasJornada),
+                new Command("mostrarCantidadCarrerasFinalizadas", cantidadCarrerasFinalizadas),
+                new Command("mostrarCantidadCarrerasPendientes", cantidadProximasCarreras),
+                new Command("mostrarProximasCarreras", proximasCarreras),
+                new Command("mostrarResultadosCarreras", resultadosCarrerasOrdenadas));
+                
     }
 }

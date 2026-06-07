@@ -1,5 +1,6 @@
 package ort.da.Obligatorio.dominio;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -13,16 +14,18 @@ public class Jornada {
     private List<Carrera> carreras;
 
     public Jornada() {
+        this.carreras = new ArrayList<>();
     }
 
     public Jornada(int numero, Date fecha) {
         this.numero = numero;
-        this.dia = fecha == null ? new Date() : fecha;
-
+        this.dia = fecha == null ? new Date() : truncarHora(fecha);
+        this.carreras = new ArrayList<>();
     }
 
-    public Jornada(Date dia) {// constructor para crear la jornada actual
+    public Jornada(Date dia) {
         this.dia = truncarHora(dia);
+        this.carreras = new ArrayList<>();
     }
 
     // truncarle la hora asi se puede comparar mas facil
@@ -109,7 +112,9 @@ public class Jornada {
 
         return cantidad;
     }
-// recorre las carreras de la jornada y cuenta las que no están finalizadas de la Jornada actual
+
+    // recorre las carreras de la jornada y cuenta las que no están finalizadas de
+    // la Jornada actual
     public int getCantidadProximasCarrerasJornada() {
         int cantidad = 0;
         List<Carrera> carreras = getCarreras();

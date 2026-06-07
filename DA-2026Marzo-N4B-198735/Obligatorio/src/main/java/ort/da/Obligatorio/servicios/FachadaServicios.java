@@ -9,10 +9,10 @@ import ort.da.Obligatorio.dominio.Credencial;
 import ort.da.Obligatorio.dominio.Jornada;
 import ort.da.Obligatorio.dominio.Modalidad;
 import ort.da.Obligatorio.dominio.Usuario;
+import ort.da.Obligatorio.dtos.JornadaDto;
 import ort.da.Obligatorio.dominio.Finalizada;
 import ort.da.Obligatorio.excepciones.AutenticacionException;
 import ort.da.Obligatorio.excepciones.HipodromoException;
-
 
 public class FachadaServicios {
     private static FachadaServicios instancia;
@@ -77,32 +77,31 @@ public class FachadaServicios {
     }
 
     // * Cantidad de carreras Finalizadas en la jornada actual
-    public int  cantidadCarrerasFinalizadasJornada() throws HipodromoException {
-    return servicioJornada.getCantidadCarrerasFinalizadasJornada();
+    public int cantidadCarrerasFinalizadasJornada() throws HipodromoException {
+        return servicioJornada.getCantidadCarrerasFinalizadasJornada();
     }
 
     public int getCantidadProximasCarrerasJornada() {
         return servicioJornada.getCantidadProximasCarrerasJornada();
     }
 
-    public List<Carrera> getResultadosCarrerasJornada() throws HipodromoException {
-       return servicioJornada.getJornadaActual().getResultadosCarrerasJornada();    
-
+    public List<Carrera> getResultadosCarrerasJornadaOrdenadas() throws HipodromoException {
+        return servicioJornada.getResultadosCarrerasJornadaOrdenadas((servicioJornada.getJornadaActual()));
     }
 
     public List<Carrera> getListaProximasCarrerasJornada() throws HipodromoException {
         return servicioJornada.getJornadaActual().getListaProximasCarrerasJornada();
-
-    }
-
+    }  
     /*
+     * • Carreras Finalizadas en la jornada actual ordenadas por número descendente
+     * Información: numero, hora de
      * finalización, cantidad de caballos que participaron, total apostado, total
      * pagado, caballo ganador, dividendo final
      * del ganador
      * • Próximas carreras– son las carreras que no están Finalizadas (Información:
      * numero, estado, cantidad de caballos,
      * total apostado, cantidad de apuestas)
-     */
+        */
 
     public Jornada getJornadaActual() throws HipodromoException {
         try {
@@ -111,6 +110,5 @@ public class FachadaServicios {
             throw new HipodromoException("Error al obtener la jornada actual: " + e.getMessage());
         }
     }
-
 
 }

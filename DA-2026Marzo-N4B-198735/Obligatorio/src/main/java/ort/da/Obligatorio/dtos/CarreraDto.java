@@ -1,7 +1,6 @@
 package ort.da.Obligatorio.dtos;
 
 import ort.da.Obligatorio.dominio.Carrera;
-import ort.da.Obligatorio.dominio.Estado;
 import ort.da.Obligatorio.dominio.IEstadoCarrera;
 import ort.da.Obligatorio.dominio.Participante;
 import ort.da.Obligatorio.dominio.Jornada;
@@ -14,7 +13,7 @@ import lombok.Data;
 public class CarreraDto {
     private int numero;
     private String nombre;
-    private IEstadoCarrera   estado;
+    private IEstadoCarrera  estadoCarrera;
     private List<Participante> registros;
     private Jornada jornada;
 
@@ -24,7 +23,7 @@ public class CarreraDto {
     public CarreraDto(Carrera carrera) {
         this.numero = carrera.getNumeroCarrera();
         this.nombre = carrera.getNombre();
-        this.estado = carrera.getEstadoCarrera();
+        this.estadoCarrera = carrera.getEstadoCarrera();
         this.registros = carrera.getRegistros();
         this.jornada = carrera.getJornada();
     }
@@ -33,7 +32,7 @@ public class CarreraDto {
         Carrera carrera = new Carrera();
         carrera.setNumeroCarrera(this.numero);
         carrera.setNombre(this.nombre);
-        carrera.setEstadoCarrera(this.estado);
+        carrera.setEstadoCarrera(this.estadoCarrera);
         carrera.setRegistros(this.registros);
         carrera.setJornada(this.jornada);
         return carrera;
