@@ -26,7 +26,7 @@ public class Jornada {
     }
 
     // truncarle la hora asi se puede comparar mas facil
-        public static Date truncarHora(Date date) {
+    public static Date truncarHora(Date date) {
         if (date == null) {
             return null;
         }
@@ -90,8 +90,50 @@ public class Jornada {
         return getTotalApostado() - getTotalPagado();
     }
 
-    public int getCantidadCarreras() {
+    public int getCantidadCarrerasJornada() {
         List<Carrera> carreras = getCarreras();
         return carreras == null ? 0 : carreras.size();
+    }
+
+    public int getCantidadCarrerasFinalizadasJornada() {
+        int cantidad = 0;
+        List<Carrera> carreras = getCarreras();
+
+        if (carreras != null) {
+            for (Carrera carrera : carreras) {
+                if (carrera != null && carrera.getEstadoCarrera() instanceof Finalizada) {
+                    cantidad++;
+                }
+            }
+        }
+
+        return cantidad;
+    }
+// recorre las carreras de la jornada y cuenta las que no están finalizadas de la Jornada actual
+    public int getCantidadProximasCarrerasJornada() {
+        int cantidad = 0;
+        List<Carrera> carreras = getCarreras();
+
+        if (carreras != null) {
+            for (Carrera carrera : carreras) {
+                if (carrera.getJornada() != null && carrera.getJornada().equals(this)
+                        && !(carrera.getEstadoCarrera() instanceof Finalizada)) {
+                    cantidad++;
+                }
+            }
+        }
+        return cantidad;
+    }
+
+    public List<Carrera> getResultadosCarrerasJornada() {
+        return getCarreras().stream()
+                .filter(c -> c.getEstadoCarrera() instanceof Finalizada)
+                .toList();
+    }
+
+    public List<Carrera> getListaProximasCarrerasJornada() {
+        return getCarreras().stream()
+                .filter(c -> !(c.getEstadoCarrera() instanceof Finalizada))
+                .toList();
     }
 }

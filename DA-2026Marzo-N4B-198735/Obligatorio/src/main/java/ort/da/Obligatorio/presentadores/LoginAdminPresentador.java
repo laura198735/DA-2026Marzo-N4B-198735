@@ -23,7 +23,7 @@ public class LoginAdminPresentador {
             Credencial credencial = credencialDto.toCredencial();
             System.out.println("Nombre recibido: " + credencial.getNombre());
             System.out.println("Password recibido: " + credencial.getPassword());
-
+            
             Usuario administrador = FachadaServicios.getInstancia().autenticar(credencial);
             session.setAttribute("usuarioLogueado", administrador);
 

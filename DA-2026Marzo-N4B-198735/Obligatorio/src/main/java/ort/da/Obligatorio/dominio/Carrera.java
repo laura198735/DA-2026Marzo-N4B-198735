@@ -7,7 +7,6 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import ort.da.Obligatorio.excepciones.EstadoException;
-import ort.da.Obligatorio.excepciones.HipodromoException;
 
 @Getter
 @Setter

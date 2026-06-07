@@ -41,14 +41,29 @@ o 1 carrera con fecha de una semana posterior en estado Definida*/
 			Caballo caballo2 = new Caballo("Tornado", 7);
 			Caballo caballo3 = new Caballo("Centella", 5);
 
-			Jornada jornada1 = new Jornada();
-			Jornada jornada2 = new Jornada(1, new Date(System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000L)); // hace una semana
-			Jornada jornada3 = new Jornada(2, new Date(System.currentTimeMillis() - 1* 24 * 60 * 60 * 1000L)); //hace 1 dia
-			Jornada jornada4 = new Jornada(3, new Date(System.currentTimeMillis())); // hoy		
+			Jornada jornada1 = new Jornada(1, new Date(System.currentTimeMillis() - 30 * 24 * 60 * 60 * 1000L)); // hace un mes
+			Jornada jornada2 = new Jornada(9, new Date(System.currentTimeMillis() - 10* 24 * 60 * 60 * 1000L)); // hace 10 dias
+			Jornada jornada3 = new Jornada(2, new Date(System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000L)); // hace una semana
+			Jornada jornada4 = new Jornada(3, new Date(System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000L)); // hace una semana
+			Jornada jornada5 = new Jornada(4, new Date(System.currentTimeMillis() - 1* 24 * 60 * 60 * 1000L)); //hace 1 dia
+			Jornada jornada6 = new Jornada(5, new Date(System.currentTimeMillis())); // hoy		
+			Jornada jornada7 = new Jornada(6, new Date(System.currentTimeMillis() + 1* 24 * 60 * 60 * 1000L)); // mañana
+			Jornada jornada8 = new Jornada(7, new Date(System.currentTimeMillis() + 2* 24 * 60 * 60 * 1000L)); // pasado mañana
+			Jornada jornada9 = new Jornada(8, new Date(System.currentTimeMillis() + 3* 24 * 60 * 60 * 1000L)); // dentro de tres días
+			Jornada jornada10 = new Jornada(10, new Date(System.currentTimeMillis() + 30* 24 * 60 * 60 * 1000L)); // dentro de un mes
+			
+			
+			
 			Carrera carrera1 = new Carrera(1,"Gran Premio Inaugural", jornada1);
 			Carrera carrera2 = new Carrera(2,"Clásico de Verano", jornada2);
-			Carrera carrera3 = new Carrera(3,"Carrera del Futuro", jornada3);
+			Carrera carrera3 = new Carrera(3,"Carrera Internacional", jornada3);
 			Carrera carrera4 = new Carrera(4,"Carrera de Hoy", jornada4);
+			Carrera carrera5 = new Carrera(5,"Carrera de Mañana", jornada5);
+			Carrera carrera6 = new Carrera(6,"Carrera de Interfaces", jornada6);
+			Carrera carrera7 = new Carrera(7,"Carrera de Patrones", jornada7);
+			Carrera carrera8 = new Carrera(8,"Carrera de Dentro de Cuatro Días", jornada8);
+			Carrera carrera9 = new Carrera(9,"Carrera de Dentro de Cinco Días", jornada9);
+			Carrera carrera10 = new Carrera(10,"Carrera del futuro", jornada10);
 
 			// EstadoCarrera type expected by Participante constructor — provide a simple subclass here
 			//EstadoCarrera estadoCarrera = new EstadoCarrera()
@@ -59,6 +74,12 @@ o 1 carrera con fecha de una semana posterior en estado Definida*/
 			Participante rp4 = new Participante(caballo3, carrera2, 0.0);
 			Participante rp5 = new Participante(caballo1, carrera3,  3.0);
 			Participante rp6 = new Participante(caballo3, carrera4, 0.0);
+			Participante rp7 = new Participante(caballo2, carrera5, 0.0);
+			Participante rp8 = new Participante(caballo3, carrera6, 0.0);
+			Participante rp9 = new Participante(caballo1, carrera7, 3.0);
+			Participante rp10 = new Participante(caballo2, carrera8, 0.0);
+			Participante rp11 = new Participante(caballo3, carrera9, 0.0);
+			Participante rp12 = new Participante(caballo1, carrera10, 3.0);	
 
 			List<Object> datosPrueba = Arrays.asList(
 				administrador1,
@@ -76,7 +97,13 @@ o 1 carrera con fecha de una semana posterior en estado Definida*/
 				rp3,
 				rp4,
 				rp5,
-				rp6
+				rp6,
+				rp7,
+				rp8,
+				rp9,
+				rp10,
+				rp11,
+				rp12
 			);
 
 			System.out.println("Datos de prueba creados exitosamente: " + datosPrueba.size() + " objetos.");
@@ -91,9 +118,18 @@ o 1 carrera con fecha de una semana posterior en estado Definida*/
 			System.out.println("Carrera 3: Carrera del Futuro con Relámpago #3 y Centella #5");
 			System.out.println("Carrera 4: Carrera de Hoy con Tornado #7 y Centella #5");
 
-			// Agregar jornada de prueba al sistema
+			// Agregar jornadas al sistema
 			ort.da.Obligatorio.servicios.FachadaServicios.getInstancia().getJornadas().add(jornada1);
-
+			ort.da.Obligatorio.servicios.FachadaServicios.getInstancia().getJornadas().add(jornada2);
+			ort.da.Obligatorio.servicios.FachadaServicios.getInstancia().getJornadas().add(jornada3);
+			ort.da.Obligatorio.servicios.FachadaServicios.getInstancia().getJornadas().add(jornada4);
+			ort.da.Obligatorio.servicios.FachadaServicios.getInstancia().getJornadas().add(jornada5);
+			ort.da.Obligatorio.servicios.FachadaServicios.getInstancia().getJornadas().add(jornada6);
+			ort.da.Obligatorio.servicios.FachadaServicios.getInstancia().getJornadas().add(jornada7);
+			ort.da.Obligatorio.servicios.FachadaServicios.getInstancia().getJornadas().add(jornada8);
+			ort.da.Obligatorio.servicios.FachadaServicios.getInstancia().getJornadas().add(jornada9);
+			ort.da.Obligatorio.servicios.FachadaServicios.getInstancia().getJornadas().add(jornada10);
+			ort.da.Obligatorio.servicios.FachadaServicios.getInstancia().getJornadas().forEach(j -> System.out.println("Jornada agregada: " + j.getNumero() + " - " + j.getDia()));
 		} catch (Exception e) {
 			System.out.println("Error al crear datos de prueba: " + e.getMessage());
 		}
