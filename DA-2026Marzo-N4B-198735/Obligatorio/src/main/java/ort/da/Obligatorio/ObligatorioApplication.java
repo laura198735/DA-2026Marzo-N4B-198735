@@ -1,7 +1,6 @@
 package ort.da.Obligatorio;
 
 import java.sql.Date;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.boot.SpringApplication;
@@ -10,11 +9,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import ort.da.Obligatorio.dominio.Administrador;
 import ort.da.Obligatorio.dominio.Caballo;
 import ort.da.Obligatorio.dominio.Carrera;
-
-//import ort.da.Obligatorio.dominio.Estado;
 import ort.da.Obligatorio.dominio.Jornada;
 import ort.da.Obligatorio.dominio.Jugador;
 import ort.da.Obligatorio.dominio.Participante;
+import ort.da.Obligatorio.servicios.FachadaServicios;
 
 @SpringBootApplication
 public class ObligatorioApplication {
@@ -24,19 +22,7 @@ public class ObligatorioApplication {
 		SpringApplication.run(ObligatorioApplication.class, args);
 	}
 
-	/*
-	 * 3 carreras con fecha del día actual en estado Definida y sin apuestas a
-	 * ningún caballo.
-	 * o 2 carreras con fecha de una semana anterior a la fecha actual en estado
-	 * Cerrada, con apuestas para
-	 * todos los caballos participantes (entre 10 y 20 apuestas para cada uno
-	 * realizadas por jugadores
-	 * diferentes).
-	 * o 1 carrera con fecha de una semana posterior en estado Definida
-
-	*/
 	public static void crearDatosPrueba() {
-
 		try {
 			Administrador administrador1 = new Administrador("a1", "a1");
 			Administrador administrador2 = new Administrador("a2", "a2");
@@ -49,143 +35,142 @@ public class ObligatorioApplication {
 			Caballo caballo3 = new Caballo("Centella", 5);
 			Caballo caballo4 = new Caballo("Rayo", 2);
 			Caballo caballo5 = new Caballo("Trueno", 4);
-
 			Caballo caballo6 = new Caballo("Vendaval", 6);
 
-			Jornada jornada1 = new Jornada(1, new Date(System.currentTimeMillis() - 30 * 24 * 60 * 60 * 1000L)); 
-			Jornada jornada2 = new Jornada(9, new Date(System.currentTimeMillis() - 10 * 24 * 60 * 60 * 1000L)); 
-			Jornada jornada3 = new Jornada(2, new Date(System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000L)); 
-			Jornada jornada4 = new Jornada(3, new Date(System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000L)); 
-			Jornada jornada5 = new Jornada(4, new Date(System.currentTimeMillis() - 1 * 24 * 60 * 60 * 1000L)); 
-			Jornada jornada6 = new Jornada(5, new Date(System.currentTimeMillis())); // hoy
-			Jornada jornada7 = new Jornada(6, new Date(System.currentTimeMillis() + 1 * 24 * 60 * 60 * 1000L)); 
-			Jornada jornada8 = new Jornada(7, new Date(System.currentTimeMillis() + 2 * 24 * 60 * 60 * 1000L)); 
-			Jornada jornada9 = new Jornada(8, new Date(System.currentTimeMillis() + 3 * 24 * 60 * 60 * 1000L)); 
-			Jornada jornada10 = new Jornada(10, new Date(System.currentTimeMillis() + 30 * 24 * 60 * 60 * 1000L)); 
+			long dia = 24 * 60 * 60 * 1000L;
 
-			Carrera carrera1 = new Carrera(1, "Gran Premio Inaugural", jornada1);
-			Carrera carrera2 = new Carrera(2, "Clásico de Verano", jornada2);
-			Carrera carrera3 = new Carrera(3, "Carrera Internacional", jornada3);
-			Carrera carrera4 = new Carrera(4, "Carrera de Hoy", jornada4);
-			Carrera carrera5 = new Carrera(5, "Carrera de Mañana", jornada5);
-			Carrera carrera6 = new Carrera(6, "Carrera de Interfaces", jornada6);
-			Carrera carrera7 = new Carrera(7, "Carrera de Patrones", jornada7);
-			Carrera carrera8 = new Carrera(8, "Carrera de Dentro de Cuatro Días", jornada8);
-			Carrera carrera9 = new Carrera(9, "Carrera de Dentro de Cinco Días", jornada9);
+			Jornada jornada1 = new Jornada(1, new Date(System.currentTimeMillis() - 30 * dia));
+			Jornada jornada2 = new Jornada(2, new Date(System.currentTimeMillis() - 10 * dia));
+			Jornada jornada3 = new Jornada(3, new Date(System.currentTimeMillis() + 7 * dia));
+			Jornada jornada4 = new Jornada(4, new Date(System.currentTimeMillis() - 7 * dia));
+			Jornada jornada5 = new Jornada(5, new Date(System.currentTimeMillis() - 1 * dia));
+			Jornada jornada6 = new Jornada(6, new Date(System.currentTimeMillis()));
+			Jornada jornada7 = new Jornada(7, new Date(System.currentTimeMillis() + 1 * dia));
+			Jornada jornada8 = new Jornada(8, new Date(System.currentTimeMillis() + 2 * dia));
+			Jornada jornada9 = new Jornada(9, new Date(System.currentTimeMillis() + 3 * dia));
+			Jornada jornada10 = new Jornada(10, new Date(System.currentTimeMillis() + 30 * dia));
 
-			Carrera carrera10 = new Carrera(10, "Carrera del futuro", jornada10);
+			Carrera carrera1 = new Carrera(1, "Velocidad Suprema", jornada1);
+			Carrera carrera2 = new Carrera(2, "Gran Premio Oriental", jornada1);
+			Carrera carrera3 = new Carrera(3, "Copa Montevideo", jornada1);
 
-			// agrega carreras a las jornadas
-			jornada1.getCarreras().add(carrera1);
-			jornada2.getCarreras().add(carrera2);
-			jornada3.getCarreras().add(carrera3);
-			jornada4.getCarreras().add(carrera4);
-			jornada5.getCarreras().add(carrera5);
-			jornada6.getCarreras().add(carrera6);
-			jornada7.getCarreras().add(carrera7);
-			jornada8.getCarreras().add(carrera8);
-			jornada9.getCarreras().add(carrera9);
-			jornada10.getCarreras().add(carrera10);
+			Carrera carrera4 = new Carrera(4, "Desafío del Sur", jornada2);
+			Carrera carrera5 = new Carrera(5, "Clásico de los Campeones", jornada2);
+			Carrera carrera6 = new Carrera(6, "Trofeo Libertad", jornada2);
 
-			
+			Carrera carrera7 = new Carrera(7, "Gran Derby Nacional", jornada3);
+			Carrera carrera8 = new Carrera(8, "Premio Primavera", jornada3);
+			Carrera carrera9 = new Carrera(9, "Carrera de las Estrellas", jornada3);
 
-			Participante rp1 = new Participante(caballo1, carrera1, 3.0);
-			Participante rp2 = new Participante(caballo2, carrera1, .0);
-			Participante rp3 = new Participante(caballo2, carrera2, 0.0);
-			Participante rp4 = new Participante(caballo3, carrera2, 0.0);
-			Participante rp5 = new Participante(caballo1, carrera3, 3.0);
-			Participante rp6 = new Participante(caballo3, carrera4, 0.0);
-			Participante rp7 = new Participante(caballo2, carrera5, 0.0);
-			Participante rp8 = new Participante(caballo3, carrera6, 0.0);
-			Participante rp9 = new Participante(caballo1, carrera7, 3.0);
-			Participante rp10 = new Participante(caballo2, carrera8, 0.0);
-			Participante rp11 = new Participante(caballo3, carrera9, 0.0);
-			Participante rp12 = new Participante(caballo1, carrera10, 3.0);
+			Carrera carrera10 = new Carrera(10, "Desafío del Hipódromo", jornada4);
+			Carrera carrera11 = new Carrera(11, "Clásico Invierno", jornada4);
+			Carrera carrera12 = new Carrera(12, "Premio Relámpago", jornada4);
 
-			List<Object> datosPrueba = Arrays.asList(
-					administrador1,
-					administrador2,
-					jugador1,
-					jugador2,
-					caballo1,
-					caballo2,
-					caballo3,
-					caballo4,
-					caballo5,
-					caballo6,
-					jornada1,
-					carrera1,
-					carrera2,
-					rp1,
-					rp2,
-					rp3,
-					rp4,
-					rp5,
-					rp6,
-					rp7,
-					rp8,
-					rp9,
-					rp10,
-					rp11,
-					rp12);
+			Carrera carrera13 = new Carrera(13, "Gran Premio Verano", jornada5);
+			Carrera carrera14 = new Carrera(14, "Copa de Oro", jornada5);
+			Carrera carrera15 = new Carrera(15, "Clásico del Río", jornada5);
 
-			/*System.out.println("Datos de prueba creados exitosamente: " + datosPrueba.size() + " objetos.");
-			System.out.println("Administrador 1: a1 / a1 / Usuario Administrador");
-			System.out.println("Administrador 2: a2 / a2 / Admin Secundario");
-			System.out.println("Jugador 1: j1 / j1 / Usuario Jugador / saldo 2000");
-			System.out.println("Jugador 2: j2 / j2 / Jugador Prueba / saldo 3500");
-			System.out.println("Comision del hipodromo: 10%");
-			System.out.println("Carrera 1: Gran Premio Inaugural con Relámpago #3 y Tornado #7");
+			Carrera carrera16 = new Carrera(16, "Premio Centenario", jornada6);
+			Carrera carrera17 = new Carrera(17, "Carrera de Campeones", jornada6);
+			Carrera carrera18 = new Carrera(18, "Desafío del Este", jornada6);
 
-			System.out.println("Carrera 2: Clásico de Verano con Tornado #2 y Centella #5");
-			System.out.println("Carrera 3: Carrera del Futuro con Relámpago #3 y Centella #5");
-			System.out.println("Carrera 4: Carrera de Hoy con Tornado #7 y Centella #5");*/
+			Carrera carrera19 = new Carrera(19, "Trofeo Victoria", jornada7);
+			Carrera carrera20 = new Carrera(20, "Gran Premio Internacional", jornada7);
+			Carrera carrera21 = new Carrera(21, "Premio Horizonte", jornada7);
 
-			// Agregar jornadas al sistema
-			ort.da.Obligatorio.servicios.FachadaServicios.getInstancia().getJornadas().add(jornada1);
-			ort.da.Obligatorio.servicios.FachadaServicios.getInstancia().getJornadas().add(jornada2);
-			ort.da.Obligatorio.servicios.FachadaServicios.getInstancia().getJornadas().add(jornada3);
-			ort.da.Obligatorio.servicios.FachadaServicios.getInstancia().getJornadas().add(jornada4);
-			ort.da.Obligatorio.servicios.FachadaServicios.getInstancia().getJornadas().add(jornada5);
-			ort.da.Obligatorio.servicios.FachadaServicios.getInstancia().getJornadas().add(jornada6);
-			ort.da.Obligatorio.servicios.FachadaServicios.getInstancia().getJornadas().add(jornada7);
-			ort.da.Obligatorio.servicios.FachadaServicios.getInstancia().getJornadas().add(jornada8);
-			ort.da.Obligatorio.servicios.FachadaServicios.getInstancia().getJornadas().add(jornada9);
-			ort.da.Obligatorio.servicios.FachadaServicios.getInstancia().getJornadas().add(jornada10);
-		
+			Carrera carrera22 = new Carrera(22, "Copa del Plata", jornada8);
+			Carrera carrera23 = new Carrera(23, "Clásico Federal", jornada8);
+			Carrera carrera24 = new Carrera(24, "Premio Eclipse", jornada8);
 
-			jornada1.getCarreras().add(carrera1);
-			jornada2.getCarreras().add(carrera2);
-			jornada3.getCarreras().add(carrera3);
-			jornada4.getCarreras().add(carrera4);
-			jornada5.getCarreras().add(carrera5);
-			jornada6.getCarreras().add(carrera6);
-			jornada7.getCarreras().add(carrera7);
-			jornada8.getCarreras().add(carrera8);
-			jornada9.getCarreras().add(carrera9);
-			jornada10.getCarreras().add(carrera10);
+			Carrera carrera25 = new Carrera(25, "Gran Premio Uruguay", jornada9);
+			Carrera carrera26 = new Carrera(26, "Desafío de Campeones", jornada9);
+			Carrera carrera27 = new Carrera(27, "Premio Tradición", jornada9);
 
-			carrera1.getRegistros().add(rp1);
-			carrera1.getRegistros().add(rp2);
-			carrera2.getRegistros().add(rp3);
-			carrera2.getRegistros().add(rp4);
-			carrera3.getRegistros().add(rp5);
-			carrera4.getRegistros().add(rp6);
-			carrera5.getRegistros().add(rp7);
-			carrera6.getRegistros().add(rp8);
-			carrera7.getRegistros().add(rp9);
-			carrera8.getRegistros().add(rp10);
-			carrera9.getRegistros().add(rp11);
-			carrera10.getRegistros().add(rp12);		
+			Carrera carrera28 = new Carrera(28, "Copa Final", jornada10);
+			Carrera carrera29 = new Carrera(29, "Clásico Clausura", jornada10);
+			Carrera carrera30 = new Carrera(30, "Gran Premio Fin de Temporada", jornada10);
 
+			agregarCarreras(jornada1, carrera1, carrera2, carrera3);
+			agregarCarreras(jornada2, carrera4, carrera5, carrera6);
+			agregarCarreras(jornada3, carrera7, carrera8, carrera9);
+			agregarCarreras(jornada4, carrera10, carrera11, carrera12);
+			agregarCarreras(jornada5, carrera13, carrera14, carrera15);
+			agregarCarreras(jornada6, carrera16, carrera17, carrera18);
+			agregarCarreras(jornada7, carrera19, carrera20, carrera21);
+			agregarCarreras(jornada8, carrera22, carrera23, carrera24);
+			agregarCarreras(jornada9, carrera25, carrera26, carrera27);
+			agregarCarreras(jornada10, carrera28, carrera29, carrera30);
+
+			agregarParticipantes(carrera1, caballo1, caballo2);
+			agregarParticipantes(carrera2, caballo2, caballo3);
+			agregarParticipantes(carrera3, caballo1, caballo3);
+			agregarParticipantes(carrera4, caballo2, caballo3);
+			agregarParticipantes(carrera5, caballo1, caballo2);
+			agregarParticipantes(carrera6, caballo3, caballo1);
+			agregarParticipantes(carrera7, caballo2, caballo3);
+			agregarParticipantes(carrera8, caballo1, caballo2);
+			agregarParticipantes(carrera9, caballo3, caballo1);
+			agregarParticipantes(carrera10, caballo2, caballo3);
+			agregarParticipantes(carrera11, caballo1, caballo2);
+			agregarParticipantes(carrera12, caballo3, caballo1);
+			agregarParticipantes(carrera13, caballo2, caballo3);
+			agregarParticipantes(carrera14, caballo1, caballo2);
+			agregarParticipantes(carrera15, caballo3, caballo1);
+			agregarParticipantes(carrera16, caballo2, caballo3);
+			agregarParticipantes(carrera17, caballo1, caballo2);
+			agregarParticipantes(carrera18, caballo3, caballo1);
+			agregarParticipantes(carrera19, caballo2, caballo3);
+			agregarParticipantes(carrera20, caballo1, caballo2);
+			agregarParticipantes(carrera21, caballo3, caballo1);
+			agregarParticipantes(carrera22, caballo2, caballo3);
+			agregarParticipantes(carrera23, caballo1, caballo2);
+			agregarParticipantes(carrera24, caballo3, caballo1);
+			agregarParticipantes(carrera25, caballo2, caballo3);
+			agregarParticipantes(carrera26, caballo1, caballo2);
+			agregarParticipantes(carrera27, caballo3, caballo1);
+			agregarParticipantes(carrera28, caballo2, caballo3);
+			agregarParticipantes(carrera29, caballo1, caballo2);
+			agregarParticipantes(carrera30, caballo3, caballo1);
+
+			List<Jornada> jornadas = FachadaServicios.getInstancia().getJornadas();
+			jornadas.clear();
+
+			jornadas.add(jornada1);
+			jornadas.add(jornada2);
+			jornadas.add(jornada3);
+			jornadas.add(jornada4);
+			jornadas.add(jornada5);
+			jornadas.add(jornada6);
+			jornadas.add(jornada7);
+			jornadas.add(jornada8);
+			jornadas.add(jornada9);
+			jornadas.add(jornada10);
+
+			System.out.println("Datos de prueba creados correctamente.");
+			System.out.println("Admin: a1 / a1");
+			System.out.println("Admin: a2 / a2");
+			System.out.println("Jugador: j1 / j1");
+			System.out.println("Jugador: j2 / j2");
 
 		} catch (Exception e) {
-				System.err.println("Error al crear datos de prueba: " + e.getMessage());	
+			System.err.println("Error al crear datos de prueba: " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
-}
+	private static void agregarCarreras(Jornada jornada, Carrera... carreras) {
+		for (Carrera carrera : carreras) {
+			jornada.getCarreras().add(carrera);
+		}
+	}
 
+	private static void agregarParticipantes(Carrera carrera, Caballo... caballos) {
+		for (Caballo caballo : caballos) {
+			Participante participante = new Participante(caballo, carrera);
+			carrera.getRegistros().add(participante);
+		}
+	}
+}
 
 
 

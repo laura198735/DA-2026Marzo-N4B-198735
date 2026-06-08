@@ -12,13 +12,13 @@ public class Participante {
     private double dividendoFinal;
     private List<Apuesta> apuestas;
 
-    public Participante(Caballo caballo, Carrera carrera, double dividendo) {
+    public Participante(Caballo caballo, Carrera carrera) {
         this.caballo = caballo;
         this.carrera = carrera;
-        this.dividendoActual = dividendo;
-
     }
-    //Verifico si el caballo es el que participa por el numero de caballo para saber si corrió
+
+    // Verifico si el caballo es el que participa por el numero de caballo para
+    // saber si corrió
     public boolean esCaballoDelRegistro(Participante registro, Caballo caballo) {
         return registro != null
                 && registro.getCaballo() != null
@@ -29,14 +29,15 @@ public class Participante {
     public boolean esCaballoGanador(Carrera carrera) {
         return carrera != null
                 && carrera.getCaballoGanador() != null
-               && caballo.getNumero() == carrera.getCaballoGanador().getNumero();
+                && caballo.getNumero() == carrera.getCaballoGanador().getNumero();
     }
-    /***se tiene que calcular cada vez que se hace una apuesta*/
+
+    /*** se tiene que calcular cada vez que se hace una apuesta */
     public double calcularDividendo(double comision) {
         if (carrera == null)
             return 0.0;
         double totalApostadoEnCarrera = carrera.getTotalApostado();
-        double totalApostadoAlCaballo = 0.0;//ver
+        double totalApostadoAlCaballo = 0.0;// ver
         if (apuestas != null) {
             for (Apuesta a : apuestas) {
                 totalApostadoAlCaballo += a.getMonto();
@@ -47,6 +48,7 @@ public class Participante {
         double valor = (totalApostadoEnCarrera * (1.0 - comision)) / totalApostadoAlCaballo;
         return valor;
     }
+
     public List<Apuesta> getApuestas() {
         return apuestas;
     }
