@@ -14,21 +14,24 @@
     <div style="display: flex; gap: 32px; justify-content: center;">
 
       <a href="gestionar-carrera.html" style="text-decoration: none;">
-        <div style="background: #15304c; border-radius: 18px; box-shadow: 0 4px 18px rgba(16,36,58,0.10); padding: 28px 38px; min-width: 220px; display: flex; flex-direction: column; align-items: center;">
-          <span style="font-size: 2.2rem; color: #ffc847; margin-bottom: 10px;">ðŸ</span>
+        <div
+          style="background: #15304c; border-radius: 18px; box-shadow: 0 4px 18px rgba(16,36,58,0.10); padding: 28px 38px; min-width: 220px; display: flex; flex-direction: column; align-items: center;">
+          <span style="font-size: 2.2rem; color: #1723cd; margin-bottom: 10px;">ðŸ</span>
           <span style="color: #fff; font-weight: 900; font-size: 1.18rem;">Gestionar Carrera</span>
         </div>
       </a>
 
       <a href="tablero-administrador.html" style="text-decoration: none;">
-        <div style="background: #15304c; border-radius: 18px; box-shadow: 0 4px 18px rgba(16,36,58,0.10); padding: 28px 38px; min-width: 220px; display: flex; flex-direction: column; align-items: center;">
+        <div
+          style="background: #15304c; border-radius: 18px; box-shadow: 0 4px 18px rgba(16,36,58,0.10); padding: 28px 38px; min-width: 220px; display: flex; flex-direction: column; align-items: center;">
           <span style="font-size: 2.2rem; color: #4f5f6f; margin-bottom: 10px;">ðŸ“Š</span>
           <span style="color: #fff; font-weight: 900; font-size: 1.18rem;">Tablero Administrador</span>
         </div>
       </a>
 
       <a href="login-admin.html" style="text-decoration: none;">
-        <div style="background: #e53c4f; border-radius: 18px; box-shadow: 0 4px 18px rgba(16,36,58,0.10); padding: 28px 38px; min-width: 220px; display: flex; flex-direction: column; align-items: center;">
+        <div
+          style="background: #e53c4f; border-radius: 18px; box-shadow: 0 4px 18px rgba(16,36,58,0.10); padding: 28px 38px; min-width: 220px; display: flex; flex-direction: column; align-items: center;">
           <span style="font-size: 2.2rem; color: #fff; margin-bottom: 10px;">â»</span>
           <span style="color: #fff; font-weight: 900; font-size: 1.18rem;">Logout</span>
         </div>
@@ -53,14 +56,16 @@
         </div>
 
         <div class="day-selector" aria-label="Selector de jornada">
-          <button id="btnJornadaAnterior" class="day-selector__button" type="button" aria-label="Jornada anterior">â—€</button>
+          <button id="btnJornadaAnterior" class="day-selector__button" type="button"
+            aria-label="Jornada anterior">â—€</button>
 
           <div class="day-selector__content">
             <span>Jornada</span>
             <strong id="jornadaActualTexto">Cargando jornada...</strong>
           </div>
 
-          <button id="btnJornadaSiguiente" class="day-selector__button" type="button" aria-label="Jornada siguiente">â–¶</button>
+          <button id="btnJornadaSiguiente" class="day-selector__button" type="button"
+            aria-label="Jornada siguiente">â–¶</button>
         </div>
       </div>
 
@@ -171,7 +176,7 @@
 
 
 
-<script type="module">
+  <script type="module">
     import { CommandDispatcher } from './CommandDispatcher.js';
 
     const $ = (id) => document.getElementById(id);
@@ -181,6 +186,9 @@
       currency: 'UYU',
       maximumFractionDigits: 0
     });
+
+    let jornadasDisponibles = [];
+    let indiceJornadaActual = -1;
 
     function mostrarTexto(id, valor) {
       const elemento = $(id);
@@ -305,6 +313,26 @@
         : 'Jornada no disponible';
 
       mostrarTexto('jornadaActualTexto', texto);
+
+      if (jornada?.numero !== undefined && jornadasDisponibles.length > 0) {
+        indiceJornadaActual = jornadasDisponibles.findIndex((item) => item.numero === jornada.numero);
+      }
+    }
+
+    function cargarDatosTablero() {
+      CommandDispatcher.submit('/tablero-administrador/cargar-datos-tablero', {});
+    }
+
+    function seleccionarJornadaPorIndice(indice) {
+      if (indice < 0 || indice >= jornadasDisponibles.length) {
+        return;
+      }
+
+      const jornada = jornadasDisponibles[indice];
+      indiceJornadaActual = indice;
+      CommandDispatcher.submit('/tablero-administrador/seleccionar-jornada', {
+        jornadaId: jornada.numero
+      });
     }
 
     function mostrarResultadosCarreras(carreras) {
@@ -348,7 +376,7 @@
       if (!Array.isArray(carreras) || carreras.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="6">No hay prÃ³ximas carreras para esta jornada.</td>
+            <td colspan="6">No hay proximas carreras para esta jornada.</td>
           </tr>
         `;
         return;
@@ -361,14 +389,14 @@
         const tr = document.createElement('tr');
 
         tr.innerHTML = `
-          <td data-label="NÂ°">${numeroCarrera}</td>
+          <td data-label="numero">${numeroCarrera}</td>
           <td data-label="Estado">
             <span class="${obtenerClaseEstado(estado)}">${estado}</span>
           </td>
           <td data-label="Caballos">${obtenerCantidadCaballos(carrera)}</td>
           <td data-label="Total apostado" class="money">${formateadorMoneda.format(obtenerTotalApostado(carrera))}</td>
           <td data-label="Apuestas">${obtenerCantidadApuestas(carrera)}</td>
-          <td data-label="AcciÃ³n">
+          <td data-label="Accion">
             <button class="action-button" type="button" onclick="window.location.href='gestionar-carrera.html?numeroCarrera=${numeroCarrera}'">
               Gestionar
             </button>
@@ -380,17 +408,21 @@
     }
 
     const vista = CommandDispatcher.registerView('TableroAdministrador', {
-      urlInicio: '/tablero-administrador',
+      urlInicio: '/tablero-administrador/cargar-datos-tablero',
       onError: (_status, texto) => mostrarError(texto || 'No se pudo cargar el tablero.'),
       onException: (mensaje) => mostrarError(mensaje)
     });
 
     vista.handler('redirigirLogin', (url) => {
       window.location.href = url;
-    });
-
+    }); 
+    
     vista.handler('error', (mensaje) => {
       mostrarError(mensaje);
+    });
+
+    vista.handler('mostrarJornadas', (jornadas) => {
+      jornadasDisponibles = Array.isArray(jornadas) ? jornadas : [];
     });
 
     vista.handler('mostrarJornadaActual', (jornada) => {
@@ -426,12 +458,17 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       CommandDispatcher.startView(vista);
-      CommandDispatcher.submit('/tablero-administrador', {});
 
-      // ActualizaciÃ³n automÃ¡tica cada 15 segundos.
-      // Si solo querÃ©s cargar una vez al abrir la pÃ¡gina, podÃ©s borrar este setInterval.
+      $('btnJornadaAnterior')?.addEventListener('click', () => {
+        seleccionarJornadaPorIndice(indiceJornadaActual - 1);
+      });
+
+      $('btnJornadaSiguiente')?.addEventListener('click', () => {
+        seleccionarJornadaPorIndice(indiceJornadaActual + 1);
+      });
+      
       setInterval(() => {
-        CommandDispatcher.submit('/tablero-administrador', {});
+        cargarDatosTablero();
       }, 15000);
     });
   </script>
