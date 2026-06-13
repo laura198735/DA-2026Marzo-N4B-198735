@@ -41,14 +41,15 @@ public class ObligatorioApplication {
 
 			Jornada jornada1 = new Jornada(1, new Date(System.currentTimeMillis() - 30 * dia));
 			Jornada jornada2 = new Jornada(2, new Date(System.currentTimeMillis() - 10 * dia));
-			Jornada jornada3 = new Jornada(3, new Date(System.currentTimeMillis() + 7 * dia));
-			Jornada jornada4 = new Jornada(4, new Date(System.currentTimeMillis() - 7 * dia));
-			Jornada jornada5 = new Jornada(5, new Date(System.currentTimeMillis() - 1 * dia));
+			Jornada jornada3 = new Jornada(3, new Date(System.currentTimeMillis() - 10 * dia));
+			Jornada jornada4 = new Jornada(4, new Date(System.currentTimeMillis() + 7 * dia));
+			Jornada jornada5 = new Jornada(5, new Date(System.currentTimeMillis() - 7 * dia));
 			Jornada jornada6 = new Jornada(6, new Date(System.currentTimeMillis()));
 			Jornada jornada7 = new Jornada(7, new Date(System.currentTimeMillis() + 1 * dia));
 			Jornada jornada8 = new Jornada(8, new Date(System.currentTimeMillis() + 2 * dia));
 			Jornada jornada9 = new Jornada(9, new Date(System.currentTimeMillis() + 3 * dia));
 			Jornada jornada10 = new Jornada(10, new Date(System.currentTimeMillis() + 30 * dia));
+			Jornada jornada11 = new Jornada(11, new Date(System.currentTimeMillis() + 30 * dia));
 
 			Carrera carrera1 = new Carrera(1, "Velocidad Suprema", jornada1);
 			Carrera carrera2 = new Carrera(2, "Gran Premio Oriental", jornada1);
@@ -90,6 +91,9 @@ public class ObligatorioApplication {
 			Carrera carrera29 = new Carrera(29, "Clásico Clausura", jornada10);
 			Carrera carrera30 = new Carrera(30, "Gran Premio Fin de Temporada", jornada10);
 
+			Carrera carrera31 = new Carrera(31, "Desafío del Hipódromo", jornada11);
+			Carrera carrera32 = new Carrera(32, "Clásico Invierno", jornada11);			Carrera carrera33 = new Carrera(33, "Premio Relámpago", jornada11);
+
 			agregarCarreras(jornada1, carrera1, carrera2, carrera3);
 			agregarCarreras(jornada2, carrera4, carrera5, carrera6);
 			agregarCarreras(jornada3, carrera7, carrera8, carrera9);
@@ -100,6 +104,7 @@ public class ObligatorioApplication {
 			agregarCarreras(jornada8, carrera22, carrera23, carrera24);
 			agregarCarreras(jornada9, carrera25, carrera26, carrera27);
 			agregarCarreras(jornada10, carrera28, carrera29, carrera30);
+			agregarCarreras(jornada11, carrera31, carrera32, carrera33);
 
 			agregarParticipantes(carrera1, caballo1, caballo2);
 			agregarParticipantes(carrera2, caballo2, caballo3);
@@ -131,6 +136,10 @@ public class ObligatorioApplication {
 			agregarParticipantes(carrera28, caballo2, caballo3);
 			agregarParticipantes(carrera29, caballo1, caballo2);
 			agregarParticipantes(carrera30, caballo3, caballo1);
+			agregarParticipantes(carrera31, caballo2, caballo3);
+			agregarParticipantes(carrera32, caballo1, caballo2);	
+			agregarParticipantes(carrera33, caballo3, caballo1);
+
 
 			List<Jornada> jornadas = FachadaServicios.getInstancia().getJornadas();
 			jornadas.clear();
@@ -145,6 +154,7 @@ public class ObligatorioApplication {
 			jornadas.add(jornada8);
 			jornadas.add(jornada9);
 			jornadas.add(jornada10);
+			jornadas.add(jornada11);
 
 			System.out.println("Datos de prueba creados correctamente.");
 			System.out.println("Admin: a1 / a1");
@@ -171,7 +181,3 @@ public class ObligatorioApplication {
 		}
 	}
 }
-
-
-
-

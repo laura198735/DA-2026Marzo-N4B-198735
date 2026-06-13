@@ -10,50 +10,56 @@
 
 <body>
 
-    <nav style="margin-bottom: 32px;">
+  <nav style="margin-bottom: 32px;">
     <div style="display: flex; gap: 32px; justify-content: center;">
-    <!-- Card Gestionar Carrera -->
-    <a href="gestionar-carrera.html" style="text-decoration: none;">
-      <div style="background: #15304c; border-radius: 18px; box-shadow: 0 4px 18px rgba(16,36,58,0.10); padding: 28px 38px; min-width: 220px; display: flex; flex-direction: column; align-items: center; transition: transform 0.18s, box-shadow 0.18s;">
-        <span style="font-size: 2.2rem; color: #ffc847; margin-bottom: 10px;">🏁</span>
-        <span style="color: #fff; font-weight: 900; font-size: 1.18rem;">Gestionar Carrera</span>
-      </div>
-    </a>
-    <!-- Card Tablero Administrador -->
-    <a href="tablero-administrador.html" style="text-decoration: none;">
-      <div style="background: #15304c; border-radius: 18px; box-shadow: 0 4px 18px rgba(16,36,58,0.10); padding: 28px 38px; min-width: 220px; display: flex; flex-direction: column; align-items: center; transition: transform 0.18s, box-shadow 0.18s;">
-        <span style="font-size: 2.2rem; color: #4f5f6f; margin-bottom: 10px;">📊</span>
-        <span style="color: #fff; font-weight: 900; font-size: 1.18rem;">Tablero Administrador</span>
-      </div>
-    </a>
-    <!-- Card Logout -->
-    <a href="login-admin.html" style="text-decoration: none;">
-      <div style="background: #e53c4f; border-radius: 18px; box-shadow: 0 4px 18px rgba(16,36,58,0.10); padding: 28px 38px; min-width: 220px; display: flex; flex-direction: column; align-items: center; transition: transform 0.18s, box-shadow 0.18s;">
-        <span style="font-size: 2.2rem; color: #fff; margin-bottom: 10px;">⏻</span>
-        <span style="color: #fff; font-weight: 900; font-size: 1.18rem;">Logout</span>
-      </div>
-    </a>
-  </div>
-</nav>
+      <!-- Card Gestionar Carrera -->
+      <a href="gestionar-carrera.html" style="text-decoration: none;">
+        <div
+          style="background: #15304c; border-radius: 18px; box-shadow: 0 4px 18px rgba(16,36,58,0.10); padding: 28px 38px; min-width: 220px; display: flex; flex-direction: column; align-items: center; transition: transform 0.18s, box-shadow 0.18s;">
+          <span style="font-size: 2.2rem; color: #ffc847; margin-bottom: 10px;">🏁</span>
+          <span style="color: #fff; font-weight: 900; font-size: 1.18rem;">Gestionar Carrera</span>
+        </div>
+      </a>
+      <!-- Card Tablero Administrador -->
+      <a href="tablero-administrador.html" style="text-decoration: none;" aria-current="page">
+        <div
+          style="background: #15304c; border-radius: 18px; box-shadow: 0 4px 18px rgba(16,36,58,0.10); padding: 28px 38px; min-width: 220px; display: flex; flex-direction: column; align-items: center; transition: transform 0.18s, box-shadow 0.18s; opacity: 0.7; cursor: default;">
+          <span style="font-size: 2.2rem; color: #4f5f6f; margin-bottom: 10px;">📊</span>
+          <span style="color: #fff; font-weight: 900; font-size: 1.18rem;">Tablero Administrador</span>
+        </div>
+      </a>
+      <!-- Card Logout -->
+      <a href="login-admin.html" style="text-decoration: none;">
+        <div
+          style="background: #e53c4f; border-radius: 18px; box-shadow: 0 4px 18px rgba(16,36,58,0.10); padding: 28px 38px; min-width: 220px; display: flex; flex-direction: column; align-items: center; transition: transform 0.18s, box-shadow 0.18s;">
+          <span style="font-size: 2.2rem; color: #fff; margin-bottom: 10px;">⏻</span>
+          <span style="color: #fff; font-weight: 900; font-size: 1.18rem;">Logout</span>
+        </div>
+      </a>
+    </div>
+  </nav>
 
   <main class="page-shell">
     <header class="hero-title" aria-labelledby="titulo-principal">
       <h1 id="titulo-principal">CU: Tablero de control del administrador</h1>
 
       <div class="day-selector" aria-label="Selector de jornada">
-        <button id="btnJornadaAnterior" class="day-selector__button" type="button"
-          aria-label="Jornada anterior">
-          <img src="./images/retroceso-rapido.gif" alt="" aria-hidden="true" />
+        <button id="btnJornadaAnterior" class="day-selector__button" type="button" aria-label="Jornada anterior">
+          ◄◄
         </button>
 
         <div class="day-selector__content">
           <span>Jornada</span>
           <strong id="jornadaActualTexto">Cargando jornada...</strong>
+
+          <select id="selectorJornadas">
+            <option value="">Cargando jornadas...</option>
+          </select>
         </div>
 
-        <button id="btnJornadaSiguiente" class="day-selector__button" type="button"
-          aria-label="Jornada siguiente">
-          <img src="./images/avance-rapido.gif" alt="" aria-hidden="true" />
+
+        <button id="btnJornadaSiguiente" class="day-selector__button" type="button" aria-label="Jornada siguiente">
+          ►►
         </button>
       </div>
     </header>
@@ -111,8 +117,7 @@
       <section class="panel" aria-labelledby="finalizadas-title">
         <div class="section-heading">
           <h3 id="finalizadas-title">
-            <span class="section-icon section-icon--success">Ã¢Å“â€œ</span>
-            Carreras Finalizadas
+            <span class="section-icon section-icon--success">Carreras Finalizadas</span>
           </h3>
           <span id="pillFinalizadas" class="pill pill--success"></span>
         </div>
@@ -121,7 +126,7 @@
           <table class="admin-table">
             <thead>
               <tr>
-                <th>NÃ‚Â°</th>
+                <th>No</th>
                 <th>Hora fin.</th>
                 <th>Caballos</th>
                 <th>Total apostado</th>
@@ -144,7 +149,7 @@
         <div class="section-heading">
           <h3 id="proximas-title">
             <span class="section-icon section-icon--warning"></span>
-            PrÃƒÂ³ximas Carreras
+            Proximas Carreras
           </h3>
           <span id="pillProximas" class="pill pill--warning"></span>
         </div>
@@ -153,12 +158,12 @@
           <table class="admin-table admin-table--next">
             <thead>
               <tr>
-                <th>NÃ‚Â°</th>
+                <th>No</th>
                 <th>Estado</th>
                 <th>Caballos</th>
                 <th>Total apostado</th>
                 <th>Apuestas</th>
-                <th>AcciÃƒÂ³n</th>
+                <th>Accion</th>
               </tr>
             </thead>
 
@@ -223,10 +228,28 @@
     function formatearFecha(fecha) {
       if (!fecha) return 'Jornada no seleccionada';
 
-      const date = new Date(fecha);
+      let date;
+      
+      // Si es un número (timestamp en milisegundos)
+      if (typeof fecha === 'number') {
+        date = new Date(fecha);
+      }
+      // Si es un string, intentar parsearlo
+      else if (typeof fecha === 'string') {
+        // Si parece ISO 8601 pero sin Z, agregarlo
+        if (fecha.match(/^\d{4}-\d{2}-\d{2}T/) && !fecha.endsWith('Z')) {
+          date = new Date(fecha + 'Z');
+        } else {
+          date = new Date(fecha);
+        }
+      } else {
+        // Si es un objeto Date
+        date = new Date(fecha);
+      }
 
       if (Number.isNaN(date.getTime())) {
-        return fecha;
+        console.warn('Fecha no válida:', fecha);
+        return String(fecha);
       }
 
       return date.toLocaleDateString('es-UY', {
@@ -309,20 +332,20 @@
 
     function mostrarJornadaActual(jornada) {
       const texto = jornada?.dia
-        ? formatearFecha(jornada.dia)
+        ? `Jornada ${jornada.numero} - ${formatearFecha(jornada.dia)}`
         : 'Jornada no disponible';
 
       mostrarTexto('jornadaActualTexto', texto);
+
+      const selector = $('selectorJornadas');
+      if (selector && jornada?.numero !== undefined) {
+        selector.value = String(jornada.numero);
+      }
 
       if (jornada?.numero !== undefined && jornadasDisponibles.length > 0) {
         indiceJornadaActual = jornadasDisponibles.findIndex((item) => item.numero === jornada.numero);
       }
     }
-
-    function cargarDatosTablero() {
-      CommandDispatcher.submit('/tablero-administrador/cargar-datos-tablero', {});
-    }
-
     function seleccionarJornadaPorIndice(indice) {
       if (indice < 0 || indice >= jornadasDisponibles.length) {
         return;
@@ -354,7 +377,7 @@
         const tr = document.createElement('tr');
 
         tr.innerHTML = `
-          <td data-label="NÃ‚Â°">${obtenerNumeroCarrera(carrera)}</td>
+          <td data-label="No°">${obtenerNumeroCarrera(carrera)}</td>
           <td data-label="Hora fin.">${carrera?.horaFinalizacion ?? '-'}</td>
           <td data-label="Caballos">${obtenerCantidadCaballos(carrera)}</td>
           <td data-label="Total apostado" class="money">${formateadorMoneda.format(obtenerTotalApostado(carrera))}</td>
@@ -415,14 +438,46 @@
 
     vista.handler('redirigirLogin', (url) => {
       window.location.href = url;
-    }); 
-    
+    });
+
     vista.handler('error', (mensaje) => {
       mostrarError(mensaje);
     });
 
     vista.handler('mostrarJornadas', (jornadas) => {
       jornadasDisponibles = Array.isArray(jornadas) ? jornadas : [];
+      console.log('mostrarJornadas recibidas:', jornadasDisponibles);
+
+      const selector = $('selectorJornadas');
+      if (!selector) {
+        console.error('Selector no encontrado');
+        return;
+      }
+
+      selector.innerHTML = '';
+
+      if (jornadasDisponibles.length === 0) {
+        selector.innerHTML = '<option value="">No hay jornadas</option>';
+        console.warn('No hay jornadas disponibles');
+        return;
+      }
+
+      jornadasDisponibles.forEach((jornada, index) => {
+        const option = document.createElement('option');
+        option.value = String(jornada.numero);
+        const fechaFormato = formatearFecha(jornada.dia);
+        option.textContent = `Jornada ${jornada.numero} - ${fechaFormato}`;
+        selector.appendChild(option);
+        console.log(`Añadida opción: ${option.textContent}`);
+      });
+
+      if (indiceJornadaActual === -1 && jornadasDisponibles.length > 0) {
+        indiceJornadaActual = 0;
+        const primeraJornada = jornadasDisponibles[0];
+        selector.value = String(primeraJornada.numero);
+        console.log(`Select actualizado a: ${primeraJornada.numero}`);
+        mostrarJornadaActual(primeraJornada);
+      }
     });
 
     vista.handler('mostrarJornadaActual', (jornada) => {
@@ -466,19 +521,20 @@
       $('btnJornadaSiguiente')?.addEventListener('click', () => {
         seleccionarJornadaPorIndice(indiceJornadaActual + 1);
       });
-      
-      setInterval(() => {
-        cargarDatosTablero();
-      }, 15000);
+      $('selectorJornadas')?.addEventListener('change', (event) => {
+        const numeroJornada = Number(event.target.value);
+
+        if (!numeroJornada) return;
+
+        CommandDispatcher.submit('/tablero-administrador/seleccionar-jornada', {
+          jornadaId: numeroJornada
+        });
+      });
+
     });
   </script>
 
 </body>
 
 </html>
-
-
-
-
-
 

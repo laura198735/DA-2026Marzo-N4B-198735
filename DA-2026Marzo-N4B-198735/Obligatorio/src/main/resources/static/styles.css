@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   --navy-950: #10243a;
   --navy-900: #15304c;
   --navy-800: #17395c;
@@ -190,6 +190,32 @@ button {
   color: #082a52;
   font-size: 1rem;
   font-weight: 850;
+}
+
+#selectorJornadas {
+  padding: 8px 12px;
+  font-size: 0.95rem;
+  border: 1px solid #d1dce1;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #082a52;
+  cursor: pointer;
+  min-width: 320px;
+  width: 100%;
+  max-width: 400px;
+  appearance: auto;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+
+#selectorJornadas:hover {
+  border-color: #a0c4d4;
+  box-shadow: 0 2px 6px rgba(16, 36, 58, 0.1);
+}
+
+#selectorJornadas:focus {
+  outline: none;
+  border-color: #0a55c7;
+  box-shadow: 0 0 0 3px rgba(10, 85, 199, 0.1);
 }
 
 .kpi-grid {
@@ -939,6 +965,16 @@ button {
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
+.dashboard main .carrera-card {
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.dashboard main .carrera-card:hover {
+  background: #1e4162 !important;
+  border-color: rgba(255, 200, 71, 0.72) !important;
+  box-shadow: 0 14px 28px rgba(16, 36, 58, 0.24) !important;
+}
+
 .carrera-header {
     display: flex;
     justify-content: space-between;
@@ -1290,6 +1326,7 @@ button {
   .login-card { padding: 20px; border-radius: 12px; }
   .login-form { gap: 14px; }
 }
+
 
 
 

@@ -1,5 +1,6 @@
 ﻿package ort.da.Obligatorio.presentadores;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +24,25 @@ import ort.da.Obligatorio.servicios.FachadaServicios;
 public class TableroAdminPresentador {
     private final FachadaServicios fachadaServicios = FachadaServicios.getInstancia();
 
+    private static record JornadaTableroDto(int numero, Date dia) {
+    }
+
+       @PostMapping("/seleccionar-jornada")
+    public Commands seleccionarJornada(@RequestParam("jornadaId") int numeroJornada, HttpSession session)
+            throws HipodromoException {
+        if (!usuarioAdministradorLogueado(session)) {
+            return redirigirLogin();
+        }
+
+        Jornada jornadaSeleccionada = buscarJornadaPorNumero(numeroJornada);
+        if (jornadaSeleccionada == null) {
+            return Commands.create(new Command("error", "Jornada no encontrada"));
+        }
+
+        session.setAttribute("jornadaActual", jornadaSeleccionada);
+        return construirTablero(fachadaServicios.getJornadas(), jornadaSeleccionada);
+    }
+
     @PostMapping("/cargar-datos-tablero")
     public Commands cargarDatosTablero(HttpSession session) throws HipodromoException {
         if (!usuarioAdministradorLogueado(session)) {
@@ -43,21 +63,7 @@ public class TableroAdminPresentador {
         return construirTablero(jornadas, jornadaActual);
     }
 
-    @PostMapping("/seleccionar-jornada")
-    public Commands seleccionarJornada(@RequestParam("jornadaId") int numeroJornada, HttpSession session)
-            throws HipodromoException {
-        if (!usuarioAdministradorLogueado(session)) {
-            return redirigirLogin();
-        }
-
-        Jornada jornadaSeleccionada = buscarJornadaPorNumero(numeroJornada);
-        if (jornadaSeleccionada == null) {
-            return Commands.create(new Command("error", "Jornada no encontrada"));
-        }
-
-        session.setAttribute("jornadaActual", jornadaSeleccionada);
-        return construirTablero(fachadaServicios.getJornadas(), jornadaSeleccionada);
-    }
+ 
 
     private Commands construirTablero(List<Jornada> jornadas, Jornada jornadaActual) throws HipodromoException {
         double totalApostado = fachadaServicios.getTotalApostado(jornadaActual);
@@ -71,10 +77,15 @@ public class TableroAdminPresentador {
 
         List<Carrera> resultadosCarreras = fachadaServicios.getResultadosCarrerasJornadaOrdenadas(jornadaActual);
         List<Carrera> proximasCarreras = fachadaServicios.getListaProximasCarrerasJornada(jornadaActual);
+    List<JornadaTableroDto> jornadasTablero = jornadas == null ? List.of()
+        : jornadas.stream()
+            .filter(jornada -> jornada != null)
+            .map(jornada -> new JornadaTableroDto(jornada.getNumero(), jornada.getDia()))
+            .toList();
 
         return Commands.create(
-                new Command("mostrarJornadas", jornadas == null ? List.of() : JornadaDto.fromList(jornadas)),
-                new Command("mostrarJornadaActual", new JornadaDto(jornadaActual)),
+        new Command("mostrarJornadas", jornadasTablero),
+        new Command("mostrarJornadaActual", new JornadaTableroDto(jornadaActual.getNumero(), jornadaActual.getDia())),
                 new Command("mostrarTotalApostado", totalApostado),
                 new Command("mostrarTotalPagado", totalPagado),
                 new Command("mostrarTotalComisionesJornada", totalComisionesJornada),

@@ -4,6 +4,7 @@ import java.util.List;
 
 import ort.da.Obligatorio.dominio.Administrador;
 import ort.da.Obligatorio.dominio.Credencial;
+import ort.da.Obligatorio.dominio.Usuario;
 import ort.da.Obligatorio.dominio.Jugador;
 import ort.da.Obligatorio.excepciones.AutenticacionException;
 
@@ -18,6 +19,7 @@ public class ServicioAutenticacion {
         try {
             Administrador administrador1 = new Administrador("a1", "a1");
             Administrador administrador2 = new Administrador("a2", "a2");
+            
             Jugador jugador1 = new Jugador("j1", "j1");
             Jugador jugador2 = new Jugador("j2", "j2");
             this.administradores.add(administrador1);
@@ -35,12 +37,19 @@ public class ServicioAutenticacion {
         this.jugadores = new java.util.ArrayList<>();
     }
 
-    public Administrador autenticar(Credencial credencial) throws AutenticacionException {
+    public Usuario autenticar(Credencial credencial) throws AutenticacionException {
         for (Administrador admin : administradores) {
             if (admin.validar(credencial)) {
                 return admin;
             }
         }
+
+        for (Jugador jugador : jugadores) {
+            if (jugador.validar(credencial)) {
+                return jugador;
+            }
+        }
+
         throw new AutenticacionException("Credenciales inválidas");
     }
 

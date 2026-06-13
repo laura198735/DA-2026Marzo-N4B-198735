@@ -12,6 +12,7 @@ public class Jornada {
     private int numero;
     private Date dia;
     private List<Carrera> carreras;
+  
 
     public Jornada() {
         this.carreras = new ArrayList<>();

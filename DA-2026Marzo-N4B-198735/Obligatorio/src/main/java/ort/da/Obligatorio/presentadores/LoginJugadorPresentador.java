@@ -2,7 +2,7 @@ package ort.da.Obligatorio.presentadores;
 
 import jakarta.servlet.http.HttpSession;
 import ort.da.Obligatorio.dominio.Credencial;
-import ort.da.Obligatorio.dominio.Jornada;
+
 import ort.da.Obligatorio.dominio.Usuario;
 import ort.da.Obligatorio.dtos.CredencialDto;
 import ort.da.Obligatorio.excepciones.AutenticacionException;
@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,17 +42,6 @@ public class LoginJugadorPresentador {
         }
     }
 
-    @GetMapping()
-    public Commands cargarDatosTablero(HttpSession session) throws HipodromoException {
 
-        Usuario usuarioJugador = (Usuario) session.getAttribute("usuarioLogueado");
-
-        if (usuarioJugador == null) {
-            return Commands.create(
-                    new Command("redirigir-login-jugador", "/login-jugador.html"));
-        }
-
-        return Commands.create(new Command("redirigir-tablero-jugador", "/tablero-jugador.html"));
-    }
 
 }

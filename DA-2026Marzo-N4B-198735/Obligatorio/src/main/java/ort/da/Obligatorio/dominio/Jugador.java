@@ -1,5 +1,6 @@
 package ort.da.Obligatorio.dominio;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
@@ -13,11 +14,17 @@ public class Jugador extends Usuario {
     @Getter
     private List<Apuesta> apuestas;
 
+   
+    public Jugador() {
+        super("", "");
+        this.apuestas = new ArrayList<>();
+    }
     public Jugador(String nombreUsuario, String password) {
         super(nombreUsuario, password);
+        this.apuestas = new java.util.ArrayList<>();
     }
 
-    @Override
+        @Override
     public boolean validar(Credencial credencial) {
         return this.getNombreUsuario().equals(credencial.getNombre()) && this.getPassword().equals(credencial.getPassword());
     }
