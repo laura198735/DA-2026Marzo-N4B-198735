@@ -74,8 +74,12 @@ button {
 }
 
 .hero-title {
-  padding: 28px 16px 48px;
-  text-align: center;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 28px 16px 32px;
+  text-align: left;
 }
 
 .hero-title h1 {
@@ -86,6 +90,7 @@ button {
   font-weight: 800;
   letter-spacing: -0.04em;
 }
+
 .error {
   margin-top: 16px;
   color: #ffd6d6;
@@ -138,12 +143,15 @@ button {
   border: 1px solid rgba(217, 225, 232, 0.9);
   border-radius: var(--radius-sm);
   background: rgba(255, 255, 255, 0.92);
-  box-shadow: var(--shadow-sm);
 }
 
 .day-selector__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 32px;
   height: 32px;
+  padding: 0;
   border: 0;
   border-radius: 7px;
   color: var(--navy-900);
@@ -152,6 +160,12 @@ button {
   transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
 }
 
+.day-selector__button img {
+  display: block;
+  width: 1.15rem;
+  height: 1.15rem;
+  object-fit: contain;
+}
 .day-selector__button:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 10px rgba(16, 36, 58, 0.14);
@@ -538,6 +552,8 @@ button {
   }
 
   .hero-title {
+    flex-direction: column;
+    align-items: flex-start;
     padding: 22px 8px 30px;
   }
 
@@ -549,7 +565,6 @@ button {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
   }
-
   .section-heading {
     align-items: flex-start;
     flex-direction: column;
@@ -1275,3 +1290,7 @@ button {
   .login-card { padding: 20px; border-radius: 12px; }
   .login-form { gap: 14px; }
 }
+
+
+
+

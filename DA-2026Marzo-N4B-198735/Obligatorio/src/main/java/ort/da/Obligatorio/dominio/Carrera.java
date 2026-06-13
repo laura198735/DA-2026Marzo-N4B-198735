@@ -87,4 +87,19 @@ public class Carrera {
         }
         return total;
     }
+
+    public String obtenerEstadoCarrera(Carrera carrera) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'obtenerEstadoCarrera'");
+    }
+
+    public int obtenerCantidadCaballos(Carrera carrera) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'obtenerCantidadCaballos'");
+    }
+
+    public int obtenerCantidadApuestas(Carrera carrera) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'obtenerCantidadApuestas'");
+    }
 }

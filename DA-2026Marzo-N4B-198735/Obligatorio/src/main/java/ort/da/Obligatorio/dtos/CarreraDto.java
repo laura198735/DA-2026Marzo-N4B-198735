@@ -3,6 +3,7 @@ package ort.da.Obligatorio.dtos;
 import ort.da.Obligatorio.dominio.Carrera;
 import ort.da.Obligatorio.dominio.IEstadoCarrera;
 import ort.da.Obligatorio.dominio.Participante;
+import ort.da.Obligatorio.dtos.JornadaDto.CarreraTableroDto;
 import ort.da.Obligatorio.dominio.Jornada;
 
 import java.util.List;
@@ -43,5 +44,18 @@ public class CarreraDto {
         return carreras.stream()
                 .map(CarreraDto::new)
                 .toList();
+    }
+
+        private CarreraTableroDto crearCarreraTablero(Carrera carrera) {
+        return new CarreraTableroDto(
+                carrera.getNumeroCarrera(),
+                carrera.getNombre(),
+                carrera.obtenerEstadoCarrera(carrera),
+                carrera.obtenerCantidadCaballos(carrera),
+                carrera.getTotalApostado(),
+                carrera.getTotalPagado(),
+                carrera.getCaballoGanador() != null ? carrera.getCaballoGanador().getNombre() : "-",
+                "-",
+                carrera.obtenerCantidadApuestas(carrera));
     }
 }

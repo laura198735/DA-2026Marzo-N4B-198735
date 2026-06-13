@@ -15,7 +15,8 @@ public class JornadaDto {
 
     public JornadaDto() {
     }
-
+    
+//constructor que recibe una jornada y la convierte a dto
     public JornadaDto(Jornada jornada) {
         this.numero = jornada.getNumero();
         this.dia = jornada.getDia();
@@ -39,6 +40,18 @@ public class JornadaDto {
         return jornadas.stream()
                 .map(JornadaDto::from)
                 .toList();
+    }
+
+    public static record CarreraTableroDto(
+            int numeroCarrera,
+            String nombre,
+            String estadoCarrera,
+            int cantidadCaballos,
+            double totalApostado,
+            double totalPagado,
+            String caballoGanador,
+            String dividendoFinal,
+            int cantidadApuestas) {
     }
 
 }

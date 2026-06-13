@@ -9,8 +9,6 @@ import ort.da.Obligatorio.dominio.Credencial;
 import ort.da.Obligatorio.dominio.Jornada;
 import ort.da.Obligatorio.dominio.Modalidad;
 import ort.da.Obligatorio.dominio.Usuario;
-import ort.da.Obligatorio.dtos.JornadaDto;
-import ort.da.Obligatorio.dominio.Finalizada;
 import ort.da.Obligatorio.excepciones.AutenticacionException;
 import ort.da.Obligatorio.excepciones.HipodromoException;
 
@@ -42,10 +40,6 @@ public class FachadaServicios {
         return servicioAutenticacion.autenticar(credencial);
     }
 
-    // **Tablero Administrador** */
-    // Fecha de la jornada actual (inicialmente es la jornada de la fecha actual o
-    // la más próxima anterior si no hay
-    // jornada en el día, luego podrá ser cambiada por el usuario)
     public List<Jornada> getJornadas() throws HipodromoException {
         try {
             return servicioJornada.getJornadas();
@@ -55,43 +49,82 @@ public class FachadaServicios {
         }
     }
 
-    public double getTotalApostado() throws HipodromoException {
-        return servicioJornada.getJornadaActual().getTotalApostado();
+    public void agregarJornada(Jornada jornada) throws HipodromoException {
+        if (jornada == null) {
+            throw new HipodromoException("No se puede agregar una jornada nula");
+        }
+
+        servicioJornada.agregar(jornada);
     }
 
-    public double getTotalPagado() throws HipodromoException {
-        return servicioJornada.getJornadaActual().getTotalPagado();
+    public Jornada getJornadaActual() throws HipodromoException {
+        try {
+            return servicioJornada.getJornadaActual();
+        } catch (Exception e) {
+            throw new HipodromoException("Error al obtener la jornada actual: ");
+        }
     }
 
-    public double getTotalComisionesJornada() throws HipodromoException {
-        return servicioJornada.getJornadaActual().getTotalComisiones();
+    public Jornada getJornadaPorFecha(Date fechaSeleccionada) throws HipodromoException {
+        try {
+            Jornada jornada = servicioJornada.getJornadaPorFecha(fechaSeleccionada);
+
+            if (jornada == null) {
+                throw new HipodromoException("No existe una jornada para la fecha seleccionada");
+            }
+
+            return jornada;
+
+        } catch (HipodromoException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new HipodromoException("Error al obtener la jornada por fecha: " + e.getMessage());
+        }
+    }
+
+    // **Tablero Administrador** */
+    // Fecha de la jornada actual (inicialmente es la jornada de la fecha actual o
+    // la más próxima anterior si no hay
+    // jornada en el día, luego podrá ser cambiada por el usuario) se recibe de la
+    // seleccionada por el usuario en el presentador que se muestra en pantalla//
+    public double getTotalApostado(Jornada jornada) throws HipodromoException {
+        return jornada.getTotalApostado();
+    }
+
+    public double getTotalPagado(Jornada jornada) throws HipodromoException {
+        return servicioJornada.getTotalPagado(jornada);
+    }
+
+    public double getTotalComisionesJornada(Jornada jornada) throws HipodromoException {
+        return servicioJornada.getTotalComisionesJornada(jornada);
     }
 
     // total apostado - total pagado en la jornada
-    public double getBalanceJornada() throws HipodromoException {
-        return servicioJornada.getJornadaActual().getBalanceJornada();
+    public double getBalanceJornada(Jornada jornada) throws HipodromoException {
+        return servicioJornada.getBalanceJornada(jornada);
     }
 
-    public int getCantidadCarrerasJornada() {
-        return servicioJornada.getJornadaActual().getCantidadCarrerasJornada();
+    public int getCantidadCarrerasJornada(Jornada jornada) throws HipodromoException {
+        return servicioJornada.getCantidadCarrerasJornada(jornada);
     }
 
     // * Cantidad de carreras Finalizadas en la jornada actual
-    public int cantidadCarrerasFinalizadasJornada() throws HipodromoException {
-        return servicioJornada.getCantidadCarrerasFinalizadasJornada();
+    public int cantidadCarrerasFinalizadasJornada(Jornada jornada) throws HipodromoException {
+        return servicioJornada.getCantidadCarrerasFinalizadasJornada(jornada);
     }
 
-    public int getCantidadProximasCarrerasJornada() {
-        return servicioJornada.getCantidadProximasCarrerasJornada();
+    public int getCantidadProximasCarrerasJornada(Jornada jornada) throws HipodromoException {
+        return servicioJornada.getCantidadProximasCarrerasJornada(jornada);
+
     }
 
-    public List<Carrera> getResultadosCarrerasJornadaOrdenadas() throws HipodromoException {
-        return servicioJornada.getResultadosCarrerasJornadaOrdenadas((servicioJornada.getJornadaActual()));
+    public List<Carrera> getResultadosCarrerasJornadaOrdenadas(Jornada jornada) throws HipodromoException {
+        return servicioJornada.getResultadosCarrerasJornadaOrdenadas(jornada);
     }
 
-    public List<Carrera> getListaProximasCarrerasJornada() throws HipodromoException {
-        return servicioJornada.getJornadaActual().getListaProximasCarrerasJornada();
-    }  
+    public List<Carrera> getListaProximasCarrerasJornada(Jornada jornada) throws HipodromoException {
+        return servicioJornada.getListaProximasCarrerasJornada(jornada);
+    }
     /*
      * • Carreras Finalizadas en la jornada actual ordenadas por número descendente
      * Información: numero, hora de
@@ -101,14 +134,6 @@ public class FachadaServicios {
      * • Próximas carreras– son las carreras que no están Finalizadas (Información:
      * numero, estado, cantidad de caballos,
      * total apostado, cantidad de apuestas)
-        */
-
-    public Jornada getJornadaActual() throws HipodromoException {
-        try {
-            return servicioJornada.getJornadaActual();
-        } catch (Exception e) {
-            throw new HipodromoException("Error al obtener la jornada actual: " + e.getMessage());
-        }
-    }
+     */
 
 }

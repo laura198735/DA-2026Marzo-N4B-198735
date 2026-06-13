@@ -49,13 +49,6 @@ public class ServicioJornada {
     }
 
     // * • Cantidad de carreras que faltan por correr en la jornada actual
-    public int getCantidadProximasCarrerasJornada() {
-        try {
-            return getJornadaActual().getCantidadProximasCarrerasJornada();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public int getCantidadProximasCarrerasJornada(Jornada jornada) throws HipodromoException {
         if (jornada == null)
@@ -97,19 +90,6 @@ public class ServicioJornada {
         return jornada.getCarreras() == null ? 0 : jornada.getCarreras().size();
     }
 
-    public int getCantidadCarrerasFinalizadasJornada() throws HipodromoException {
-        Jornada jornada = getJornadaActual();
-        if (jornada == null)
-            throw new HipodromoException("No hay jornada seleccionada");
-        if (jornada.getCarreras() == null)
-            return 0;
-        int c = 0;
-        for (Carrera ca : jornada.getCarreras()) {
-            if (ca.getEstadoCarrera() instanceof Finalizada)
-                c++;
-        }
-        return c;
-    }
 
     public int getCantidadCarrerasFinalizadasJornada(Jornada jornada) throws HipodromoException {
         if (jornada == null)
@@ -149,10 +129,6 @@ public class ServicioJornada {
         return res;
     }
 
-    public List<Carrera> getResultadosCarrerasJornadaOrdenadas() throws HipodromoException {
-        return getResultadosCarrerasJornadaOrdenadas(getJornadaActual());
-    }
-
     public List<Carrera> getListaProximasCarrerasJornada(Jornada jornada) throws HipodromoException {
         if (jornada == null)
             throw new HipodromoException("No hay jornada seleccionada");
@@ -166,9 +142,6 @@ public class ServicioJornada {
         return res;
     }
 
-    public List<Carrera> getListaProximasCarrerasJornada() throws HipodromoException {
-        return getListaProximasCarrerasJornada(getJornadaActual());
-    }
 
 
    
