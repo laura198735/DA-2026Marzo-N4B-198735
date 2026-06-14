@@ -7,22 +7,28 @@ import lombok.Setter;
 @Setter
 public class Apuesta {
     private double monto;
+    private Jugador jugador;
     private Modalidad modalidad;
-    private Participante caballo; // El caballo al que se le apuesta
-    private Carrera carrera;
-    private boolean ganadora; // flag para marcar si la apuesta es ganadora
-    private double comision;
-    
-    public Apuesta(double monto, Modalidad modalidad, Participante caballoApostado) {
+    private Participante participante; // El caballo al que se le apuesta
+
+    public Apuesta(double monto, Modalidad modalidad, Participante participante) {
         this.monto = monto;
         this.modalidad = modalidad;
-        this.caballo = caballoApostado;
-        this.carrera = caballoApostado.getCarrera();
-        this.ganadora = false;
+        this.participante = participante;
+        this.jugador = null; // El jugador se asigna cuando se realice la apuesta a través del método realizarApuesta del jugador
     }
 
-    // Convenience method kept for compatibility with existing calls
-    public boolean isGanadora() {
-        return ganadora;
+    public boolean esApuestaGanadora() {
+        return participante != null && participante.esCaballoGanador();
+
     }
+//para el hipodromo  
+    public double calcularGanancia() {
+        if (esApuestaGanadora()) {
+            double valorDividendo = participante.getDividendoFinal();
+            return monto * valorDividendo;
+        }
+        return 0.0; // Si la apuesta no es ganadora, no se gana nada
+    }
+
 }

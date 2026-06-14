@@ -15,43 +15,22 @@ public class JornadaDto {
 
     public JornadaDto() {
     }
-    
-//constructor que recibe una jornada y la convierte a dto
+
+    // constructor que recibe una jornada y la convierte a dto
     public JornadaDto(Jornada jornada) {
         this.numero = jornada.getNumero();
         this.dia = jornada.getDia();
         this.carreras = jornada.getCarreras() == null ? null : CarreraDto.fromList(jornada.getCarreras());
     }
 
-    public Jornada toJornada() {
-        Jornada jornada = new Jornada();
-        jornada.setNumero(this.numero);
-        jornada.setDia(this.dia);
-        jornada.setCarreras(this.carreras == null ? null : this.carreras.stream()
-                .map(CarreraDto::toCarrera)
-                .toList());
-        return jornada;
-    }
-
     public static JornadaDto from(Jornada jornada) {
         return new JornadaDto(jornada);
     }
+
     public static List<JornadaDto> fromList(List<Jornada> jornadas) {
         return jornadas.stream()
                 .map(JornadaDto::from)
                 .toList();
-    }
-
-    public static record CarreraTableroDto(
-            int numeroCarrera,
-            String nombre,
-            String estadoCarrera,
-            int cantidadCaballos,
-            double totalApostado,
-            double totalPagado,
-            String caballoGanador,
-            String dividendoFinal,
-            int cantidadApuestas) {
     }
 
 }

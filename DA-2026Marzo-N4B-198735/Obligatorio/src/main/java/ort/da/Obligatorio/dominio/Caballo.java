@@ -6,13 +6,15 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Caballo {
-    public Caballo(String string, int i) {
-        //TODO Auto-generated constructor stub
-    }
+
     private int numero;
     private String nombre;
-    // Dividendo
- 
 
-    
+    public Caballo(String string, int i) {
+        this.nombre = string;
+        this.numero = i;
+    }
+
+  
+
 }

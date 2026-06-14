@@ -9,16 +9,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpSession;
-import ort.da.Obligatorio.dominio.Apuesta;
+import ort.da.Obligatorio.dominio.Administrador;
 import ort.da.Obligatorio.dominio.Carrera;
 import ort.da.Obligatorio.dominio.Jornada;
-import ort.da.Obligatorio.dominio.Participante;
 import ort.da.Obligatorio.dominio.Usuario;
-import ort.da.Obligatorio.dtos.JornadaDto;
-import ort.da.Obligatorio.dtos.JornadaDto.CarreraTableroDto;
+import ort.da.Obligatorio.dtos.CarreraDto;
+import ort.da.Obligatorio.dtos.CarreraDto.CarreraProximaDto;
 import ort.da.Obligatorio.excepciones.HipodromoException;
 import ort.da.Obligatorio.servicios.FachadaServicios;
 
+/* Fecha de la jornada actual (inicialmente es la jornada de la fecha actual o la más próxima anterior si no hay 
+jornada en el día, luego podrá ser cambiada por el usuario)  
+• Total apostado en la jornada actual 
+• Total pagado en la jornada actual  
+• Total de comisiones cobradas en la jornada actual 
+• Balance general de la jornada (total apostado – total pagado) 
+• Cantidad de carreras de la jornada actual 
+• Cantidad de carreras Finalizadas en la jornada actual 
+• Cantidad de carreras que faltan por correr en la jornada actual 
+ */
 @RestController
 @RequestMapping("/tablero-administrador")
 public class TableroAdminPresentador {
@@ -27,7 +36,7 @@ public class TableroAdminPresentador {
     private static record JornadaTableroDto(int numero, Date dia) {
     }
 
-       @PostMapping("/seleccionar-jornada")
+    @PostMapping("/seleccionar-jornada")
     public Commands seleccionarJornada(@RequestParam("jornadaId") int numeroJornada, HttpSession session)
             throws HipodromoException {
         if (!usuarioAdministradorLogueado(session)) {
@@ -63,8 +72,6 @@ public class TableroAdminPresentador {
         return construirTablero(jornadas, jornadaActual);
     }
 
- 
-
     private Commands construirTablero(List<Jornada> jornadas, Jornada jornadaActual) throws HipodromoException {
         double totalApostado = fachadaServicios.getTotalApostado(jornadaActual);
         double totalPagado = fachadaServicios.getTotalPagado(jornadaActual);
@@ -72,38 +79,41 @@ public class TableroAdminPresentador {
         double balanceJornada = fachadaServicios.getBalanceJornada(jornadaActual);
 
         int cantidadCarrerasJornada = fachadaServicios.getCantidadCarrerasJornada(jornadaActual);
-        int cantidadCarrerasFinalizadas = fachadaServicios.cantidadCarrerasFinalizadasJornada(jornadaActual);
+        int cantidadCarrerasFinalizadas = fachadaServicios.getCantidadCarrerasFinalizadasJornada(jornadaActual);
         int cantidadProximasCarreras = fachadaServicios.getCantidadProximasCarrerasJornada(jornadaActual);
 
         List<Carrera> resultadosCarreras = fachadaServicios.getResultadosCarrerasJornadaOrdenadas(jornadaActual);
         List<Carrera> proximasCarreras = fachadaServicios.getListaProximasCarrerasJornada(jornadaActual);
-    List<JornadaTableroDto> jornadasTablero = jornadas == null ? List.of()
-        : jornadas.stream()
-            .filter(jornada -> jornada != null)
-            .map(jornada -> new JornadaTableroDto(jornada.getNumero(), jornada.getDia()))
-            .toList();
+        List<JornadaTableroDto> jornadasTablero = jornadas == null ? List.of()
+                : jornadas.stream()
+                        .filter(jornada -> jornada != null)
+                        .map(jornada -> new JornadaTableroDto(jornada.getNumero(), jornada.getDia()))
+                        .toList();
 
         return Commands.create(
-        new Command("mostrarJornadas", jornadasTablero),
-        new Command("mostrarJornadaActual", new JornadaTableroDto(jornadaActual.getNumero(), jornadaActual.getDia())),
+                new Command("mostrarJornadas", jornadasTablero),
+                new Command("mostrarJornadaActual",
+                        new JornadaTableroDto(jornadaActual.getNumero(), jornadaActual.getDia())),
                 new Command("mostrarTotalApostado", totalApostado),
                 new Command("mostrarTotalPagado", totalPagado),
                 new Command("mostrarTotalComisionesJornada", totalComisionesJornada),
                 new Command("mostrarBalanceJornada", balanceJornada),
                 new Command("mostrarCantidadCarreras", cantidadCarrerasJornada),
                 new Command("mostrarCantidadCarrerasFinalizadas", cantidadCarrerasFinalizadas),
-                new Command("mostrarCantidadCarrerasPendientes", cantidadProximasCarreras),
                 new Command("mostrarCantidadProximasCarreras", cantidadProximasCarreras),
                 new Command("mostrarResultadosCarreras", resultadosCarreras == null ? List.of()
-                        : resultadosCarreras.stream().map(this::crearCarreraTablero).toList()),
-                new Command("mostrarProximasCarreras", proximasCarreras == null ? List.of()
-                        : proximasCarreras.stream().map(this::crearCarreraTablero).toList())
-        );
+                         : resultadosCarreras.stream()
+                         .filter(carrera -> carrera != null)
+                        .map(CarreraDto.CarreraResultadoDto::new).toList()),
+                new Command("mostrarProximasCarreras", proximasCarreras.stream()
+                        .filter(carrera -> carrera != null)
+                        .map(CarreraDto.CarreraProximaDto::new)
+                        .toList()));
     }
 
     private boolean usuarioAdministradorLogueado(HttpSession session) {
         Usuario usuarioAdministrador = (Usuario) session.getAttribute("usuarioLogueado");
-        return usuarioAdministrador != null;
+        return usuarioAdministrador instanceof Administrador;
     }
 
     private Commands redirigirLogin() {
@@ -111,7 +121,7 @@ public class TableroAdminPresentador {
     }
 
     private Jornada buscarJornadaPorNumero(int numeroJornada) throws HipodromoException {
-        List<Jornada> jornadas = FachadaServicios.getInstancia().getJornadas();
+        List<Jornada> jornadas = fachadaServicios.getJornadas();
         if (jornadas == null) {
             return null;
         }
@@ -122,53 +132,4 @@ public class TableroAdminPresentador {
                 .orElse(null);
     }
 
-    private CarreraTableroDto crearCarreraTablero(Carrera carrera) {
-        if (carrera == null) {
-            return new CarreraTableroDto(0, "", "Sin estado", 0, 0.0, 0.0, "-", "-", 0);
-        }
-
-        return new CarreraTableroDto(
-                carrera.getNumeroCarrera(),
-                carrera.getNombre(),
-                obtenerEstadoCarrera(carrera),
-                obtenerCantidadCaballos(carrera),
-                carrera.getTotalApostado(),
-                carrera.getTotalPagado(),
-                obtenerCaballoGanador(carrera),
-                obtenerDividendoFinal(carrera),
-                obtenerCantidadApuestas(carrera));
-    }
-
-    private String obtenerEstadoCarrera(Carrera carrera) {
-        return carrera.getEstadoCarrera() == null
-                ? "Sin estado"
-                : carrera.getEstadoCarrera().getClass().getSimpleName();
-    }
-
-    private int obtenerCantidadCaballos(Carrera carrera) {
-        return carrera.getRegistros() == null ? 0 : carrera.getRegistros().size();
-    }
-
-    private String obtenerCaballoGanador(Carrera carrera) {
-        return carrera.getCaballoGanador() == null ? "-" : carrera.getCaballoGanador().getNombre();
-    }
-
-    private String obtenerDividendoFinal(Carrera carrera) {
-        return "-";
-    }
-
-    private int obtenerCantidadApuestas(Carrera carrera) {
-        if (carrera.getRegistros() == null) {
-            return 0;
-        }
-
-        int cantidad = 0;
-        for (Participante participante : carrera.getRegistros()) {
-            List<Apuesta> apuestas = participante.getApuestas();
-            if (apuestas != null) {
-                cantidad += apuestas.size();
-            }
-        }
-        return cantidad;
-    }
 }

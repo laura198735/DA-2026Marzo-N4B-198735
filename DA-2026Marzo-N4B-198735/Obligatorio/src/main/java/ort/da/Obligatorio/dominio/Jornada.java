@@ -84,7 +84,7 @@ public class Jornada {
                 continue;
             for (Apuesta ap : apuestas) {
                 if (ap != null)
-                    total += ap.getComision();
+                    total += ap.getMonto() * Carrera.COMISION;
             }
         }
         return total;
@@ -99,20 +99,22 @@ public class Jornada {
         return carreras == null ? 0 : carreras.size();
     }
 
+
     public int getCantidadCarrerasFinalizadasJornada() {
-        int cantidad = 0;
-        List<Carrera> carreras = getCarreras();
+    int cantidad = 0;
 
-        if (carreras != null) {
-            for (Carrera carrera : carreras) {
-                if (carrera != null && carrera.getEstadoCarrera() instanceof Finalizada) {
-                    cantidad++;
-                }
-            }
-        }
-
+    if (carreras == null) {
         return cantidad;
     }
+
+    for (Carrera carrera : carreras) {
+        if (carrera != null && carrera.estaFinalizada()) {
+            cantidad++;
+        }
+    }
+
+    return cantidad;
+}
 
     // recorre las carreras de la jornada y cuenta las que no están finalizadas de
     // la Jornada actual

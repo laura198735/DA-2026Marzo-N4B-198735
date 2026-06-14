@@ -3,6 +3,7 @@ package ort.da.Obligatorio.dominio;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import ort.da.Obligatorio.excepciones.EstadoException;
@@ -15,6 +16,7 @@ public class Carrera {
     private String nombre;
     private IEstadoCarrera estadoCarrera;
     private Jornada jornada;
+    public static final double COMISION = 0.15; // se asume comisión del hipódromo (15%){
 
     // Lista de registros y jornada correspondiente
     private List<Participante> registros;
@@ -44,10 +46,12 @@ public class Carrera {
     public boolean estaFinalizada() {
         return estadoCarrera instanceof Finalizada;
     }
-    // ganador.
-    public int asignarGanador() throws EstadoException {
-        return estadoCarrera.asignarGanador(this);
-    };
+
+    // ganador y finalizo la carrera
+    public void asignarCaballoGanadorYfinalizar(Caballo caballoGanador) {
+        this.caballoGanador = caballoGanador;
+        this.estadoCarrera = new Finalizada();
+    }
 
     // **ver si se puede apostar */
     public boolean puedeApostar() {
@@ -75,10 +79,10 @@ public class Carrera {
         for (Participante registro : registros) {
             if (registro.getApuestas() != null) {
                 for (Apuesta apuesta : registro.getApuestas()) {
-                    if (apuesta.isGanadora()) {
+                    if (apuesta.esApuestaGanadora()) {
                         // Se paga el monto apostado multiplicado por el valor
                         // del dividendo
-                        double valorDividendo = registro.getDividendoActual();
+                        double valorDividendo = registro.getDividendoFinal();
                         total += apuesta.getMonto() * valorDividendo;
                     }
                 }
@@ -88,18 +92,45 @@ public class Carrera {
         return total;
     }
 
-    public String obtenerEstadoCarrera(Carrera carrera) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'obtenerEstadoCarrera'");
+    // obtener el dividendo final del caballo ganador para mostrar en el tablero
+    // Administrador
+    public double getDividendoFinalGanador() {
+        if (registros == null || caballoGanador == null) {
+            return 0.0;
+        }
+
+        for (Participante participante : registros) {
+            if (participante != null && participante.esCaballoGanador()) {
+                return participante.getDividendoFinal();
+            }
+        }
+
+        return 0.0;
     }
 
-    public int obtenerCantidadCaballos(Carrera carrera) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'obtenerCantidadCaballos'");
+    public IEstadoCarrera obtenerEstadoCarrera(Carrera carrera) {
+        return this.getEstadoCarrera();
     }
 
-    public int obtenerCantidadApuestas(Carrera carrera) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'obtenerCantidadApuestas'");
+    public String obtenerNombreEstadoCarrera() {
+        return this.getEstadoCarrera().toString();
     }
+
+    public int obtenerCantidadCaballos() {
+        return registros == null ? 0 : registros.size();
+    }
+
+    public int obtenerCantidadApuestas() {
+        int cantidad = 0;
+        if (registros == null) {
+            return cantidad;
+        }
+        for (Participante registro : registros) {
+            if (registro.getApuestas() != null) {
+                cantidad += registro.getApuestas().size();
+            }
+        }
+        return cantidad;
+    }
+
 }

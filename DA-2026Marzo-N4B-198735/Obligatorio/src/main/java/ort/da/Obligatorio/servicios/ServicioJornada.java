@@ -2,6 +2,7 @@ package ort.da.Obligatorio.servicios;
 
 import java.util.Date;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import lombok.Getter;
@@ -26,22 +27,26 @@ public class ServicioJornada {
 
     public Jornada getJornadaActual() {
         Date hoy = Jornada.truncarHora(new Date());
-
+        Jornada jornadaActual = null;
         for (Jornada jornada : jornadas) {
             if (jornada == null || jornada.getDia() == null)
                 continue;
             Date diaJ = Jornada.truncarHora(jornada.getDia());
-            if (diaJ == null)
+
+            if (diaJ == null || diaJ.after(hoy)) {
                 continue;
-            // si la fecha de hoy es igual o posterior a la fecha de la jornada (solo fecha), entonces es la jornada actual
-            if (!hoy.before(diaJ)) {
-                return jornada;
+            }
+            // si la fecha de hoy es igual o posterior a la fecha de la jornada (solo
+            // fecha), entonces es la jornada actual
+
+            if (jornadaActual == null ||
+                    diaJ.after(Jornada.truncarHora(jornadaActual.getDia()))) {
+                jornadaActual = jornada;
             }
         }
 
-        return null;
+        return jornadaActual;
     }
-    
 
     // las jornadas se agregan en orden cronologico inverso
     public void agregar(Jornada jornada) {
@@ -49,12 +54,6 @@ public class ServicioJornada {
     }
 
     // * • Cantidad de carreras que faltan por correr en la jornada actual
-
-    public int getCantidadProximasCarrerasJornada(Jornada jornada) throws HipodromoException {
-        if (jornada == null)
-            throw new HipodromoException("No hay jornada seleccionada");
-        return jornada.getCantidadProximasCarrerasJornada();
-    }
 
     public double getTotalApostado(Jornada jornada) throws HipodromoException {
         if (jornada == null)
@@ -71,8 +70,8 @@ public class ServicioJornada {
     public double getTotalComisionesJornada(Jornada jornada) throws HipodromoException {
         if (jornada == null)
             throw new HipodromoException("No hay jornada seleccionada");
-        final double comision = 0.10;
-        return jornada.getTotalApostado() * comision;
+
+        return jornada.getTotalApostado() * Carrera.COMISION;
     }
 
     public double getBalanceJornada(Jornada jornada) throws HipodromoException {
@@ -80,8 +79,7 @@ public class ServicioJornada {
             throw new HipodromoException("No hay jornada seleccionada");
         double totalA = jornada.getTotalApostado();
         double totalP = jornada.getTotalPagado();
-        double com = getTotalComisionesJornada(jornada);
-        return totalA - totalP - com;
+        return totalA - totalP;
     }
 
     public int getCantidadCarrerasJornada(Jornada jornada) throws HipodromoException {
@@ -90,20 +88,20 @@ public class ServicioJornada {
         return jornada.getCarreras() == null ? 0 : jornada.getCarreras().size();
     }
 
-
     public int getCantidadCarrerasFinalizadasJornada(Jornada jornada) throws HipodromoException {
         if (jornada == null)
             throw new HipodromoException("No hay jornada seleccionada");
         if (jornada.getCarreras() == null)
             return 0;
-        int c = 0;
+        int cantidad = 0;
         for (Carrera ca : jornada.getCarreras()) {
             if (ca.getEstadoCarrera() instanceof Finalizada)
-                c++;
+                cantidad++;
         }
-        return c;
+        return cantidad;
     }
-    public int getCantidadCProximasCarrerasJornada(Jornada jornada) throws HipodromoException {
+
+    public int getCantidadProximasCarrerasJornada(Jornada jornada) throws HipodromoException {
         if (jornada == null)
             throw new HipodromoException("No hay jornada seleccionada");
         if (jornada.getCarreras() == null)
@@ -115,6 +113,7 @@ public class ServicioJornada {
         }
         return c;
     }
+
     public List<Carrera> getResultadosCarrerasJornadaOrdenadas(Jornada jornada) throws HipodromoException {
         if (jornada == null)
             throw new HipodromoException("No hay jornada seleccionada");
@@ -125,7 +124,7 @@ public class ServicioJornada {
             if (ca.getEstadoCarrera() instanceof Finalizada)
                 res.add(ca);
         }
-        res.sort((a, b) -> Integer.compare(b.getNumeroCarrera(), a.getNumeroCarrera()));
+        res.sort(Comparator.comparingInt(Carrera::getNumeroCarrera).reversed());// se ordenan de más reciente a más antigua
         return res;
     }
 
@@ -142,11 +141,7 @@ public class ServicioJornada {
         return res;
     }
 
-
-
-   
-
-//auxiliares
+    // auxiliares}
     public Jornada getJornadaPorFecha(Date fechaSeleccionada) {
         try {
             if (fechaSeleccionada == null) {
@@ -167,5 +162,4 @@ public class ServicioJornada {
             throw new RuntimeException("Error al obtener la jornada por fecha: " + e.getMessage());
         }
     }
-
 }

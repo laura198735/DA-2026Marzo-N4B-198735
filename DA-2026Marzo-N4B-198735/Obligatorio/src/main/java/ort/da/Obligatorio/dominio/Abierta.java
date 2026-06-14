@@ -35,5 +35,11 @@ public class Abierta implements IEstadoCarrera {
         carrera.setEstadoCarrera(this);// cambia el estado de la carrera a Abierta y permite apostar
         return true;//**ver si pasa a abierta */
     }
+    public void cambiarAEstadoEstable(Carrera carrera) throws EstadoException {
+        if(!Participante.tieneDividendoValido(carrera)) {
+            throw new EstadoException("No se puede cambiar a estado estable si hay al menos un caballo con dividendo inválido");
+        }
+        carrera.setEstadoCarrera(new Estable()); // Cambia el estado de la carrera a "Estable"
+    }
 
 }

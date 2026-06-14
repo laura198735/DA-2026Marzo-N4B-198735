@@ -109,7 +109,7 @@ public class FachadaServicios {
     }
 
     // * Cantidad de carreras Finalizadas en la jornada actual
-    public int cantidadCarrerasFinalizadasJornada(Jornada jornada) throws HipodromoException {
+    public int getCantidadCarrerasFinalizadasJornada(Jornada jornada) throws HipodromoException {
         return servicioJornada.getCantidadCarrerasFinalizadasJornada(jornada);
     }
 
@@ -136,4 +136,7 @@ public class FachadaServicios {
      * total apostado, cantidad de apuestas)
      */
 
+
+
+       
 }
