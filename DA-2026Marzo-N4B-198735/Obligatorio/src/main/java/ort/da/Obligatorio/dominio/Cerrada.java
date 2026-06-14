@@ -17,19 +17,29 @@ public class Cerrada implements IEstadoCarrera {
         throw new EstadoException("La carrera ya está cerrada");
     }
 
-    @Override
-    public int asignarGanador(Carrera carrera) throws EstadoException {
-        Caballo ganador = carrera.getCaballoGanador();
-        if (ganador == null) {
-            throw new EstadoException("No se puede asignar un ganador a una carrera sin ganador definido");
-        }
-        return ganador.getNumero();
-
-    }
 
     @Override
     public boolean puedeApostar(Carrera carrera) {
         return false;
     }
 
+    //
+    @Override
+    public void finalizarCarrera(Carrera carrera, Caballo caballoGanador) throws EstadoException {
+        if (caballoGanador == null) {
+            throw new EstadoException("Debe seleccionar un caballo ganador.");
+        }
+        Caballo caballoParticipante = carrera.buscarCaballoParticipante(caballoGanador.getNumero());
+        if (caballoParticipante == null) {
+            throw new EstadoException("El caballo ganador debe participar en la carrera.");
+        }
+
+        carrera.setCaballoGanador(caballoGanador);
+        carrera.setEstadoCarrera(new Finalizada());
+    }
+
+    @Override
+    public String getNombreEstado() {
+        return "Cerrada";
+    }
 }

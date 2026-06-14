@@ -15,7 +15,7 @@ public class Definida implements IEstadoCarrera {
         throw new EstadoException("No se puede cerrar una carrera en estado definido");}
 
     @Override
-    public int asignarGanador(Carrera carrera) throws EstadoException {
+    public void finalizarCarrera(Carrera carrera, Caballo caballoGanador) throws EstadoException {
         throw new EstadoException("No se puede asignar un ganador a una carrera en estado Definido");
     }
 
@@ -24,4 +24,9 @@ public class Definida implements IEstadoCarrera {
         return false;
     }
 
-}
+            @Override
+            public String getNombreEstado() {
+                return "Definida";
+            }
+
+        }

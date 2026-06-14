@@ -14,21 +14,20 @@ public class Finalizada implements IEstadoCarrera {
 
     @Override
     public void cerrarCarrera(Carrera carrera) throws EstadoException {
-        throw new EstadoException("La carrera ya está cerrada y finalizada");
+        throw new EstadoException("La carrera ya está cerrada");
     }
 
-    @Override
-    public int asignarGanador(Carrera carrera) throws EstadoException {
-        throw new EstadoException("No se puede asignar un ganador a una carrera que ya ha finalizado");
+    // Cambia el estado de la carrera a "Finalizada"
+    public void finalizarCarrera(Carrera carrera, Caballo caballoGanador) throws EstadoException {
+        carrera.setEstadoCarrera(this);
     }
-
     @Override
     public boolean puedeApostar(Carrera carrera) {
         return false;
     }
-    public void finalizarCarrera(Carrera carrera) throws EstadoException {
-        carrera.setEstadoCarrera(this); // Cambia el estado de la carrera a "Finalizada"
+    @Override
+    public String getNombreEstado() {
+        return "Finalizada";
     }
-   
-
 }
+

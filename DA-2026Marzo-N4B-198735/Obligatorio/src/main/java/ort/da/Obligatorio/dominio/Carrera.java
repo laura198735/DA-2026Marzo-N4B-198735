@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import ort.da.Obligatorio.excepciones.EstadoException;
+import ort.da.Obligatorio.excepciones.HipodromoException;
 
 @Getter
 @Setter
@@ -47,8 +48,13 @@ public class Carrera {
         return estadoCarrera instanceof Finalizada;
     }
 
+    public IEstadoCarrera obtenerEstadoCarrera(Carrera carrera) {
+        return this.getEstadoCarrera();
+    }
+
     // ganador y finalizo la carrera
-    public void asignarCaballoGanadorYfinalizar(Caballo caballoGanador) {
+
+    public void finalizarCarrera(Caballo caballoGanador) throws EstadoException {
         this.caballoGanador = caballoGanador;
         this.estadoCarrera = new Finalizada();
     }
@@ -58,6 +64,7 @@ public class Carrera {
         return estadoCarrera.puedeApostar(this);
     };
 
+    // calculos
     // calcular apostado y pagado en carrera
     public double getTotalApostado() {
         double total = 0.0;
@@ -91,9 +98,10 @@ public class Carrera {
         }
         return total;
     }
+ 
 
     // obtener el dividendo final del caballo ganador para mostrar en el tablero
-    // Administrador
+
     public double getDividendoFinalGanador() {
         if (registros == null || caballoGanador == null) {
             return 0.0;
@@ -108,18 +116,54 @@ public class Carrera {
         return 0.0;
     }
 
-    public IEstadoCarrera obtenerEstadoCarrera(Carrera carrera) {
-        return this.getEstadoCarrera();
+    // obtener carrera por numero y caballo ganador para tablero
+    public Carrera obtenerCarreraPorNumero(int numeroCarrera) throws HipodromoException {
+        try {
+            Carrera carrera = null;
+            for (Carrera c : jornada.getCarreras()) {
+                if (c.getNumeroCarrera() == numeroCarrera) {
+                    carrera = c;
+                    break;
+                }
+            }
+            if (carrera == null) {
+                throw new HipodromoException("No se encontró la carrera con número: " + numeroCarrera);
+            }
+            return carrera;
+
+        } catch (Exception e) {
+            throw new HipodromoException("Error al obtener la carrera por número: " + e.getMessage());
+        }
     }
 
+    // para dtos
     public String obtenerNombreEstadoCarrera() {
         return this.getEstadoCarrera().toString();
     }
 
+    // caballos participantes de carrera para tablero Administrador
     public int obtenerCantidadCaballos() {
         return registros == null ? 0 : registros.size();
     }
 
+    public String obtenerCaballoGanador() {
+        return caballoGanador != null ? caballoGanador.getNombre() : "-";
+    }
+
+    public Caballo buscarCaballoParticipante(int numeroCaballo) {
+        if (registros == null) {
+            return null;
+        }
+        for (Participante registro : registros) {
+            if (registro != null && registro.getCaballo() != null
+                    && registro.getCaballo().getNumero() == numeroCaballo) {
+                return registro.getCaballo();
+            }
+        }
+        return null;
+    }
+
+    // cantidad de apuestas realizadas en la carrera para tablero Administrador
     public int obtenerCantidadApuestas() {
         int cantidad = 0;
         if (registros == null) {

@@ -114,7 +114,7 @@ public class ServicioJornada {
         return c;
     }
 
-    public List<Carrera> getResultadosCarrerasJornadaOrdenadas(Jornada jornada) throws HipodromoException {
+    public List<Carrera> getResultadosCarrerasFinalizadasJornadaOrdenadas(Jornada jornada) throws HipodromoException {
         if (jornada == null)
             throw new HipodromoException("No hay jornada seleccionada");
         List<Carrera> res = new ArrayList<>();

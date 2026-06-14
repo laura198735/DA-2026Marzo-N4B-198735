@@ -53,7 +53,7 @@ public class CarreraDto {
     }
 
     // para usar en tableros
-    public static record CarreraResultadoDto(
+    public static record CarreraFinalizadaDto(
             int numero,
             String nombre,
             int cantidadCaballos,
@@ -62,7 +62,7 @@ public class CarreraDto {
             String caballoGanador,
             double dividendoFinal) {
 
-        public CarreraResultadoDto(Carrera carrera) {
+        public CarreraFinalizadaDto(Carrera carrera) {
             this(
                     carrera.getNumeroCarrera(),
                     carrera.getNombre(),

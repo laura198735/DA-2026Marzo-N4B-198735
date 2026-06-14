@@ -80,9 +80,12 @@ public class TableroAdminPresentador {
 
         int cantidadCarrerasJornada = fachadaServicios.getCantidadCarrerasJornada(jornadaActual);
         int cantidadCarrerasFinalizadas = fachadaServicios.getCantidadCarrerasFinalizadasJornada(jornadaActual);
-        int cantidadProximasCarreras = fachadaServicios.getCantidadProximasCarrerasJornada(jornadaActual);
+        //*Carreras Finalizadas en la jornada actual ordenadas por número descendente Información: numero, hora de finalización, cantidad de caballos que participaron, total apostado, total pagado, caballo ganador, dividendo final del ganador   */
+        List<Carrera> carrerasFinalizadas = fachadaServicios.getResultadosCarrerasFinalizadasJornadaOrdenadas(jornadaActual);
+        int cantidadProximasCarreras = fachadaServicios.
+        getCantidadProximasCarrerasJornada(jornadaActual);
 
-        List<Carrera> resultadosCarreras = fachadaServicios.getResultadosCarrerasJornadaOrdenadas(jornadaActual);
+        List<Carrera> resultadosCarreras = fachadaServicios.getResultadosCarrerasFinalizadasJornadaOrdenadas(jornadaActual);
         List<Carrera> proximasCarreras = fachadaServicios.getListaProximasCarrerasJornada(jornadaActual);
         List<JornadaTableroDto> jornadasTablero = jornadas == null ? List.of()
                 : jornadas.stream()
@@ -101,10 +104,10 @@ public class TableroAdminPresentador {
                 new Command("mostrarCantidadCarreras", cantidadCarrerasJornada),
                 new Command("mostrarCantidadCarrerasFinalizadas", cantidadCarrerasFinalizadas),
                 new Command("mostrarCantidadProximasCarreras", cantidadProximasCarreras),
-                new Command("mostrarResultadosCarreras", resultadosCarreras == null ? List.of()
-                         : resultadosCarreras.stream()
-                         .filter(carrera -> carrera != null)
-                        .map(CarreraDto.CarreraResultadoDto::new).toList()),
+                new Command("mostrarResultadosCarreras", carrerasFinalizadas.stream()
+                        .filter(carrera -> carrera != null)
+                        .map(CarreraDto.CarreraFinalizadaDto::new)
+                        .toList()),
                 new Command("mostrarProximasCarreras", proximasCarreras.stream()
                         .filter(carrera -> carrera != null)
                         .map(CarreraDto.CarreraProximaDto::new)

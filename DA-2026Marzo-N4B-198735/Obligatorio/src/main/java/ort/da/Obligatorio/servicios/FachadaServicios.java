@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import ort.da.Obligatorio.dominio.Caballo;
 import ort.da.Obligatorio.dominio.Carrera;
 import ort.da.Obligatorio.dominio.Credencial;
 import ort.da.Obligatorio.dominio.Jornada;
@@ -11,11 +12,15 @@ import ort.da.Obligatorio.dominio.Modalidad;
 import ort.da.Obligatorio.dominio.Usuario;
 import ort.da.Obligatorio.excepciones.AutenticacionException;
 import ort.da.Obligatorio.excepciones.HipodromoException;
+import ort.da.Obligatorio.servicios.ServicioApuesta;
+import ort.da.Obligatorio.servicios.ServicioCarrera;
 
 public class FachadaServicios {
     private static FachadaServicios instancia;
     private ServicioAutenticacion servicioAutenticacion;
     private ServicioJornada servicioJornada;
+    private ServicioCarrera servicioCarrera;
+    private ServicioApuesta servicioApuesta;
 
     private List<Usuario> usuarios; // Lista de usuarios para autenticación
     private List<Modalidad> modalidades; // Lista de modalidades de apuesta
@@ -31,6 +36,9 @@ public class FachadaServicios {
         // Inicializar servicios
         this.servicioAutenticacion = new ServicioAutenticacion();
         this.servicioJornada = new ServicioJornada();
+        this.servicioApuesta = new ServicioApuesta();
+        this.servicioCarrera = new ServicioCarrera(this.servicioJornada, this.servicioApuesta);
+        
         this.usuarios = new ArrayList<>();
         this.modalidades = new ArrayList<>();
 
@@ -118,8 +126,8 @@ public class FachadaServicios {
 
     }
 
-    public List<Carrera> getResultadosCarrerasJornadaOrdenadas(Jornada jornada) throws HipodromoException {
-        return servicioJornada.getResultadosCarrerasJornadaOrdenadas(jornada);
+    public List<Carrera> getResultadosCarrerasFinalizadasJornadaOrdenadas(Jornada jornada) throws HipodromoException {
+        return servicioJornada.getResultadosCarrerasFinalizadasJornadaOrdenadas(jornada);
     }
 
     public List<Carrera> getListaProximasCarrerasJornada(Jornada jornada) throws HipodromoException {
@@ -136,7 +144,24 @@ public class FachadaServicios {
      * total apostado, cantidad de apuestas)
      */
 
+//CASO DE USO GESTIONAR CARRERA
+public void abrirCarrera(Carrera carrera) throws HipodromoException {
+    if (carrera == null) {
+        throw new HipodromoException("Carrera inválida");
+    }  
+    servicioCarrera.abrirCarrera(carrera);
+    }  
+   
+
+
+public void gestionarCerrarCarrera(int numeroCarrera) throws HipodromoException {
+    servicioCarrera.cerrarCarrera(numeroCarrera);
+}
+
+public void gestionarFinalizarCarrera(Carrera carrera, Caballo caballoGanador) throws HipodromoException {
+    servicioCarrera.finalizarCarrera(carrera, caballoGanador);
+}
+}
 
 
        
-}

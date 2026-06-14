@@ -8,8 +8,10 @@ public interface IEstadoCarrera {
 
     public void cerrarCarrera(Carrera carrera) throws EstadoException;
 
-    public int asignarGanador(Carrera carrera) throws EstadoException;
-
-    public boolean puedeApostar(Carrera carrera);
+    public void finalizarCarrera(Carrera carrera, Caballo caballoGanador) throws EstadoException;
+     
     
+    public boolean puedeApostar(Carrera carrera);
+
+    String getNombreEstado();
 }
