@@ -751,7 +751,7 @@ button {
 }
 
 /* ============================================
-   NAVEGACI�N DE JORNADAS
+   NAVEGACIoN DE JORNADAS
    ============================================ */
 
 .jornada-nav {
@@ -807,7 +807,7 @@ button {
 }
 
 /* ============================================
-   ESTAD�STICAS (GRID)
+   ESTADISTICAS (GRID)
    ============================================ */
 
 .estadisticas-grid {
@@ -1040,7 +1040,7 @@ button {
 }
 
 /* ============================================
-   ESTADOS VAC�OS
+   ESTADOS VACIOS
    ============================================ */
 
 .empty-state {
@@ -1326,8 +1326,19 @@ button {
   .login-card { padding: 20px; border-radius: 12px; }
   .login-form { gap: 14px; }
 }
+/* ==============================
+   Dashboard - Gestionar carrera
+   ============================== */
 
+.caballo-seleccionado {
+    background: #fff0bd !important;
+    box-shadow: inset 4px 0 0 #ffc107;
+    font-weight: 700;
+}
 
-
+.caballo-seleccionado .action-button {
+    background: #ffc107;
+    color: #1f2933;
+}
 
 

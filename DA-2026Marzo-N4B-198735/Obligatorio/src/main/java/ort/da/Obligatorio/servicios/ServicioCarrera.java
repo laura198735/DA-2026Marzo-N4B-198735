@@ -126,8 +126,10 @@ public class ServicioCarrera {
             return new ArrayList<>();
         }
         return carrera.getRegistros().stream()
+                .filter(participante -> participante != null && participante.getCaballo() != null)
                 .map(Participante::getCaballo)
-                .toList();
+                .filter(caballo -> caballo != null)
+                .toList();//listo los caballos que tiene el participante de la carrera.
     }
 
     public List<Carrera> getCarreras() throws HipodromoException {

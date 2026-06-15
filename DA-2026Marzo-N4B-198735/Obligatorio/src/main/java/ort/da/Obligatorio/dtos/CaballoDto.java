@@ -16,6 +16,11 @@ public class CaballoDto {
         this.nombre = nombre;
     }
 
+    public CaballoDto(Caballo caballo) {
+        this.numero = caballo.getNumero();
+        this.nombre = caballo.getNombre();
+
+    }
     public static CaballoDto from(int numero, String nombre) {
         return new CaballoDto(numero, nombre);
     }

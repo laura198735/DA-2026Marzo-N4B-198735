@@ -1,383 +1,421 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Gestionar Carrera</title>
-  <link rel="stylesheet" href="styles.css" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Gestionar Carrera</title>
+    <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
-  <nav style="margin-bottom:24px; display:flex; gap:18px; justify-content:center;">
-    <a href="tablero-administrador.html">Tablero Administrador</a>
-    <a href="login-admin.html">Logout</a>
-  </nav>
+    <nav style="margin-bottom:24px; display:flex; gap:18px; justify-content:center;">
+        <a href="tablero-administrador.html">Tablero Administrador</a>
+        <a href="login-admin.html">Logout</a>
+    </nav>
 
-  <main class="page-shell" style="max-width:1100px;margin:24px auto;padding:20px;">
-    <header style="background:#15304c;color:#fff;padding:18px;border-radius:10px;display:flex;justify-content:space-between;align-items:center;">
-      <div>
-        <div style="font-weight:900;font-size:1.2rem;">Gestionar carrera</div>
-        <div id="carrera-nombre" style="font-weight:800;margin-top:6px;">Sin carrera seleccionada</div>
-        <div style="margin-top:6px;"><span id="carrera-estado" class="status status--defined">Sin definir</span></div>
-      </div>
-      <div style="text-align:right;">
-        <div style="font-size:0.9rem;color:#dfe8ee">Total apostado</div>
-        <div id="carrera-total-apostado" style="font-weight:900;color:#ffc847;font-size:1.4rem">$ 0</div>
-        <div style="margin-top:6px;color:#dfe8ee">Caballos: <span id="carrera-cantidad-caballos">0</span> &nbsp; Apuestas: <span id="carrera-cantidad-apuestas">0</span></div>
-      </div>
-    </header>
+    <main class="page-shell" style="max-width:1100px;margin:24px auto;padding:20px;">
+        <header
+            style="background:#15304c;color:#fff;padding:18px;border-radius:10px;display:flex;justify-content:space-between;align-items:center;">
+            <div>
+                <div style="font-weight:900;font-size:1.2rem;">Gestionar carrera</div>
+                <div id="carrera-nombre" style="font-weight:800;margin-top:6px;">Sin carrera seleccionada</div>
+                <div style="margin-top:6px;"><span id="carrera-estado" class="status status--defined">Sin definir</span>
+                </div>
+            </div>
+            <div style="text-align:right;">
+                <div style="font-size:0.9rem;color:#dfe8ee">Total apostado</div>
+                <div id="carrera-total-apostado" style="font-weight:900;color:#ffc847;font-size:1.4rem">$ 0</div>
+                <div style="margin-top:6px;color:#dfe8ee">Caballos: <span id="carrera-cantidad-caballos">0</span> &nbsp;
+                    Apuestas: <span id="carrera-cantidad-apuestas">0</span></div>
+            </div>
+        </header>
 
-    <section style="background:#fff;padding:18px;border-radius:10px;margin-top:16px;">
-      <div style="font-weight:900;margin-bottom:8px">Caballos participantes</div>
-      <table class="admin-table" style="width:100%;background:#fff;border-collapse:collapse;">
-        <thead>
-          <tr>
-            <th style="text-align:left;padding:10px">N°</th>
-            <th style="text-align:left;padding:10px">NOMBRE DEL CABALLO</th>
-            <th style="text-align:left;padding:10px">ACCIÓN</th>
-          </tr>
-        </thead>
-        <tbody id="caballos-body">
-          <tr id="caballos-vacio"><td colspan="3" style="text-align:center;padding:18px;color:#7a8589">Esperando datos de la carrera.</td></tr>
-        </tbody>
-      </table>
-    </section>
+        <section style="background:#fff;padding:18px;border-radius:10px;margin-top:16px;">
+            <div style="font-weight:900;margin-bottom:8px">Caballos participantes</div>
+            <table class="admin-table" style="width:100%;background:#fff;border-collapse:collapse;">
+                <thead>
+                    <tr>
+                        <th style="text-align:left;padding:10px">N°</th>
+                        <th style="text-align:left;padding:10px">NOMBRE DEL CABALLO</th>
+                        <th style="text-align:left;padding:10px">ACCIÓN</th>
+                    </tr>
+                </thead>
+                <tbody id="caballos-body">
+                    <tr id="caballos-vacio">
+                        <td colspan="3" style="text-align:center;padding:18px;color:#7a8589">Esperando datos de la
+                            carrera.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
 
-    <section style="background:#fff;padding:18px;border-radius:10px;margin-top:16px;">
-      <div style="font-weight:900;margin-bottom:8px">Caballo seleccionado</div>
-      <div id="caballo-seleccionado" style="padding:12px;border-radius:8px;background:#f4f7f8;color:#516169">Todavía no hay un caballo seleccionado.</div>
-    </section>
+        <section style="background:#fff;padding:18px;border-radius:10px;margin-top:16px;">
+            <div style="font-weight:900;margin-bottom:8px">Caballo seleccionado</div>
+            <div id="caballo-seleccionado" style="padding:12px;border-radius:8px;background:#f4f7f8;color:#516169">
+                Todavía no hay un caballo seleccionado.</div>
+        </section>
 
-    <div id="vista-mensajes" class="error hidden" role="status" aria-live="polite" style="margin-top:16px"></div>
-  </main>
+        <div id="vista-mensajes" class="error hidden" role="status" aria-live="polite" style="margin-top:16px"></div>
+    </main>
 
-<script type="module">
-  import dispatcher from './CommandDispatcher.js';
+    <script type="module">
+        import dispatcher from './CommandDispatcher.js';
 
-  const carreraNombre = document.getElementById('carrera-nombre');
-  const carreraEstado = document.getElementById('carrera-estado');
-  const carreraTotalApostado = document.getElementById('carrera-total-apostado');
-  const carreraCantidadCaballos = document.getElementById('carrera-cantidad-caballos');
-  const carreraCantidadApuestas = document.getElementById('carrera-cantidad-apuestas');
-  const caballosBody = document.getElementById('caballos-body');
-  const caballosVacio = document.getElementById('caballos-vacio');
-  const caballoSeleccionado = document.getElementById('caballo-seleccionado');
-  const vistaMensajes = document.getElementById('vista-mensajes');
+        const carreraNombre = document.getElementById('carrera-nombre');
+        const carreraEstado = document.getElementById('carrera-estado');
+        const carreraTotalApostado = document.getElementById('carrera-total-apostado');
+        const carreraCantidadCaballos = document.getElementById('carrera-cantidad-caballos');
+        const carreraCantidadApuestas = document.getElementById('carrera-cantidad-apuestas');
+        const caballosBody = document.getElementById('caballos-body');
+        const caballosVacio = document.getElementById('caballos-vacio');
+        const caballoSeleccionado = document.getElementById('caballo-seleccionado');
+        const vistaMensajes = document.getElementById('vista-mensajes');
 
-  const formateadorEntero = new Intl.NumberFormat('es-UY', {
-    maximumFractionDigits: 0
-  });
+        const formateadorEntero = new Intl.NumberFormat('es-UY', {
+            maximumFractionDigits: 0
+        });
 
-  let caballoSeleccionadoId = null;
+        let caballoSeleccionadoId = null;
 
-  function extraerValor(origen, rutas, valorPorDefecto = '') {
-    for (const ruta of rutas) {
-      let valor = origen;
+        function extraerValor(origen, rutas, valorPorDefecto = '') {
+            for (const ruta of rutas) {
+                let valor = origen;
 
-      for (const clave of ruta) {
-        if (valor === null || valor === undefined) {
-          valor = undefined;
-          break;
+                for (const clave of ruta) {
+                    if (valor === null || valor === undefined) {
+                        valor = undefined;
+                        break;
+                    }
+
+                    valor = valor[clave];
+                }
+
+                if (valor !== null && valor !== undefined && valor !== '') {
+                    return valor;
+                }
+            }
+
+            return valorPorDefecto;
         }
 
-        valor = valor[clave];
-      }
+        function formatearMoneda(valor) {
+            const numero = Number(valor ?? 0);
+            const seguro = Number.isFinite(numero) ? numero : 0;
 
-      if (valor !== null && valor !== undefined && valor !== '') {
-        return valor;
-      }
-    }
+            return `$ ${formateadorEntero.format(seguro)}`;
+        }
 
-    return valorPorDefecto;
-  }
+        function normalizarTexto(valor) {
+            return String(valor ?? '').trim();
+        }
 
-  function formatearMoneda(valor) {
-    const numero = Number(valor ?? 0);
-    const seguro = Number.isFinite(numero) ? numero : 0;
+        function claseEstado(estado) {
+            const texto = normalizarTexto(estado).toLowerCase();
 
-    return `$ ${formateadorEntero.format(seguro)}`;
-  }
+            if (texto.includes('abierta')) {
+                return 'status status--open';
+            }
 
-  function normalizarTexto(valor) {
-    return String(valor ?? '').trim();
-  }
+            if (texto.includes('cerrada')) {
+                return 'status status--closed';
+            }
 
-  function claseEstado(estado) {
-    const texto = normalizarTexto(estado).toLowerCase();
+            if (texto.includes('finalizada')) {
+                return 'status status--closed';
+            }
 
-    if (texto.includes('abierta')) {
-      return 'status status--open';
-    }
+            return 'status status--defined';
+        }
 
-    if (texto.includes('cerrada')) {
-      return 'status status--closed';
-    }
+        function mostrarMensaje(tipo, texto) {
+            if (!texto) {
+                vistaMensajes.classList.add('hidden');
+                vistaMensajes.textContent = '';
+                return;
+            }
 
-    if (texto.includes('finalizada')) {
-      return 'status status--closed';
-    }
+            vistaMensajes.classList.remove('hidden');
+            vistaMensajes.textContent = texto;
 
-    return 'status status--defined';
-  }
+            if (tipo === 'exito') {
+                vistaMensajes.style.background = 'rgba(28, 169, 76, 0.12)';
+                vistaMensajes.style.borderColor = 'rgba(28, 169, 76, 0.3)';
+                vistaMensajes.style.color = '#166c31';
+                return;
+            }
 
-  function mostrarMensaje(tipo, texto) {
-    if (!texto) {
-      vistaMensajes.classList.add('hidden');
-      vistaMensajes.textContent = '';
-      return;
-    }
+            vistaMensajes.style.background = 'rgba(229, 60, 79, 0.12)';
+            vistaMensajes.style.borderColor = 'rgba(229, 60, 79, 0.3)';
+            vistaMensajes.style.color = '#9e2332';
+        }
 
-    vistaMensajes.classList.remove('hidden');
-    vistaMensajes.textContent = texto;
+        function renderCarrera(carrera) {
+            if (!carrera) {
+                carreraNombre.textContent = 'Sin carrera seleccionada';
+                carreraEstado.textContent = 'Sin definir';
+                carreraEstado.className = 'status status--defined';
+                carreraTotalApostado.textContent = '$ 0';
+                carreraCantidadCaballos.textContent = '0';
+                carreraCantidadApuestas.textContent = '0';
+                return;
+            }
 
-    if (tipo === 'exito') {
-      vistaMensajes.style.background = 'rgba(28, 169, 76, 0.12)';
-      vistaMensajes.style.borderColor = 'rgba(28, 169, 76, 0.3)';
-      vistaMensajes.style.color = '#166c31';
-      return;
-    }
+            const numero = extraerValor(carrera, [
+                ['numeroCarrera'],
+                ['numero']
+            ], '-');
 
-    vistaMensajes.style.background = 'rgba(229, 60, 79, 0.12)';
-    vistaMensajes.style.borderColor = 'rgba(229, 60, 79, 0.3)';
-    vistaMensajes.style.color = '#9e2332';
-  }
+            const nombre = extraerValor(carrera, [
+                ['nombre']
+            ], 'Sin nombre');
 
-  function renderCarrera(carrera) {
-    if (!carrera) {
-      carreraNombre.textContent = 'Sin carrera seleccionada';
-      carreraEstado.textContent = 'Sin definir';
-      carreraEstado.className = 'status status--defined';
-      carreraTotalApostado.textContent = '$ 0';
-      carreraCantidadCaballos.textContent = '0';
-      carreraCantidadApuestas.textContent = '0';
-      return;
-    }
+            const estado = extraerValor(carrera, [
+                ['estado'],
+                ['estadoCarrera', 'nombreEstado'],
+                ['nombreEstado']
+            ], 'Sin definir');
 
-    const numero = extraerValor(carrera, [
-      ['numeroCarrera'],
-      ['numero']
-    ], '-');
+            const totalApostado = extraerValor(carrera, [
+                ['totalApostado']
+            ], 0);
 
-    const nombre = extraerValor(carrera, [
-      ['nombre']
-    ], 'Sin nombre');
+            const cantidadCaballos = extraerValor(carrera, [
+                ['cantidadCaballos']
+            ], Array.isArray(carrera?.registros) ? carrera.registros.length : 0);
 
-    const estado = extraerValor(carrera, [
-      ['estado'],
-      ['estadoCarrera', 'nombreEstado'],
-      ['nombreEstado']
-    ], 'Sin definir');
+            const cantidadApuestas = extraerValor(carrera, [
+                ['cantidadApuestas']
+            ], 0);
 
-    const totalApostado = extraerValor(carrera, [
-      ['totalApostado']
-    ], 0);
+            carreraNombre.textContent = `${numero} · ${nombre}`;
+            carreraEstado.textContent = normalizarTexto(estado);
+            carreraEstado.className = claseEstado(estado);
+            carreraTotalApostado.textContent = formatearMoneda(totalApostado);
+            carreraCantidadCaballos.textContent = formateadorEntero.format(Number(cantidadCaballos) || 0);
+            carreraCantidadApuestas.textContent = formateadorEntero.format(Number(cantidadApuestas) || 0);
+        }
 
-    const cantidadCaballos = extraerValor(carrera, [
-      ['cantidadCaballos']
-    ], Array.isArray(carrera?.registros) ? carrera.registros.length : 0);
+        function renderCaballos(caballos) {
+            const lista = Array.isArray(caballos) ? caballos : [];
 
-    const cantidadApuestas = extraerValor(carrera, [
-      ['cantidadApuestas']
-    ], 0);
+            caballosBody.innerHTML = '';
 
-    carreraNombre.textContent = `${numero} · ${nombre}`;
-    carreraEstado.textContent = normalizarTexto(estado);
-    carreraEstado.className = claseEstado(estado);
-    carreraTotalApostado.textContent = formatearMoneda(totalApostado);
-    carreraCantidadCaballos.textContent = formateadorEntero.format(Number(cantidadCaballos) || 0);
-    carreraCantidadApuestas.textContent = formateadorEntero.format(Number(cantidadApuestas) || 0);
-  }
+            if (lista.length === 0) {
+                caballosVacio.hidden = false;
+                caballosBody.appendChild(caballosVacio);
+                return;
+            }
 
-  function renderCaballos(caballos) {
-    const lista = Array.isArray(caballos) ? caballos : [];
+            caballosVacio.hidden = true;
 
-    caballosBody.innerHTML = '';
+            lista.forEach(caballo => {
+                const numero = extraerValor(caballo, [
+                    ['numero'],
+                    ['numeroCaballo']
+                ], '');
 
-    if (lista.length === 0) {
-      caballosVacio.hidden = false;
-      caballosBody.appendChild(caballosVacio);
-      return;
-    }
+                const nombre = extraerValor(caballo, [
+                    ['nombre']
+                ], 'Sin nombre');
 
-    caballosVacio.hidden = true;
+                const seleccionado =
+                    caballoSeleccionadoId !== null &&
+                    String(caballoSeleccionadoId) === String(numero);
 
-    lista.forEach(caballo => {
-      const numero = extraerValor(caballo, [
-        ['numero'],
-        ['numeroCaballo']
-      ], '');
+                const tr = document.createElement('tr');
+                tr.dataset.caballoId = numero;
 
-      const nombre = extraerValor(caballo, [
-        ['nombre']
-      ], 'Sin nombre');
+                if (seleccionado) {
+                    tr.classList.add('caballo-seleccionado');
+                }
 
-      const seleccionado =
-        caballoSeleccionadoId !== null &&
-        String(caballoSeleccionadoId) === String(numero);
+                tr.innerHTML = `
+            <td style="padding:10px">${numero}</td>
+            <td style="padding:10px"><b>${nombre}</b></td>
+            <td style="padding:10px">
+                <button
+                    type="button"
+                    class="action-button"
+                    data-action="seleccionar-caballo"
+                    data-caballo-id="${numero}">
+                    ${seleccionado ? 'Seleccionado' : 'Seleccionar'}
+                </button>
+            </td>
+        `;
 
-      const tr = document.createElement('tr');
+                caballosBody.appendChild(tr);
+            });
+        }
+        function marcarCaballoSeleccionadoEnTabla() {
+            const filas = caballosBody.querySelectorAll('tr');
 
-      if (seleccionado) {
-        tr.style.background = '#fff0bd';
-      }
+            filas.forEach(fila => {
+                const idFila = fila.dataset.caballoId;
 
-      tr.innerHTML = `
-        <td style="padding:10px">${numero}</td>
-        <td style="padding:10px"><b>${nombre}</b></td>
-        <td style="padding:10px">
-          <button
-            type="button"
-            class="action-button"
-            data-action="seleccionar-caballo"
-            data-caballo-id="${numero}">
-            ${seleccionado ? 'Seleccionado' : 'Seleccionar'}
-          </button>
-        </td>
-      `;
+                fila.classList.remove('caballo-seleccionado');
 
-      caballosBody.appendChild(tr);
-    });
-  }
+                const boton = fila.querySelector('[data-action="seleccionar-caballo"]');
 
-  function renderCaballoSeleccionado(caballo) {
-    if (!caballo) {
-      caballoSeleccionadoId = null;
-      caballoSeleccionado.textContent = 'Todavía no hay un caballo seleccionado.';
-      return;
-    }
+                if (String(idFila) === String(caballoSeleccionadoId)) {
+                    fila.classList.add('caballo-seleccionado');
 
-    caballoSeleccionadoId = extraerValor(caballo, [
-      ['numero'],
-      ['numeroCaballo']
-    ], null);
+                    if (boton) {
+                        boton.textContent = 'Seleccionado';
+                    }
+                } else {
+                    if (boton) {
+                        boton.textContent = 'Seleccionar';
+                    }
+                }
+            });
+        }
 
-    const numero = extraerValor(caballo, [
-      ['numero'],
-      ['numeroCaballo']
-    ], '-');
+        function renderCaballoSeleccionado(caballo) {
+            if (!caballo) {
+                caballoSeleccionadoId = null;
+                caballoSeleccionado.textContent = 'Todavía no hay un caballo seleccionado.';
+                marcarCaballoSeleccionadoEnTabla();
+                return;
+            }
 
-    const nombre = extraerValor(caballo, [
-      ['nombre']
-    ], 'Sin nombre');
+            caballoSeleccionadoId = extraerValor(caballo, [
+                ['numero'],
+                ['numeroCaballo']
+            ], null);
 
-    caballoSeleccionado.innerHTML = `
-      <strong>Caballo seleccionado:</strong> ${numero} · ${nombre}
+            const numero = extraerValor(caballo, [
+                ['numero'],
+                ['numeroCaballo']
+            ], '-');
+
+            const nombre = extraerValor(caballo, [
+                ['nombre']
+            ], 'Sin nombre');
+
+            caballoSeleccionado.innerHTML = `
+        <strong>Caballo seleccionado:</strong> ${numero} · ${nombre}
     `;
-  }
 
-  async function cargarPantallaInicial() {
-    const params = new URLSearchParams(window.location.search);
-    const numeroCarrera = Number(params.get('numeroCarrera'));
+            marcarCaballoSeleccionadoEnTabla();
+        }
+        async function cargarPantallaInicial() {
+            const params = new URLSearchParams(window.location.search);
+            const numeroCarrera = Number(params.get('numeroCarrera'));
 
-    mostrarMensaje(null, '');
+            mostrarMensaje(null, '');
 
-    if (Number.isFinite(numeroCarrera) && numeroCarrera > 0) {
-      await dispatcher.submit('/gestionar-carrera/seleccionar-carrera', {
-        carreraId: numeroCarrera
-      });
-      return;
-    }
+            if (Number.isFinite(numeroCarrera) && numeroCarrera > 0) {
+                await dispatcher.submit('/gestionar-carrera/seleccionar-carrera', {
+                    carreraId: numeroCarrera
+                });
+                return;
+            }
 
-    try {
-      const respuesta = await fetch('/gestionar-carrera', {
-        method: 'GET',
-        credentials: 'include'
-      });
+            try {
+                const respuesta = await fetch('/gestionar-carrera', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
 
-      const texto = await respuesta.text();
+                const texto = await respuesta.text();
 
-      if (!respuesta.ok) {
-        mostrarMensaje('error', texto || 'No se pudo cargar la carrera inicial.');
-        return;
-      }
+                if (!respuesta.ok) {
+                    mostrarMensaje('error', texto || 'No se pudo cargar la carrera inicial.');
+                    return;
+                }
 
-      if (!texto || texto.trim() === '') {
-        return;
-      }
+                if (!texto || texto.trim() === '') {
+                    return;
+                }
 
-      const json = JSON.parse(texto);
+                const json = JSON.parse(texto);
+                console.log("RESPUESTA CRUDA DEL BACKEND:");
+                console.log(texto);
 
-      if (json.commands) {
-        dispatcher.processCommands(json);
-      } else {
-        console.error('Respuesta inicial no cumple contrato Commands', json);
-        mostrarMensaje('error', 'La respuesta inicial no cumple el contrato Commands.');
-      }
+                if (json.commands) {
+                    dispatcher.processCommands(json);
+                } else {
+                    console.error('Respuesta inicial no cumple contrato Commands', json);
+                    mostrarMensaje('error', 'La respuesta inicial no cumple el contrato Commands.');
+                }
 
-    } catch (error) {
-      console.error('Error en fetch inicial:', error);
-      mostrarMensaje('error', 'No se pudo cargar la carrera inicial.');
-    }
-  }
+            } catch (error) {
+                console.error('Error en fetch inicial:', error);
+                mostrarMensaje('error', 'No se pudo cargar la carrera inicial.');
+            }
+        }
 
-  function configurarEventos() {
-    caballosBody.addEventListener('click', (event) => {
-      const boton = event.target.closest('button[data-action="seleccionar-caballo"]');
+        function configurarEventos() {
+            caballosBody.addEventListener('click', (event) => {
+                const boton = event.target.closest('button[data-action="seleccionar-caballo"]');
 
-      if (!boton) {
-        return;
-      }
+                if (!boton) {
+                    return;
+                }
 
-      const caballoId = Number(boton.dataset.caballoId);
+                const caballoId = Number(boton.dataset.caballoId);
 
-      if (!Number.isFinite(caballoId)) {
-        mostrarMensaje('error', 'El caballo seleccionado no tiene un número válido.');
-        return;
-      }
+                if (!Number.isFinite(caballoId)) {
+                    mostrarMensaje('error', 'El caballo seleccionado no tiene un número válido.');
+                    return;
+                }
 
-      mostrarMensaje(null, '');
+                mostrarMensaje(null, '');
 
-      dispatcher.submit('/gestionar-carrera/seleccionar-caballo', {
-        caballoId
-      });
-    });
-  }
+                dispatcher.submit('/gestionar-carrera/seleccionar-caballo', {
+                    caballoId
+                });
+            });
+        }
 
-  const vista = dispatcher.registerView('GestionarCarrera', {
-    urlInicio: null,
-    onError: (_status, texto) => mostrarMensaje('error', texto),
-    onException: mensaje => mostrarMensaje('error', mensaje)
-  });
+        const vista = dispatcher.registerView('GestionarCarrera', {
+            urlInicio: null,
+            onError: (_status, texto) => mostrarMensaje('error', texto),
+            onException: mensaje => mostrarMensaje('error', mensaje)
+        });
 
-  vista.handler('redirigirLoginAdmin', url => {
-    window.location.href = url;
-  });
+        vista.handler('redirigirLoginAdmin', url => {
+            window.location.href = url;
+        });
 
-  vista.handler('redirigir', url => {
-    window.location.href = url;
-  });
+        vista.handler('redirigir', url => {
+            window.location.href = url;
+        });
 
-  vista.handler('error', mensaje => {
-    mostrarMensaje('error', mensaje);
-  });
+        vista.handler('error', mensaje => {
+            mostrarMensaje('error', mensaje);
+        });
 
-  vista.handler('mensaje', mensaje => {
-    mostrarMensaje('exito', mensaje);
-  });
+        vista.handler('mensaje', mensaje => {
+            mostrarMensaje('exito', mensaje);
+        });
 
-  vista.handler('mostrarCarreraSeleccionada', carrera => {
-    renderCarrera(carrera);
-  });
+        vista.handler('mostrarCarreraSeleccionada', carrera => {
+            renderCarrera(carrera);
+        });
 
-  vista.handler('actualizarCaballos', caballos => {
-    renderCaballos(caballos);
-  });
+        vista.handler('actualizarCaballos', caballos => {
+            renderCaballos(caballos);
+        });
 
-  vista.handler('mostrarCaballoSeleccionado', caballo => {
-    renderCaballoSeleccionado(caballo);
+        vista.handler('mostrarCaballoSeleccionado', caballo => {
+            renderCaballoSeleccionado(caballo);
 
-    /**
-     * Repintamos la tabla para que se marque visualmente
-     * el caballo elegido si ya había caballos cargados.
-     */
-  });
+            /**
+             * Repintamos la tabla para que se marque visualmente
+             * el caballo elegido si ya había caballos cargados.
+             */
+        });
 
-  document.addEventListener('DOMContentLoaded', () => {
-    dispatcher.startView(vista);
-    configurarEventos();
-    cargarPantallaInicial();
-  });
-</script>
+        document.addEventListener('DOMContentLoaded', () => {
+            dispatcher.startView(vista);
+            configurarEventos();
+            cargarPantallaInicial();
+        });
+    </script>
 
 
 </body>
+
 </html>

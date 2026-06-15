@@ -32,9 +32,10 @@ public class GestionarCarreraPresentador {
     Caballo caballoSeleccionado = (Caballo) session.getAttribute("caballoSeleccionado");
 
     return Commands.create(
-        new Command("mostrarCarreraSeleccionada", carreraSeleccionada),
-        new Command("actualizarCaballos", fachadaServicios.getCaballosCarrera(carreraSeleccionada)),
-        new Command("mostrarCaballoSeleccionado", caballoSeleccionado));
+        new Command("mostrarCarreraSeleccionada", new CarreraDto(carreraSeleccionada)),
+        new Command("actualizarCaballos",
+              CaballoDto.fromList(fachadaServicios.getCaballosCarrera(carreraSeleccionada))),
+        new Command("mostrarCaballoSeleccionado", new CaballoDto(caballoSeleccionado)));
   }
 
   // CU Gestionar carreras - elegir carrera en vista
@@ -89,9 +90,9 @@ public class GestionarCarreraPresentador {
 
     return Commands.create(
         new Command("mensaje", "Carrera finalizada correctamente"),
-        new Command("actualizarCaballos", fachadaServicios.getCaballosCarrera(carreraSeleccionada)),
-        new Command("mostrarCarreraSeleccionada", carreraSeleccionada),
-        new Command("mostrarCaballoSeleccionado", caballoSeleccionado));
+        new Command("actualizarCaballos", CaballoDto.fromList(fachadaServicios.getCaballosCarrera(carreraSeleccionada))),
+        new Command("mostrarCarreraSeleccionada", new CarreraDto(carreraSeleccionada)),
+        new Command("mostrarCaballoSeleccionado", new CaballoDto(caballoSeleccionado)));
   }
 
 
