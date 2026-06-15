@@ -37,7 +37,7 @@ public class Cerrada implements IEstadoCarrera {
         if (carrera.getRegistros() == null || carrera.getRegistros().isEmpty()) {
             throw new HipodromoException("No hay participantes en la carrera para finalizarla.");
         }       
-        Participante caballoParticipante = carrera.obtenerParticanteEnCarrera(caballoGanador.getNumero());
+        Participante caballoParticipante = carrera.obtenerParticipanteEnCarrera(caballoGanador.getNumero());
         if (caballoParticipante == null) {
             throw new HipodromoException("El caballo ganador debe participar en la carrera.");
         }
