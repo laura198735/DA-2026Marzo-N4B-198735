@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import lombok.Data;
+import ort.da.Obligatorio.excepciones.HipodromoException;
 
 @Data
 public class Jornada {
@@ -42,6 +43,7 @@ public class Jornada {
         cal.set(Calendar.MILLISECOND, 0);
         return cal.getTime();
     }
+    
 
     // recorre las carreras de la jornada y suma el total apostado en c/u
     public double getTotalApostado() {

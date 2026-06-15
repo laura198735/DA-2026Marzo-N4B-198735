@@ -53,6 +53,18 @@ public class ServicioJornada {
         this.jornadas.add(jornada);
     }
 
+    public Jornada buscarJornadaPorNumero(int numeroJornada) throws HipodromoException {
+        List<Jornada> jornadas = getJornadas();
+        if (jornadas == null) {
+            return null;
+        }
+
+        return jornadas.stream()
+                .filter(jornada -> jornada != null && jornada.getNumero() == numeroJornada)
+                .findFirst()
+                .orElse(null);
+    }
+
     // * • Cantidad de carreras que faltan por correr en la jornada actual
 
     public double getTotalApostado(Jornada jornada) throws HipodromoException {

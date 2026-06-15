@@ -1,4 +1,4 @@
-﻿package ort.da.Obligatorio.presentadores;
+package ort.da.Obligatorio.presentadores;
 
 import java.util.Date;
 import java.util.List;
@@ -15,6 +15,7 @@ import ort.da.Obligatorio.dominio.Jornada;
 import ort.da.Obligatorio.dominio.Usuario;
 import ort.da.Obligatorio.dtos.CarreraDto;
 import ort.da.Obligatorio.dtos.CarreraDto.CarreraProximaDto;
+import ort.da.Obligatorio.dtos.JornadaTableroDto;
 import ort.da.Obligatorio.excepciones.HipodromoException;
 import ort.da.Obligatorio.servicios.FachadaServicios;
 
@@ -33,8 +34,7 @@ jornada en el día, luego podrá ser cambiada por el usuario)
 public class TableroAdminPresentador {
     private final FachadaServicios fachadaServicios = FachadaServicios.getInstancia();
 
-    private static record JornadaTableroDto(int numero, Date dia) {
-    }
+  
 
     @PostMapping("/seleccionar-jornada")
     public Commands seleccionarJornada(@RequestParam("jornadaId") int numeroJornada, HttpSession session)
@@ -43,13 +43,13 @@ public class TableroAdminPresentador {
             return redirigirLogin();
         }
 
-        Jornada jornadaSeleccionada = buscarJornadaPorNumero(numeroJornada);
+        Jornada jornadaSeleccionada = fachadaServicios.buscarJornadaPorNumero(numeroJornada);
         if (jornadaSeleccionada == null) {
             return Commands.create(new Command("error", "Jornada no encontrada"));
         }
 
         session.setAttribute("jornadaActual", jornadaSeleccionada);
-        return construirTablero(fachadaServicios.getJornadas(), jornadaSeleccionada);
+        return construirTablero(fachadaServicios.getJornadas(), jornadaSeleccionada);// hago getJornadas para actualizar el listado de jornadas en el tablero por si se agregó una nueva jornada mientras el admin estaba en el tablero
     }
 
     @PostMapping("/cargar-datos-tablero")
@@ -90,13 +90,13 @@ public class TableroAdminPresentador {
         List<JornadaTableroDto> jornadasTablero = jornadas == null ? List.of()
                 : jornadas.stream()
                         .filter(jornada -> jornada != null)
-                        .map(jornada -> new JornadaTableroDto(jornada.getNumero(), jornada.getDia()))
+                        .map(jornada -> JornadaTableroDto.from(jornada.getNumero(), jornada.getDia()))
                         .toList();
 
         return Commands.create(
                 new Command("mostrarJornadas", jornadasTablero),
                 new Command("mostrarJornadaActual",
-                        new JornadaTableroDto(jornadaActual.getNumero(), jornadaActual.getDia())),
+                        JornadaTableroDto.from(jornadaActual.getNumero(), jornadaActual.getDia())),
                 new Command("mostrarTotalApostado", totalApostado),
                 new Command("mostrarTotalPagado", totalPagado),
                 new Command("mostrarTotalComisionesJornada", totalComisionesJornada),
@@ -123,16 +123,5 @@ public class TableroAdminPresentador {
         return Commands.create(new Command("redirigirLogin", "/login-admin.html"));
     }
 
-    private Jornada buscarJornadaPorNumero(int numeroJornada) throws HipodromoException {
-        List<Jornada> jornadas = fachadaServicios.getJornadas();
-        if (jornadas == null) {
-            return null;
-        }
-
-        return jornadas.stream()
-                .filter(jornada -> jornada != null && jornada.getNumero() == numeroJornada)
-                .findFirst()
-                .orElse(null);
-    }
-
+    
 }

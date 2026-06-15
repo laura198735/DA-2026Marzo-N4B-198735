@@ -1,6 +1,7 @@
 package ort.da.Obligatorio.dominio;
 
 import ort.da.Obligatorio.excepciones.EstadoException;
+import ort.da.Obligatorio.excepciones.HipodromoException;
 
 public class Cerrada implements IEstadoCarrera {
 
@@ -23,15 +24,22 @@ public class Cerrada implements IEstadoCarrera {
         return false;
     }
 
-    //
+    
     @Override
-    public void finalizarCarrera(Carrera carrera, Caballo caballoGanador) throws EstadoException {
-        if (caballoGanador == null) {
-            throw new EstadoException("Debe seleccionar un caballo ganador.");
+    public void finalizarCarrera(Carrera carrera, Caballo caballoGanador) throws  HipodromoException {
+
+         if(carrera ==null){
+            throw new HipodromoException("La carrera no existe.");
         }
-        Caballo caballoParticipante = carrera.buscarCaballoParticipante(caballoGanador.getNumero());
+        if (caballoGanador == null ) {
+            throw new HipodromoException("Debe seleccionar un caballo ganador.");
+        }
+        if (carrera.getRegistros() == null || carrera.getRegistros().isEmpty()) {
+            throw new HipodromoException("No hay participantes en la carrera para finalizarla.");
+        }       
+        Participante caballoParticipante = carrera.obtenerParticanteEnCarrera(caballoGanador.getNumero());
         if (caballoParticipante == null) {
-            throw new EstadoException("El caballo ganador debe participar en la carrera.");
+            throw new HipodromoException("El caballo ganador debe participar en la carrera.");
         }
 
         carrera.setCaballoGanador(caballoGanador);

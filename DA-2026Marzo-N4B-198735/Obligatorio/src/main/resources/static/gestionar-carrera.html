@@ -1,212 +1,383 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestionar Carrera</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gestionar Carrera</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
+<body>
+  <nav style="margin-bottom:24px; display:flex; gap:18px; justify-content:center;">
+    <a href="tablero-administrador.html">Tablero Administrador</a>
+    <a href="login-admin.html">Logout</a>
+  </nav>
 
-<body style="background: #f4f7f8; color: #253034;">
-    <nav style="margin-bottom: 32px;">
-  <div style="display: flex; gap: 32px; justify-content: center;">
-    <!-- Card Tablero Administrador -->
-        <a href="tablero-administrador.html" style="text-decoration: none;">
-      <div style="background: #15304c; border-radius: 18px; box-shadow: 0 4px 18px rgba(16,36,58,0.10); padding: 28px 38px; min-width: 220px; display: flex; flex-direction: column; align-items: center; transition: transform 0.18s, box-shadow 0.18s;">
-        <span style="font-size: 2.2rem; color: #4f5f6f; margin-bottom: 10px;">📊</span>
-        <span style="color: #fff; font-weight: 900; font-size: 1.18rem;">Tablero Administrador</span>
+  <main class="page-shell" style="max-width:1100px;margin:24px auto;padding:20px;">
+    <header style="background:#15304c;color:#fff;padding:18px;border-radius:10px;display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div style="font-weight:900;font-size:1.2rem;">Gestionar carrera</div>
+        <div id="carrera-nombre" style="font-weight:800;margin-top:6px;">Sin carrera seleccionada</div>
+        <div style="margin-top:6px;"><span id="carrera-estado" class="status status--defined">Sin definir</span></div>
       </div>
-    </a>
-    <!-- Card Logout -->
-    <a href="login-admin.html" style="text-decoration: none;">
-      <div style="background: #e53c4f; border-radius: 18px; box-shadow: 0 4px 18px rgba(16,36,58,0.10); padding: 28px 38px; min-width: 220px; display: flex; flex-direction: column; align-items: center; transition: transform 0.18s, box-shadow 0.18s;">
-        <span style="font-size: 2.2rem; color: #fff; margin-bottom: 10px;">⏻</span>
-        <span style="color: #fff; font-weight: 900; font-size: 1.18rem;">Logout</span>
+      <div style="text-align:right;">
+        <div style="font-size:0.9rem;color:#dfe8ee">Total apostado</div>
+        <div id="carrera-total-apostado" style="font-weight:900;color:#ffc847;font-size:1.4rem">$ 0</div>
+        <div style="margin-top:6px;color:#dfe8ee">Caballos: <span id="carrera-cantidad-caballos">0</span> &nbsp; Apuestas: <span id="carrera-cantidad-apuestas">0</span></div>
       </div>
-    </a>
-  </div>
-</nav>
-    <div class="page-shell" style="max-width: 1100px; margin: 32px auto;">
-        <!-- Header Carrera -->
-        <div
-            style="display: flex; align-items: center; justify-content: space-between; background: #15304c; border-radius: 14px 14px 0 0; padding: 24px 32px 18px 32px;">
-            <div style="display: flex; align-items: center; gap: 18px;">
-                <span class="numero-carrera"
-                    style="background: #ffc847; color: #151515; font-weight: 900; border-radius: 50%; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">7</span>
-                <div>
-                    <div style="font-size: 1.5rem; font-weight: 900; color: #fff;">Gran Premio del Litoral</div>
-                    <div style="margin-top: 4px;">
-                        <span
-                            style="background: #e6f9ff; color: #0edbff; font-weight: 900; border-radius: 999px; padding: 4px 16px; font-size: 1rem; display: inline-flex; align-items: center; gap: 6px;">
-                            <span
-                                style="display: inline-block; width: 10px; height: 10px; background: #0edbff; border-radius: 50%;"></span>
-                            ABIERTA
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div style="color: #fff; font-size: 1.2rem; font-weight: 900;">TOTAL APOSTADO <span
-                    style="color: #ffc847;">$187.500</span></div>
-        </div>
-        <!-- Acciones Carrera -->
-        <div
-            style="background: #fff; padding: 22px 32px 18px 32px; border-radius: 0 0 14px 14px; border-bottom: 1px solid #e9eef2;">
-            <div style="display: flex; align-items: center; gap: 18px; margin-bottom: 18px;">
-                <button
-                    style="background: #1ca94c; color: #fff; font-weight: 900; border: none; border-radius: 6px; padding: 10px 22px; font-size: 1rem; cursor: pointer;">▶
-                    Abrir Carrera</button>
-                <button
-                    style="background: #ffc847; color: #151515; font-weight: 900; border: none; border-radius: 6px; padding: 10px 22px; font-size: 1rem; cursor: pointer;">⏸
-                    Cerrar Carrera</button>
-                <span style="font-weight: 700; color: #888;">Finalizar carrera con ganador:</span>
-                <select style="padding: 8px 16px; border-radius: 6px; border: 1px solid #d7dcdd; font-size: 1rem;">
-                    <option>— Elegir caballo —</option>
-                    <option>Relámpago Celeste</option>
-                    <option>Fuerza Norteña</option>
-                    <option>Sombra de Luna</option>
-                    <option>El Paisano</option>
-                    <option>Tormenta del Sur</option>
-                    <option>Chaqui Real</option>
-                    <option>Cielo Pampeano</option>
-                    <option>Trueno Negro</option>
-                </select>
-                <button
-                    style="background: #e53c4f; color: #fff; font-weight: 900; border: none; border-radius: 6px; padding: 10px 22px; font-size: 1rem; cursor: pointer; display: flex; align-items: center; gap: 6px;">🚩
-                    Finalizar Carrera y Pagar</button>
-                <span style="color: #b48a00; font-size: 1.1rem; display: flex; align-items: center; gap: 6px;"><span
-                        style="font-size: 1.3rem;">⚠️</span> Esta acción pagará automáticamente a todos los jugadores
-                    que apostaron al ganador.</span>
-            </div>
-        </div>
-        <!-- Tabla de Caballos Participantes -->
-        <div
-            style="background: #fff; border-radius: 0 0 14px 14px; padding: 0 32px 24px 32px; border-bottom: 1px solid #e9eef2;">
-            <div
-                style="font-weight: 900; color: #253034; font-size: 1.1rem; margin: 18px 0 10px 0; display: flex; align-items: center; gap: 8px;">
-                <span style="font-size: 1.3rem;">🏇</span> Caballos Participantes
-            </div>
-            <table class="admin-table" style="background: #fff;">
-                <thead>
-                    <tr>
-                        <th>N°</th>
-                        <th>NOMBRE DEL CABALLO</th>
-                        <th>DIVIDENDO ACTUAL</th>
-                        <th>TOTAL APOSTADO</th>
-                        <th>CANTIDAD DE APUESTAS</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Relámpago Celeste</td>
-                        <td><b>$ 3,20</b></td>
-                        <td style="color: #018653; font-weight: 900;">$52.000</td>
-                        <td>34</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Fuerza Norteña</td>
-                        <td><b>$ 4,80</b></td>
-                        <td style="color: #018653; font-weight: 900;">$31.500</td>
-                        <td>21</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Sombra de Luna</td>
-                        <td><b>$ 6,50</b></td>
-                        <td style="color: #018653; font-weight: 900;">$18.000</td>
-                        <td>12</td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>El Paisano</td>
-                        <td><b>$ 2,90</b></td>
-                        <td style="color: #018653; font-weight: 900;">$47.000</td>
-                        <td>31</td>
-                    </tr>
-                    <tr>
-                        <td>5</td>
-                        <td>Tormenta del Sur</td>
-                        <td><b>$ 9,10</b></td>
-                        <td style="color: #018653; font-weight: 900;">$12.500</td>
-                        <td>8</td>
-                    </tr>
-                    <tr>
-                        <td>6</td>
-                        <td>Chaqui Real</td>
-                        <td><b>$ 5,40</b></td>
-                        <td style="color: #018653; font-weight: 900;">$9.000</td>
-                        <td>6</td>
-                    </tr>
-                    <tr>
-                        <td>7</td>
-                        <td>Cielo Pampeano</td>
-                        <td><b>$ 11,20</b></td>
-                        <td style="color: #018653; font-weight: 900;">$7.500</td>
-                        <td>5</td>
-                    </tr>
-                    <tr>
-                        <td>8</td>
-                        <td>Trueno Negro</td>
-                        <td><b>$ 7,80</b></td>
-                        <td style="color: #018653; font-weight: 900;">$10.000</td>
-                        <td>7</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <!-- Precondición -->
-        <div
-            style="background: #fff; border-radius: 0 0 14px 14px; padding: 18px 32px 24px 32px; border-bottom: 1px solid #e9eef2; margin-bottom: 18px;">
-            <span style="font-weight: 900; font-size: 1.1rem;">Precondición:</span> Hay una carrera seleccionada
-        </div>
-    </div>
-    <script type="module">
-        import dispatcher from "/CommandDispatcher.js";
+    </header>
 
-        dispatcher.registerView({
-            urlInicio: "/gestionar-carrera.html",
-            handlers: {
-                mostrarCarrera: (param) => {
+    <section style="background:#fff;padding:18px;border-radius:10px;margin-top:16px;">
+      <div style="font-weight:900;margin-bottom:8px">Caballos participantes</div>
+      <table class="admin-table" style="width:100%;background:#fff;border-collapse:collapse;">
+        <thead>
+          <tr>
+            <th style="text-align:left;padding:10px">N°</th>
+            <th style="text-align:left;padding:10px">NOMBRE DEL CABALLO</th>
+            <th style="text-align:left;padding:10px">ACCIÓN</th>
+          </tr>
+        </thead>
+        <tbody id="caballos-body">
+          <tr id="caballos-vacio"><td colspan="3" style="text-align:center;padding:18px;color:#7a8589">Esperando datos de la carrera.</td></tr>
+        </tbody>
+      </table>
+    </section>
 
-                    if (param && param.nombre) { //
-                        document.querySelector(".page-shell div[style*='font-size: 1.5rem']").textContent = param.nombre;
-                    }
-                    //  if (param && param.estado) { //
-                    //      document.querySelector(".page-shell span[style*='background: #e6f9ff']").innerHTML =
-                    //           `<span style="display: inline-block; width: 10px; height: 10px; background: #0edbff; border-radius: 50%;"></span> ${param.estado}`;
-                    //  }
+    <section style="background:#fff;padding:18px;border-radius:10px;margin-top:16px;">
+      <div style="font-weight:900;margin-bottom:8px">Caballo seleccionado</div>
+      <div id="caballo-seleccionado" style="padding:12px;border-radius:8px;background:#f4f7f8;color:#516169">Todavía no hay un caballo seleccionado.</div>
+    </section>
 
+    <div id="vista-mensajes" class="error hidden" role="status" aria-live="polite" style="margin-top:16px"></div>
+  </main>
 
-                    cerrarCarrera: () => {
+<script type="module">
+  import dispatcher from './CommandDispatcher.js';
 
-                    }
+  const carreraNombre = document.getElementById('carrera-nombre');
+  const carreraEstado = document.getElementById('carrera-estado');
+  const carreraTotalApostado = document.getElementById('carrera-total-apostado');
+  const carreraCantidadCaballos = document.getElementById('carrera-cantidad-caballos');
+  const carreraCantidadApuestas = document.getElementById('carrera-cantidad-apuestas');
+  const caballosBody = document.getElementById('caballos-body');
+  const caballosVacio = document.getElementById('caballos-vacio');
+  const caballoSeleccionado = document.getElementById('caballo-seleccionado');
+  const vistaMensajes = document.getElementById('vista-mensajes');
 
-                    finalizarCarrera: () => {
+  const formateadorEntero = new Intl.NumberFormat('es-UY', {
+    maximumFractionDigits: 0
+  });
 
-                    }
-                }
-            }
-        });
+  let caballoSeleccionadoId = null;
 
-        document.querySelector("button[style*='#1ca94c']").addEventListener("click", () => {
-            dispatcher.submit("/gestionar-carrera/abrir");
-        });
-        document.querySelector("button[style*='#ffc847']").addEventListener("click", () => {
-            dispatcher.submit("/gestionar-carrera/cerrar");
-        });
-       /** document.querySelector("button[style*='#e53c4f']").addEventListener("click", () => {
-            const select = document.querySelector("select");
-            const ganador = select.value;
-            if (ganador && ganador !== "— Elegir caballo —") {
-                dispatcher.submit("/gestionar-carrera/finalizar", { ganador });
-            }
-        });*/
+  function extraerValor(origen, rutas, valorPorDefecto = '') {
+    for (const ruta of rutas) {
+      let valor = origen;
 
-    </script>
+      for (const clave of ruta) {
+        if (valor === null || valor === undefined) {
+          valor = undefined;
+          break;
+        }
+
+        valor = valor[clave];
+      }
+
+      if (valor !== null && valor !== undefined && valor !== '') {
+        return valor;
+      }
+    }
+
+    return valorPorDefecto;
+  }
+
+  function formatearMoneda(valor) {
+    const numero = Number(valor ?? 0);
+    const seguro = Number.isFinite(numero) ? numero : 0;
+
+    return `$ ${formateadorEntero.format(seguro)}`;
+  }
+
+  function normalizarTexto(valor) {
+    return String(valor ?? '').trim();
+  }
+
+  function claseEstado(estado) {
+    const texto = normalizarTexto(estado).toLowerCase();
+
+    if (texto.includes('abierta')) {
+      return 'status status--open';
+    }
+
+    if (texto.includes('cerrada')) {
+      return 'status status--closed';
+    }
+
+    if (texto.includes('finalizada')) {
+      return 'status status--closed';
+    }
+
+    return 'status status--defined';
+  }
+
+  function mostrarMensaje(tipo, texto) {
+    if (!texto) {
+      vistaMensajes.classList.add('hidden');
+      vistaMensajes.textContent = '';
+      return;
+    }
+
+    vistaMensajes.classList.remove('hidden');
+    vistaMensajes.textContent = texto;
+
+    if (tipo === 'exito') {
+      vistaMensajes.style.background = 'rgba(28, 169, 76, 0.12)';
+      vistaMensajes.style.borderColor = 'rgba(28, 169, 76, 0.3)';
+      vistaMensajes.style.color = '#166c31';
+      return;
+    }
+
+    vistaMensajes.style.background = 'rgba(229, 60, 79, 0.12)';
+    vistaMensajes.style.borderColor = 'rgba(229, 60, 79, 0.3)';
+    vistaMensajes.style.color = '#9e2332';
+  }
+
+  function renderCarrera(carrera) {
+    if (!carrera) {
+      carreraNombre.textContent = 'Sin carrera seleccionada';
+      carreraEstado.textContent = 'Sin definir';
+      carreraEstado.className = 'status status--defined';
+      carreraTotalApostado.textContent = '$ 0';
+      carreraCantidadCaballos.textContent = '0';
+      carreraCantidadApuestas.textContent = '0';
+      return;
+    }
+
+    const numero = extraerValor(carrera, [
+      ['numeroCarrera'],
+      ['numero']
+    ], '-');
+
+    const nombre = extraerValor(carrera, [
+      ['nombre']
+    ], 'Sin nombre');
+
+    const estado = extraerValor(carrera, [
+      ['estado'],
+      ['estadoCarrera', 'nombreEstado'],
+      ['nombreEstado']
+    ], 'Sin definir');
+
+    const totalApostado = extraerValor(carrera, [
+      ['totalApostado']
+    ], 0);
+
+    const cantidadCaballos = extraerValor(carrera, [
+      ['cantidadCaballos']
+    ], Array.isArray(carrera?.registros) ? carrera.registros.length : 0);
+
+    const cantidadApuestas = extraerValor(carrera, [
+      ['cantidadApuestas']
+    ], 0);
+
+    carreraNombre.textContent = `${numero} · ${nombre}`;
+    carreraEstado.textContent = normalizarTexto(estado);
+    carreraEstado.className = claseEstado(estado);
+    carreraTotalApostado.textContent = formatearMoneda(totalApostado);
+    carreraCantidadCaballos.textContent = formateadorEntero.format(Number(cantidadCaballos) || 0);
+    carreraCantidadApuestas.textContent = formateadorEntero.format(Number(cantidadApuestas) || 0);
+  }
+
+  function renderCaballos(caballos) {
+    const lista = Array.isArray(caballos) ? caballos : [];
+
+    caballosBody.innerHTML = '';
+
+    if (lista.length === 0) {
+      caballosVacio.hidden = false;
+      caballosBody.appendChild(caballosVacio);
+      return;
+    }
+
+    caballosVacio.hidden = true;
+
+    lista.forEach(caballo => {
+      const numero = extraerValor(caballo, [
+        ['numero'],
+        ['numeroCaballo']
+      ], '');
+
+      const nombre = extraerValor(caballo, [
+        ['nombre']
+      ], 'Sin nombre');
+
+      const seleccionado =
+        caballoSeleccionadoId !== null &&
+        String(caballoSeleccionadoId) === String(numero);
+
+      const tr = document.createElement('tr');
+
+      if (seleccionado) {
+        tr.style.background = '#fff0bd';
+      }
+
+      tr.innerHTML = `
+        <td style="padding:10px">${numero}</td>
+        <td style="padding:10px"><b>${nombre}</b></td>
+        <td style="padding:10px">
+          <button
+            type="button"
+            class="action-button"
+            data-action="seleccionar-caballo"
+            data-caballo-id="${numero}">
+            ${seleccionado ? 'Seleccionado' : 'Seleccionar'}
+          </button>
+        </td>
+      `;
+
+      caballosBody.appendChild(tr);
+    });
+  }
+
+  function renderCaballoSeleccionado(caballo) {
+    if (!caballo) {
+      caballoSeleccionadoId = null;
+      caballoSeleccionado.textContent = 'Todavía no hay un caballo seleccionado.';
+      return;
+    }
+
+    caballoSeleccionadoId = extraerValor(caballo, [
+      ['numero'],
+      ['numeroCaballo']
+    ], null);
+
+    const numero = extraerValor(caballo, [
+      ['numero'],
+      ['numeroCaballo']
+    ], '-');
+
+    const nombre = extraerValor(caballo, [
+      ['nombre']
+    ], 'Sin nombre');
+
+    caballoSeleccionado.innerHTML = `
+      <strong>Caballo seleccionado:</strong> ${numero} · ${nombre}
+    `;
+  }
+
+  async function cargarPantallaInicial() {
+    const params = new URLSearchParams(window.location.search);
+    const numeroCarrera = Number(params.get('numeroCarrera'));
+
+    mostrarMensaje(null, '');
+
+    if (Number.isFinite(numeroCarrera) && numeroCarrera > 0) {
+      await dispatcher.submit('/gestionar-carrera/seleccionar-carrera', {
+        carreraId: numeroCarrera
+      });
+      return;
+    }
+
+    try {
+      const respuesta = await fetch('/gestionar-carrera', {
+        method: 'GET',
+        credentials: 'include'
+      });
+
+      const texto = await respuesta.text();
+
+      if (!respuesta.ok) {
+        mostrarMensaje('error', texto || 'No se pudo cargar la carrera inicial.');
+        return;
+      }
+
+      if (!texto || texto.trim() === '') {
+        return;
+      }
+
+      const json = JSON.parse(texto);
+
+      if (json.commands) {
+        dispatcher.processCommands(json);
+      } else {
+        console.error('Respuesta inicial no cumple contrato Commands', json);
+        mostrarMensaje('error', 'La respuesta inicial no cumple el contrato Commands.');
+      }
+
+    } catch (error) {
+      console.error('Error en fetch inicial:', error);
+      mostrarMensaje('error', 'No se pudo cargar la carrera inicial.');
+    }
+  }
+
+  function configurarEventos() {
+    caballosBody.addEventListener('click', (event) => {
+      const boton = event.target.closest('button[data-action="seleccionar-caballo"]');
+
+      if (!boton) {
+        return;
+      }
+
+      const caballoId = Number(boton.dataset.caballoId);
+
+      if (!Number.isFinite(caballoId)) {
+        mostrarMensaje('error', 'El caballo seleccionado no tiene un número válido.');
+        return;
+      }
+
+      mostrarMensaje(null, '');
+
+      dispatcher.submit('/gestionar-carrera/seleccionar-caballo', {
+        caballoId
+      });
+    });
+  }
+
+  const vista = dispatcher.registerView('GestionarCarrera', {
+    urlInicio: null,
+    onError: (_status, texto) => mostrarMensaje('error', texto),
+    onException: mensaje => mostrarMensaje('error', mensaje)
+  });
+
+  vista.handler('redirigirLoginAdmin', url => {
+    window.location.href = url;
+  });
+
+  vista.handler('redirigir', url => {
+    window.location.href = url;
+  });
+
+  vista.handler('error', mensaje => {
+    mostrarMensaje('error', mensaje);
+  });
+
+  vista.handler('mensaje', mensaje => {
+    mostrarMensaje('exito', mensaje);
+  });
+
+  vista.handler('mostrarCarreraSeleccionada', carrera => {
+    renderCarrera(carrera);
+  });
+
+  vista.handler('actualizarCaballos', caballos => {
+    renderCaballos(caballos);
+  });
+
+  vista.handler('mostrarCaballoSeleccionado', caballo => {
+    renderCaballoSeleccionado(caballo);
+
+    /**
+     * Repintamos la tabla para que se marque visualmente
+     * el caballo elegido si ya había caballos cargados.
+     */
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    dispatcher.startView(vista);
+    configurarEventos();
+    cargarPantallaInicial();
+  });
+</script>
 
 
 </body>
-
 </html>

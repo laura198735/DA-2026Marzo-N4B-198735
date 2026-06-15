@@ -98,7 +98,6 @@ public class Carrera {
         }
         return total;
     }
- 
 
     // obtener el dividendo final del caballo ganador para mostrar en el tablero
 
@@ -119,10 +118,10 @@ public class Carrera {
     // obtener carrera por numero y caballo ganador para tablero
     public Carrera obtenerCarreraPorNumero(int numeroCarrera) throws HipodromoException {
         try {
-            Carrera carrera = null;
-            for (Carrera c : jornada.getCarreras()) {
-                if (c.getNumeroCarrera() == numeroCarrera) {
-                    carrera = c;
+            Carrera carrera = this.obtenerCarreraPorNumero(numeroCarrera);
+            for (Participante participante : carrera.getRegistros()) {
+                if (participante.getCarrera().getNumeroCarrera() == numeroCarrera) {
+                    carrera = participante.getCarrera();
                     break;
                 }
             }
@@ -134,6 +133,16 @@ public class Carrera {
         } catch (Exception e) {
             throw new HipodromoException("Error al obtener la carrera por número: " + e.getMessage());
         }
+    }
+
+    public Participante obtenerParticanteEnCarrera(int numero) {
+        for (Participante participante : registros) {
+
+            if (participante.getCaballo().getNumero() == numero) {
+                return participante;
+            }
+        }
+        return null;
     }
 
     // para dtos
@@ -148,19 +157,6 @@ public class Carrera {
 
     public String obtenerCaballoGanador() {
         return caballoGanador != null ? caballoGanador.getNombre() : "-";
-    }
-
-    public Caballo buscarCaballoParticipante(int numeroCaballo) {
-        if (registros == null) {
-            return null;
-        }
-        for (Participante registro : registros) {
-            if (registro != null && registro.getCaballo() != null
-                    && registro.getCaballo().getNumero() == numeroCaballo) {
-                return registro.getCaballo();
-            }
-        }
-        return null;
     }
 
     // cantidad de apuestas realizadas en la carrera para tablero Administrador

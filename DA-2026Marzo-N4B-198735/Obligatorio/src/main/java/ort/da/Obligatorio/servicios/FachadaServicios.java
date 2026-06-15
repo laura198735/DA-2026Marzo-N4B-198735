@@ -23,6 +23,7 @@ public class FachadaServicios {
     private ServicioApuesta servicioApuesta;
 
     private List<Usuario> usuarios; // Lista de usuarios para autenticación
+    private List<Caballo> caballos; // Lista de caballos para gestión de carreras
     private List<Modalidad> modalidades; // Lista de modalidades de apuesta
 
     public static FachadaServicios getInstancia() {
@@ -38,7 +39,7 @@ public class FachadaServicios {
         this.servicioJornada = new ServicioJornada();
         this.servicioApuesta = new ServicioApuesta();
         this.servicioCarrera = new ServicioCarrera(this.servicioJornada, this.servicioApuesta);
-        
+        this.caballos = new ArrayList<>();
         this.usuarios = new ArrayList<>();
         this.modalidades = new ArrayList<>();
 
@@ -133,6 +134,9 @@ public class FachadaServicios {
     public List<Carrera> getListaProximasCarrerasJornada(Jornada jornada) throws HipodromoException {
         return servicioJornada.getListaProximasCarrerasJornada(jornada);
     }
+    public List<Caballo> getCaballosCarrera(Carrera carrera) throws HipodromoException {
+        return servicioCarrera.getCaballosCarrera(carrera);
+    }
     /*
      * • Carreras Finalizadas en la jornada actual ordenadas por número descendente
      * Información: numero, hora de
@@ -144,24 +148,61 @@ public class FachadaServicios {
      * total apostado, cantidad de apuestas)
      */
 
-//CASO DE USO GESTIONAR CARRERA
-public void abrirCarrera(Carrera carrera) throws HipodromoException {
-    if (carrera == null) {
-        throw new HipodromoException("Carrera inválida");
-    }  
-    servicioCarrera.abrirCarrera(carrera);
-    }  
-   
+    // CASO DE USO GESTIONAR CARRERA
+// busco la carrera por numero en la jornada seleccionada porque Jornada tiene las carreras.
+    public Carrera buscarCarreraEnJornada(Jornada jornada, int numeroCarrera) throws HipodromoException {
+    if (jornada == null) {
+        throw new HipodromoException("No hay jornada seleccionada");
+    }
+    if(numeroCarrera <= 0) {
+        throw new HipodromoException("Número de carrera inválido: " + numeroCarrera);
+    }
+     if (jornada.getCarreras() == null || jornada.getCarreras().isEmpty()) {// las carreras se cargan en Jornadas en la precarga de datos.
+        throw new HipodromoException("La jornada seleccionada no tiene carreras");
+    }
+    for (Carrera carrera : jornada.getCarreras()) {
+        if (carrera != null && carrera.getNumeroCarrera() == numeroCarrera) {
+            return carrera;
+        }
+    }
 
-
-public void gestionarCerrarCarrera(int numeroCarrera) throws HipodromoException {
-    servicioCarrera.cerrarCarrera(numeroCarrera);
+    throw new HipodromoException("No se encontró la carrera con número: " + numeroCarrera
+            + " en la jornada seleccionada");
 }
 
-public void gestionarFinalizarCarrera(Carrera carrera, Caballo caballoGanador) throws HipodromoException {
-    servicioCarrera.finalizarCarrera(carrera, caballoGanador);
-}
-}
 
+    public List<Carrera> getCarreras() throws HipodromoException {
+        return servicioCarrera.getCarreras();
+    }
+
+    public void gestionAbrirCarrera(Carrera carrera) throws HipodromoException {
+        if (carrera == null) {
+            throw new HipodromoException("Carrera inválida");
+        }
+        servicioCarrera.abrirCarrera(carrera);
+    }
+
+    public void gestionarCerrarCarrera(int numeroCarrera) throws HipodromoException {
+        servicioCarrera.cerrarCarrera(numeroCarrera);
+    }
+
+    public void gestionarFinalizarCarrera(Carrera carrera, Caballo caballoGanador) throws HipodromoException {
+        servicioCarrera.finalizarCarrera(carrera, caballoGanador);
+    }
+
+     public Jornada buscarJornadaPorNumero(int numeroJornada) throws HipodromoException {
+        return servicioJornada.buscarJornadaPorNumero(numeroJornada);
+
+     }   
+    public Caballo buscarCaballoPorNumero(int numeroCaballo) throws HipodromoException {
+        return servicioCarrera.buscarCaballoPorNumero(numeroCaballo);
+    }
+    public Carrera buscarCarreraPorNumero(int numeroCarrera) throws HipodromoException {
+        return servicioCarrera.buscarCarreraPorNumero(numeroCarrera);
+    }
+    public boolean caballoParticipaEnCarrera(int numeroCaballo, int numeroCarrera) throws HipodromoException {
+       return  servicioCarrera.buscarCarreraPorNumero(numeroCarrera) != null && servicioCarrera.buscarCaballoParticipaEnCarrera(servicioCarrera.buscarCarreraPorNumero(numeroCarrera), numeroCaballo);
+    }
 
        
+}
