@@ -146,8 +146,8 @@ public class Carrera {
     }
 
     // para dtos
-    public String obtenerNombreEstadoCarrera() {
-        return this.getEstadoCarrera().toString();
+    public String obtenerNombreEstadoCarrera() {//para mostrar el estadode la carrera en el tablero.
+        return estadoCarrera.getClass().getSimpleName();
     }
 
     // caballos participantes de carrera para tablero Administrador

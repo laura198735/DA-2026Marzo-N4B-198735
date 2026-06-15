@@ -36,8 +36,11 @@
             <table class="admin-table" style="width:100%;background:#fff;border-collapse:collapse;">
                 <thead>
                     <tr>
-                        <th style="text-align:left;padding:10px">N°</th>
-                        <th style="text-align:left;padding:10px">NOMBRE DEL CABALLO</th>
+                        <th style="text-align:left;padding:10px">No.</th>
+                        <th style="text-align:left;padding:10px">CABALLO</th>
+                        <th style="text-align:left;padding:10px">DIVIDENDO</th>
+                        <th style="text-align:left;padding:10px">TOTAL APOSTADO</th>
+                        <th style="text-align:left;padding:10px">APUESTAS</th>
                         <th style="text-align:left;padding:10px">ACCIÓN</th>
                     </tr>
                 </thead>
@@ -212,12 +215,32 @@
             lista.forEach(caballo => {
                 const numero = extraerValor(caballo, [
                     ['numero'],
-                    ['numeroCaballo']
+                    ['numeroCaballo'],
+                    ['id'],
+                    ['idCaballo']
                 ], '');
 
                 const nombre = extraerValor(caballo, [
-                    ['nombre']
+                    ['nombre'],
+                    ['nombreCaballo']
                 ], 'Sin nombre');
+
+                const dividendo = extraerValor(caballo, [
+                    ['dividendo'],
+                    ['dividendoActual'],
+                    ['dividendoFinal']
+                ], '-');
+
+                const totalApostado = extraerValor(caballo, [
+                    ['totalApostado'],
+                    ['montoApostado'],
+                    ['apostado']
+                ], 0);
+
+                const cantidadApuestas = extraerValor(caballo, [
+                    ['cantidadApuestas'],
+                    ['apuestas']
+                ], 0);
 
                 const seleccionado =
                     caballoSeleccionadoId !== null &&
@@ -233,6 +256,9 @@
                 tr.innerHTML = `
             <td style="padding:10px">${numero}</td>
             <td style="padding:10px"><b>${nombre}</b></td>
+            <td style="padding:10px">${dividendo}</td>
+            <td style="padding:10px">$ ${totalApostado}</td>
+            <td style="padding:10px">${cantidadApuestas}</td>
             <td style="padding:10px">
                 <button
                     type="button"
@@ -312,40 +338,8 @@
                 return;
             }
 
-            try {
-                const respuesta = await fetch('/gestionar-carrera', {
-                    method: 'GET',
-                    credentials: 'include'
-                });
-
-                const texto = await respuesta.text();
-
-                if (!respuesta.ok) {
-                    mostrarMensaje('error', texto || 'No se pudo cargar la carrera inicial.');
-                    return;
-                }
-
-                if (!texto || texto.trim() === '') {
-                    return;
-                }
-
-                const json = JSON.parse(texto);
-                console.log("RESPUESTA CRUDA DEL BACKEND:");
-                console.log(texto);
-
-                if (json.commands) {
-                    dispatcher.processCommands(json);
-                } else {
-                    console.error('Respuesta inicial no cumple contrato Commands', json);
-                    mostrarMensaje('error', 'La respuesta inicial no cumple el contrato Commands.');
-                }
-
-            } catch (error) {
-                console.error('Error en fetch inicial:', error);
-                mostrarMensaje('error', 'No se pudo cargar la carrera inicial.');
-            }
+            mostrarMensaje('error', 'No se recibio el numero de carrera.');
         }
-
         function configurarEventos() {
             caballosBody.addEventListener('click', (event) => {
                 const boton = event.target.closest('button[data-action="seleccionar-caballo"]');
