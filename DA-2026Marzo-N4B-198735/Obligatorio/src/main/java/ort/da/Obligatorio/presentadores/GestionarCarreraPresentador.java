@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpSession;
 import ort.da.Obligatorio.dominio.Caballo;
 import ort.da.Obligatorio.dominio.Carrera;
 import ort.da.Obligatorio.dominio.Jornada;
+import ort.da.Obligatorio.dominio.Participante;
 import ort.da.Obligatorio.dtos.CaballoDto;
 import ort.da.Obligatorio.dtos.CarreraDto;
 import ort.da.Obligatorio.excepciones.HipodromoException;
@@ -52,8 +53,7 @@ public class GestionarCarreraPresentador {
 
     return Commands.create(
         new Command("mostrarCarreraSeleccionada", new CarreraDto(carreraSeleccionada)),
-        new Command("actualizarCaballos",
-            CaballoDto.fromList(fachadaServicios.getCaballosCarrera(carreraSeleccionada))),
+        new Command("actualizarCaballos", CaballoDto.fromCarrera(carreraSeleccionada)),
         new Command("mostrarCaballoSeleccionado", null));
   }
 
@@ -73,9 +73,8 @@ public class GestionarCarreraPresentador {
       session.removeAttribute("caballoSeleccionado");
 
       return Commands.create(
-          new Command("actualizarCaballos",
-              CaballoDto.fromList(fachadaServicios.getCaballosCarrera(carreraSeleccionada))),
           new Command("mostrarCarreraSeleccionada", new CarreraDto(carreraSeleccionada)),
+          new Command("actualizarCaballos", CaballoDto.fromCarrera(carreraSeleccionada)),
           new Command("mostrarCaballoSeleccionado", null));
     } catch (HipodromoException e) {
       return Commands.create(new Command("error", e.getMessage()));
@@ -102,13 +101,24 @@ public class GestionarCarreraPresentador {
       return Commands.create(new Command("error", "No se encontro el caballo con numero: " + caballoNumero));
     }
 
+    Participante participanteSeleccionado = carreraSeleccionada.obtenerParticanteEnCarrera(caballoNumero);
+
+    if (participanteSeleccionado == null) {
+      return Commands.create(new Command("error", "El caballo seleccionado no participa en esta carrera."));
+    }
+
     session.setAttribute("caballoSeleccionado", caballoSeleccionado);
 
+    try {
+      fachadaServicios.gestionarFinalizarCarrera(carreraSeleccionada, caballoSeleccionado);
+    } catch (HipodromoException e) {
+      return Commands.create(new Command("error", e.getMessage()));
+    }
+
     return Commands.create(
-        new Command("mensaje", "Caballo seleccionado correctamente"),
-        new Command("actualizarCaballos",
-            CaballoDto.fromList(fachadaServicios.getCaballosCarrera(carreraSeleccionada))),
+        new Command("mensaje", "Carrera finalizada correctamente"),
         new Command("mostrarCarreraSeleccionada", new CarreraDto(carreraSeleccionada)),
+        new Command("actualizarCaballos", CaballoDto.fromCarrera(carreraSeleccionada)),
         new Command("mostrarCaballoSeleccionado", new CaballoDto(caballoSeleccionado)));
   }
 

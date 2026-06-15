@@ -54,7 +54,27 @@ public class Carrera {
 
     // ganador y finalizo la carrera
 
-    public void finalizarCarrera(Caballo caballoGanador) throws EstadoException {
+    public void finalizarCarrera(Caballo caballoGanador) throws EstadoException, HipodromoException {
+        if (caballoGanador == null) {
+            throw new HipodromoException("Debe seleccionar un caballo ganador.");
+        }
+
+        if (registros == null || registros.isEmpty()) {
+            throw new HipodromoException("No hay participantes en la carrera para finalizarla.");
+        }
+
+        if (obtenerParticanteEnCarrera(caballoGanador.getNumero()) == null) {
+            throw new HipodromoException("El caballo ganador debe participar en la carrera.");
+        }
+
+        if (registros != null) {
+            for (Participante participante : registros) {
+                if (participante != null) {
+                    participante.fijarDividendoFinal();
+                }
+            }
+        }
+
         this.caballoGanador = caballoGanador;
         this.estadoCarrera = new Finalizada();
     }
