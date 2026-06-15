@@ -13,6 +13,7 @@ import ort.da.Obligatorio.dominio.Jornada;
 import ort.da.Obligatorio.dominio.Participante;
 import ort.da.Obligatorio.dtos.CaballoDto;
 import ort.da.Obligatorio.dtos.CarreraDto;
+import ort.da.Obligatorio.dtos.ParticipanteDto;
 import ort.da.Obligatorio.excepciones.HipodromoException;
 import ort.da.Obligatorio.presentadores.auxiliar.AuxiliarSesion;
 import ort.da.Obligatorio.servicios.FachadaServicios;
@@ -53,7 +54,7 @@ public class GestionarCarreraPresentador {
 
     return Commands.create(
         new Command("mostrarCarreraSeleccionada", new CarreraDto(carreraSeleccionada)),
-        new Command("actualizarCaballos", CaballoDto.fromCarrera(carreraSeleccionada)),
+        new Command("actualizarCaballos", ParticipanteDto.fromCarrera(carreraSeleccionada)),//desde participanteDto para enviar el dividendo de cada caballo.
         new Command("mostrarCaballoSeleccionado", null));
   }
 
@@ -74,7 +75,7 @@ public class GestionarCarreraPresentador {
 
       return Commands.create(
           new Command("mostrarCarreraSeleccionada", new CarreraDto(carreraSeleccionada)),
-          new Command("actualizarCaballos", CaballoDto.fromCarrera(carreraSeleccionada)),
+          new Command("actualizarCaballos", ParticipanteDto.fromCarrera(carreraSeleccionada)),
           new Command("mostrarCaballoSeleccionado", null));
     } catch (HipodromoException e) {
       return Commands.create(new Command("error", e.getMessage()));
@@ -101,7 +102,7 @@ public class GestionarCarreraPresentador {
       return Commands.create(new Command("error", "No se encontro el caballo con numero: " + caballoNumero));
     }
 
-    Participante participanteSeleccionado = carreraSeleccionada.obtenerParticanteEnCarrera(caballoNumero);
+   Participante participanteSeleccionado = carreraSeleccionada.obtenerParticipanteEnCarrera(caballoNumero);
 
     if (participanteSeleccionado == null) {
       return Commands.create(new Command("error", "El caballo seleccionado no participa en esta carrera."));
@@ -118,7 +119,7 @@ public class GestionarCarreraPresentador {
     return Commands.create(
         new Command("mensaje", "Carrera finalizada correctamente"),
         new Command("mostrarCarreraSeleccionada", new CarreraDto(carreraSeleccionada)),
-        new Command("actualizarCaballos", CaballoDto.fromCarrera(carreraSeleccionada)),
+        new Command("actualizarCaballos", ParticipanteDto.fromCarrera(carreraSeleccionada)),
         new Command("mostrarCaballoSeleccionado", new CaballoDto(caballoSeleccionado)));
   }
 

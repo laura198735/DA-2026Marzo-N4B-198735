@@ -32,6 +32,7 @@ ort\da\Obligatorio\dominio\IEstadoCarrera.class
 ort\da\Obligatorio\dtos\CarreraDto$CarreraFinalizadaDto.class
 ort\da\Obligatorio\servicios\ServicioApuesta.class
 ort\da\Obligatorio\dominio\Caballo.class
+ort\da\Obligatorio\dtos\ParticipanteDto.class
 ort\da\Obligatorio\dominio\Modalidad.class
 ort\da\Obligatorio\dominio\Jornada.class
 ort\da\Obligatorio\presentadores\LoginAdminPresentador.class

@@ -3,7 +3,6 @@ package ort.da.Obligatorio.dominio;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import ort.da.Obligatorio.excepciones.EstadoException;
@@ -63,7 +62,7 @@ public class Carrera {
             throw new HipodromoException("No hay participantes en la carrera para finalizarla.");
         }
 
-        if (obtenerParticanteEnCarrera(caballoGanador.getNumero()) == null) {
+        if (obtenerParticipanteEnCarrera(caballoGanador.getNumero()) == null) {
             throw new HipodromoException("El caballo ganador debe participar en la carrera.");
         }
 
@@ -155,7 +154,7 @@ public class Carrera {
         }
     }
 
-    public Participante obtenerParticanteEnCarrera(int numero) {
+    public Participante obtenerParticipanteEnCarrera(int numero) {
         for (Participante participante : registros) {
 
             if (participante.getCaballo().getNumero() == numero) {
