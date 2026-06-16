@@ -2,7 +2,7 @@ package ort.da.Obligatorio.dominio;
 
 import java.util.List;
 
-import ort.da.Obligatorio.excepciones.EstadoException;
+import ort.da.Obligatorio.excepciones.HipodromoException;
 
 public class Abierta implements IEstadoCarrera {
 
@@ -10,42 +10,53 @@ public class Abierta implements IEstadoCarrera {
     List<Caballo> caballos;
     List<Participante> registrosParticipacion;
 
-    private List<Apuesta> apuestas;
-
     public Abierta() {
     }
 
     @Override
-    public void abrirCarrera(Carrera carrera) throws EstadoException {
-        carrera.setEstadoCarrera(this); // Cambia el estado de la carrera a "Abierta"
+    public void abrirCarrera(Carrera carrera) throws HipodromoException {
+        throw new HipodromoException("La carrera ya está abierta");
     }
 
     @Override
-    public void cerrarCarrera(Carrera carrera) throws EstadoException {
-        throw new EstadoException("No se puede cerrar una carrera en estado abierta");
+    public void cerrarCarrera(Carrera carrera) throws HipodromoException {
+        throw new HipodromoException(
+                "No se puede cerrar una carrera en estado abierta. Primero debe cambiar a estado estable.");
     }
 
     @Override
     public boolean puedeApostar(Carrera carrera) {
-        carrera.setEstadoCarrera(this);// cambia el estado de la carrera a Abierta y permite apostar
-        return true;// **ver si pasa a abierta */
+        return true;
     }
 
-    public void cambiarAEstadoEstable(Carrera carrera) throws EstadoException {
-        if (!Participante.tieneDividendoValido(carrera)) {
-            throw new EstadoException(
+    @Override
+    public void finalizarCarrera(Carrera carrera, Caballo caballoGanador) throws HipodromoException {
+        throw new HipodromoException(
+                "No se puede finalizar una carrera en estado abierta. Primero debe cerrar la carrera.");
+    }
+
+    public void cambiarAEstadoEstable(Carrera carrera) throws HipodromoException {
+        if (!carrera.todosLosDividendosSonValidos()) {
+            throw new HipodromoException(
                     "No se puede cambiar a estado estable si hay al menos un caballo con dividendo inválido");
         }
         carrera.setEstadoCarrera(new Estable()); // Cambia el estado de la carrera a "Estable"
     }
 
     @Override
-    public void finalizarCarrera(Carrera carrera, Caballo caballoGanador) throws EstadoException {
-        throw new EstadoException("No se puede finalizar una carrera en estado abierta");
+    public String getNombreEstado() {
+        return "Abierta";
     }
 
     @Override
-    public String getNombreEstado() {
-     return "Abierta";
+    public boolean estaFinalizada() {
+        return false;
+    }
+
+    @Override
+public void actualizarEstadoPorDividendo(Carrera carrera) {
+    if (carrera.todosLosDividendosSonValidos()) {
+        carrera.setEstadoCarrera(new Estable());
+    }
 }
 }

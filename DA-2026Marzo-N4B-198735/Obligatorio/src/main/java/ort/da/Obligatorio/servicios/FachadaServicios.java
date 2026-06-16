@@ -135,9 +135,6 @@ public class FachadaServicios {
         return servicioJornada.getListaProximasCarrerasJornada(jornada);
     }
 
-    public List<Caballo> getCaballosCarrera(Carrera carrera) throws HipodromoException {
-        return servicioCarrera.getCaballosCarrera(carrera);
-    }
     /*
      * • Carreras Finalizadas en la jornada actual ordenadas por número descendente
      * Información: numero, hora de
@@ -173,6 +170,7 @@ public class FachadaServicios {
                 + " en la jornada seleccionada");
     }
 
+    // servicio carrera.
     public List<Carrera> getCarreras() throws HipodromoException {
         return servicioCarrera.getCarreras();
     }
@@ -197,7 +195,6 @@ public class FachadaServicios {
 
     }
 
-  
     public Carrera buscarCarreraPorNumero(int numeroCarrera) throws HipodromoException {
         return servicioCarrera.buscarCarreraPorNumero(numeroCarrera);
     }
@@ -206,9 +203,13 @@ public class FachadaServicios {
         return servicioCarrera.buscarCarreraPorNumero(numeroCarrera) != null && servicioCarrera
                 .buscarCaballoParticipaEnCarrera(servicioCarrera.buscarCarreraPorNumero(numeroCarrera), numeroCaballo);
     }
-    //caballos
-  public Caballo buscarCaballoPorNumero(int numeroCaballo) throws HipodromoException {
+
+    // caballos
+    public Caballo buscarCaballoPorNumero(int numeroCaballo) throws HipodromoException {
         return servicioCarrera.buscarCaballoPorNumero(numeroCaballo);
     }
 
+    public List<Caballo> getCaballosCarrera(Carrera carrera) throws HipodromoException {
+        return servicioCarrera.getCaballosCarrera(carrera);
+    }
 }

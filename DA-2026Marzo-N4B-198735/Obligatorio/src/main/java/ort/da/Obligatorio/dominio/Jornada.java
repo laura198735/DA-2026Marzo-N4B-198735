@@ -6,14 +6,12 @@ import java.util.Date;
 import java.util.List;
 
 import lombok.Data;
-import ort.da.Obligatorio.excepciones.HipodromoException;
 
 @Data
 public class Jornada {
     private int numero;
     private Date dia;
     private List<Carrera> carreras;
-  
 
     public Jornada() {
         this.carreras = new ArrayList<>();
@@ -43,7 +41,6 @@ public class Jornada {
         cal.set(Calendar.MILLISECOND, 0);
         return cal.getTime();
     }
-    
 
     // recorre las carreras de la jornada y suma el total apostado en c/u
     public double getTotalApostado() {
@@ -59,7 +56,7 @@ public class Jornada {
         return total;
     }
 
-    public double getTotalPagado() {
+    public double getTotalPagado() {// joranda tiene todas las carreras y saca el pagado a cada carrera.
         double total = 0.0;
         List<Carrera> carreras = getCarreras();
         if (carreras == null)
@@ -72,7 +69,8 @@ public class Jornada {
         return total;
     }
 
-    public double getTotalComisiones() {
+    public double getTotalComisiones() {// la comision esta definida como constante global en carrera por lo que en caso
+                                        // de actualizarse solamente se actualiza ahi.
         double total = 0.0;
         List<Carrera> carreras = getCarreras();
         if (carreras == null)
@@ -101,23 +99,6 @@ public class Jornada {
         return carreras == null ? 0 : carreras.size();
     }
 
-
-    public int getCantidadCarrerasFinalizadasJornada() {
-    int cantidad = 0;
-
-    if (carreras == null) {
-        return cantidad;
-    }
-
-    for (Carrera carrera : carreras) {
-        if (carrera != null && carrera.estaFinalizada()) {
-            cantidad++;
-        }
-    }
-
-    return cantidad;
-}
-
     // recorre las carreras de la jornada y cuenta las que no están finalizadas de
     // la Jornada actual
     public int getCantidadProximasCarrerasJornada() {
@@ -127,7 +108,7 @@ public class Jornada {
         if (carreras != null) {
             for (Carrera carrera : carreras) {
                 if (carrera.getJornada() != null && carrera.getJornada().equals(this)
-                        && !(carrera.getEstadoCarrera() instanceof Finalizada)) {
+                        && !carrera.estaFinalizada()) {
                     cantidad++;
                 }
             }
@@ -135,15 +116,22 @@ public class Jornada {
         return cantidad;
     }
 
-    public List<Carrera> getResultadosCarrerasJornada() {
-        return getCarreras().stream()
-                .filter(c -> c.getEstadoCarrera() instanceof Finalizada)
-                .toList();
+    public int getCantidadCarrerasFinalizadasJornada() {
+        int cantidad = 0;
+        if (carreras == null) {
+            return 0;
+        }
+        for (Carrera carrera : carreras) {
+            if (carrera != null && carrera.estaFinalizada()) {
+                cantidad++;
+            }
+        }
+        return cantidad;
     }
 
     public List<Carrera> getListaProximasCarrerasJornada() {
         return getCarreras().stream()
-                .filter(c -> !(c.getEstadoCarrera() instanceof Finalizada))
+                .filter(c -> !(c.estaFinalizada()) && c.getJornada() != null && c.getJornada().equals(this))
                 .toList();
     }
 }

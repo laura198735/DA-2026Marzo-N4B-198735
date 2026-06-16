@@ -21,7 +21,7 @@ public class ParticipanteDto {
         Caballo caballo = participante.getCaballo();
         this.numero = caballo.getNumero();
         this.nombre = caballo.getNombre();
-        this.dividendoActual = participante.calcularDividendo();
+        this.dividendoActual = participante.getDividendoActual();
         this.dividendoFinal = participante.getDividendoFinal();
         this.totalApostado = participante.getTotalApostadoAlCaballo();
         this.cantidadApuestas = participante.getApuestas() == null ? 0 : participante.getApuestas().size();

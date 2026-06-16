@@ -3,6 +3,7 @@ package ort.da.Obligatorio.dominio;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
+import ort.da.Obligatorio.excepciones.HipodromoException;
 
 @Getter
 public class Participante {
@@ -21,12 +22,11 @@ public class Participante {
     }
 
     // Verifico si el caballo es el que participa por el numero de caballo para
-    // saber si corrió
-    public boolean esCaballoDelRegistro(Participante registro, Caballo caballo) {
-        return registro != null
-                && registro.getCaballo() != null
+    // saber si corrió -
+    public boolean esCaballoDelRegistro(Caballo caballo) {
+        return this.caballo != null
                 && caballo != null
-                && registro.getCaballo().getNumero() == caballo.getNumero();
+                && this.caballo.getNumero() == caballo.getNumero();
     }
 
     public boolean esCaballoGanador() {
@@ -58,53 +58,57 @@ public class Participante {
      * apostado
      * al caballo
      */
-
     /*** se tiene que calcular cada vez que se hace una apuesta */
-    public double calcularDividendo() {
-    if (carrera == null) {
-        return 0.0;
+
+    private double calcularDividendo() {
+        if (carrera == null) {
+            return 0.0;
+        }
+        double totalApostadoCarrera = carrera.getTotalApostado();
+        double totalApostadoCaballo = getTotalApostadoAlCaballo();
+
+        if (totalApostadoCaballo <= 0) {
+            return 0.0; // No hay apuestas al caballo
+        }
+
+        double totalApostadoCarreraLuegoComision = totalApostadoCarrera * (1 - Carrera.COMISION);
+        return totalApostadoCarreraLuegoComision / totalApostadoCaballo;
     }
-
-    double totalApostadoEnCarrera = carrera.getTotalApostado();
-    double totalApostadoAlCaballo = getTotalApostadoAlCaballo();
-
-    if (totalApostadoAlCaballo <= 0) {
-        return 0.0;
-    }
-
-    return (totalApostadoEnCarrera * (1.0 - Carrera.COMISION)) / totalApostadoAlCaballo;
-}
 
     public void actualizarDividendoActual() {
         this.dividendoActual = calcularDividendo();
     }
+  
+    /**
+     * Un dividendo es válido únicamente cuando:
+     * La cantidad de apuestas al caballo es mayor a 0.
+     * El dividendo es mayor a 1.
+     */
+    public boolean tieneDividendoValido() {
+        if (apuestas == null || apuestas.isEmpty()) {
+            return false; // No hay apuestas al caballo
+        }
+        return dividendoActual > 1 && getTotalApostadoAlCaballo() > 0;
+    }
+
+    public void invalidarDividendo() {
+        this.dividendoActual = 0.0;
+        this.dividendoFinal = 0.0;
+    }
 
     public void fijarDividendoFinal() {
-        this.dividendoFinal = calcularDividendo();
+        dividendoFinal = this.dividendoActual;
     }
 
-    public List<Apuesta> getApuestas() {
-        return apuestas;
-    }
-
-    public void agregarApuesta(Apuesta apuesta) {
+    public void agregarApuesta(Apuesta apuesta)throws HipodromoException {
+        if(apuesta ==null){
+            throw new HipodromoException("La apuesta no puede ser nula");
+        }
         apuestas.add(apuesta);
-    }
-
-    public static boolean tieneDividendoValido(Carrera carrera) {
-        if (carrera == null || carrera.getRegistros() == null) {
-            return false; // No hay registros de participación
-        }
-        for (Participante registro : carrera.getRegistros()) {
-            if (registro != null && registro.calcularDividendo() <= 1) {
-                return false; // Hay al menos un caballo con dividendo inválido
-            }
-        }
-        return true; // Todos los caballos tienen dividendo válido
+  
     }
 
 }
-
 /***
  * // Dividendo = (total apostado en la carrera - comisión) / total apostado al
  * // caballo

@@ -1,6 +1,6 @@
 package ort.da.Obligatorio.dominio;
 
-import ort.da.Obligatorio.excepciones.EstadoException;
+import ort.da.Obligatorio.excepciones.HipodromoException;
 
 public class Finalizada implements IEstadoCarrera {
 
@@ -8,26 +8,39 @@ public class Finalizada implements IEstadoCarrera {
     }
 
     @Override
-    public void abrirCarrera(Carrera carrera) throws EstadoException {
-        throw new EstadoException("No se puede abrir una carrera que ya ha finalizado");
+    public void abrirCarrera(Carrera carrera) throws HipodromoException {
+        throw new HipodromoException("No se puede abrir una carrera que ya ha finalizado");
     }
 
     @Override
-    public void cerrarCarrera(Carrera carrera) throws EstadoException {
-        throw new EstadoException("La carrera ya está cerrada");
+    public void cerrarCarrera(Carrera carrera) throws HipodromoException {
+        throw new HipodromoException("La carrera ya está cerrada");
     }
 
-    // Cambia el estado de la carrera a "Finalizada"
-    public void finalizarCarrera(Carrera carrera, Caballo caballoGanador) throws EstadoException {
-        carrera.setEstadoCarrera(this);
+    // la carrera se finaliza en estado Cerrado.
+    public void finalizarCarrera(Carrera carrera, Caballo caballoGanador) throws HipodromoException {
+        throw new HipodromoException("La carrera ya ha finalizado");
     }
+
     @Override
     public boolean puedeApostar(Carrera carrera) {
         return false;
     }
+
     @Override
     public String getNombreEstado() {
         return "Finalizada";
     }
-}
 
+    @Override
+    public boolean estaFinalizada() {
+        return true;
+
+    }
+
+    @Override
+    public void actualizarEstadoPorDividendo(Carrera carrera) throws HipodromoException {
+        throw new HipodromoException("No se puede actualizar el estado de una carrera finalizada por dividendo");
+    }
+
+}

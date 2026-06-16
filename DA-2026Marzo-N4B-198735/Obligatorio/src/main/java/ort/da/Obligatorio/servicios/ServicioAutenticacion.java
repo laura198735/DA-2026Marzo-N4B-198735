@@ -53,12 +53,5 @@ public class ServicioAutenticacion {
         throw new AutenticacionException("Credenciales inválidas");
     }
 
-    public Jugador autenticarJugador(Credencial credencial) throws AutenticacionException {
-        for (Jugador jugador : jugadores) {
-            if (jugador.validar(credencial)) {
-                return jugador;
-            }
-        }
-        throw new AutenticacionException("Credenciales inválidas");
-    }
+   
 }
