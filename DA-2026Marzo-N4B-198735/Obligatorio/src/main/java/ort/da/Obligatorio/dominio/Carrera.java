@@ -192,4 +192,14 @@ public class Carrera {
         return cantidad;
     }
 
+    public void invalidarDividendosParticipantes() {
+        if (registros != null) {
+            for (Participante participante : registros) {
+                participante.invalidarDividendo();
+            }
+        }
+    }
+
+  
+
 }
