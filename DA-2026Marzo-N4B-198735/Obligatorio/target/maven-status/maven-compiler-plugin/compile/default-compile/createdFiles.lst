@@ -50,6 +50,7 @@ ort\da\Obligatorio\observer\Observable$Evento.class
 ort\da\Obligatorio\presentadores\GestionarCarreraPresentador.class
 ort\da\Obligatorio\servicios\ServicioJornada.class
 ort\da\Obligatorio\dtos\CarreraDto$CarreraProximaDto.class
+ort\da\Obligatorio\presentadores\TableroAdminPresentador$1.class
 ort\da\Obligatorio\dominio\Super.class
 ort\da\Obligatorio\dominio\IModalidad.class
 ort\da\Obligatorio\presentadores\ConexionNavegador.class

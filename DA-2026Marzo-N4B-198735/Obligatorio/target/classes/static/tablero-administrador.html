@@ -179,18 +179,17 @@
     </section>
   </main>
 
-
-
   <script type="module">
-    import { CommandDispatcher } from './CommandDispatcher.js';
+    import dispatcher from './CommandDispatcher.js';
+    import SSECommandDispatcher from './SSECommandDispatcher.js';
 
-    const $ = (id) => document.getElementById(id);
+    // Conectar SSE automáticamente
+   window.sseConnection = new SSECommandDispatcher(
+  "/tablero-administrador/registrarSSE",
+  dispatcher,
+  () => console.log("Conexión cerrada")
+);
 
-    const formateadorMoneda = new Intl.NumberFormat('es-UY', {
-      style: 'currency',
-      currency: 'UYU',
-      maximumFractionDigits: 0
-    });
 
     let jornadasDisponibles = [];
     let indiceJornadaActual = -1;
@@ -229,15 +228,15 @@
       if (!fecha) return 'Jornada no seleccionada';
 
       let date;
-      
-      // Si es un número (timestamp en milisegundos)
+
+      // Si es un número (timestamp en milisegundos)  
       if (typeof fecha === 'number') {
         date = new Date(fecha);
       }
       // Si es un string, intentar parsearlo
       else if (typeof fecha === 'string') {
         // Si parece ISO 8601 pero sin Z, agregarlo
-        if (fecha.match(/^\d{4}-\d{2}-\d{2}T/) && !fecha.endsWith('Z')) {
+        if (fecha.match(/^\d{4}-\d{2}-\d{2}T/g) && !fecha.endsWith('Z')) {
           date = new Date(fecha + 'Z');
         } else {
           date = new Date(fecha);
@@ -537,4 +536,3 @@
 </body>
 
 </html>
-
