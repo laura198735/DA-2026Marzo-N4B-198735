@@ -9,14 +9,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpSession;
-import ort.da.Obligatorio.dominio.Administrador;
 import ort.da.Obligatorio.dominio.Carrera;
 import ort.da.Obligatorio.dominio.Jornada;
-import ort.da.Obligatorio.dominio.Usuario;
 import ort.da.Obligatorio.dtos.CarreraDto;
-import ort.da.Obligatorio.dtos.CarreraDto.CarreraProximaDto;
 import ort.da.Obligatorio.dtos.JornadaTableroDto;
 import ort.da.Obligatorio.excepciones.HipodromoException;
+import ort.da.Obligatorio.presentadores.auxiliar.AuxiliarSesion;
 import ort.da.Obligatorio.servicios.FachadaServicios;
 
 /* Fecha de la jornada actual (inicialmente es la jornada de la fecha actual o la más próxima anterior si no hay 
@@ -39,8 +37,8 @@ public class TableroAdminPresentador {
     @PostMapping("/seleccionar-jornada")
     public Commands seleccionarJornada(@RequestParam("jornadaId") int numeroJornada, HttpSession session)
             throws HipodromoException {
-        if (!usuarioAdministradorLogueado(session)) {
-            return redirigirLogin();
+        if (!AuxiliarSesion.usuarioAdministradorLogueado(session)) {
+            return AuxiliarSesion.redirigirLoginAdmin();
         }
 
         Jornada jornadaSeleccionada = fachadaServicios.buscarJornadaPorNumero(numeroJornada);
@@ -54,8 +52,8 @@ public class TableroAdminPresentador {
 
     @PostMapping("/cargar-datos-tablero")
     public Commands cargarDatosTablero(HttpSession session) throws HipodromoException {
-        if (!usuarioAdministradorLogueado(session)) {
-            return redirigirLogin();
+        if (!AuxiliarSesion.usuarioAdministradorLogueado(session)) {
+            return AuxiliarSesion.redirigirLoginAdmin();
         }
 
         List<Jornada> jornadas = fachadaServicios.getJornadas();
@@ -114,14 +112,4 @@ public class TableroAdminPresentador {
                         .toList()));
     }
 
-    private boolean usuarioAdministradorLogueado(HttpSession session) {
-        Usuario usuarioAdministrador = (Usuario) session.getAttribute("usuarioLogueado");
-        return usuarioAdministrador instanceof Administrador;
-    }
-
-    private Commands redirigirLogin() {
-        return Commands.create(new Command("redirigirLogin", "/login-admin.html"));
-    }
-
-    
 }

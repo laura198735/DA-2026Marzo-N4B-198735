@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import lombok.Data;
+import ort.da.Obligatorio.excepciones.HipodromoException;
 
 @Data
 public class Jornada {
@@ -89,7 +90,7 @@ public class Jornada {
         }
         return total;
     }
-
+//tablero admin
     public double getBalanceJornada() {
         return getTotalApostado() - getTotalPagado();
     }
@@ -99,16 +100,14 @@ public class Jornada {
         return carreras == null ? 0 : carreras.size();
     }
 
-    // recorre las carreras de la jornada y cuenta las que no están finalizadas de
-    // la Jornada actual
-    public int getCantidadProximasCarrerasJornada() {
+    /*  recorre las carreras de la jornada y cuenta las que no están finalizadas de  la Jornada actual*/
+    public int getCantidadProximasCarrerasJornada() throws HipodromoException {
         int cantidad = 0;
         List<Carrera> carreras = getCarreras();
 
         if (carreras != null) {
             for (Carrera carrera : carreras) {
-                if (carrera.getJornada() != null && carrera.getJornada().equals(this)
-                        && !carrera.estaFinalizada()) {
+                if (!(carrera.getJornada() != null && carrera.getJornada().equals(this)) && !carrera.estaFinalizada()&& !carrera.estaCerrada()) {
                     cantidad++;
                 }
             }

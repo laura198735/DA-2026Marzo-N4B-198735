@@ -13,6 +13,6 @@ public class LogoutAdminPresentador {
     public Commands logout(HttpSession session) {
         session.invalidate();
         return Commands.create(
-                new Command("redirigirLogin", "/login-administrador.html"));
+                new Command("redirigirLogin", "/login-admin.html"));
     }
 }

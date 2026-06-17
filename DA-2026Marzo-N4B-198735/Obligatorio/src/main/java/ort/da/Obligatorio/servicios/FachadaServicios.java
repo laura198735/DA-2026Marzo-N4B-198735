@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import ort.da.Obligatorio.dominio.Administrador;
 import ort.da.Obligatorio.dominio.Caballo;
 import ort.da.Obligatorio.dominio.Carrera;
 import ort.da.Obligatorio.dominio.Credencial;
 import ort.da.Obligatorio.dominio.Jornada;
+import ort.da.Obligatorio.dominio.Jugador;
 import ort.da.Obligatorio.dominio.Modalidad;
 import ort.da.Obligatorio.dominio.Usuario;
 import ort.da.Obligatorio.excepciones.AutenticacionException;
@@ -47,6 +49,14 @@ public class FachadaServicios {
 
     public Usuario autenticar(Credencial credencial) throws AutenticacionException {
         return servicioAutenticacion.autenticar(credencial);
+    }
+
+    public Administrador autenticarAdministrador(Credencial credencial) throws AutenticacionException {
+        return servicioAutenticacion.autenticarAdministrador(credencial);
+    }
+
+    public Jugador autenticarJugador(Credencial credencial) throws AutenticacionException {
+        return servicioAutenticacion.autenticarJugador(credencial);
     }
 
     public List<Jornada> getJornadas() throws HipodromoException {

@@ -15,7 +15,7 @@ import ort.da.Obligatorio.dtos.CaballoDto;
 import ort.da.Obligatorio.dtos.CarreraDto;
 import ort.da.Obligatorio.dtos.ParticipanteDto;
 import ort.da.Obligatorio.excepciones.HipodromoException;
-
+import ort.da.Obligatorio.presentadores.auxiliar.AuxiliarSesion;
 import ort.da.Obligatorio.servicios.FachadaServicios;
 
 @RestController
@@ -27,10 +27,9 @@ public class GestionarCarreraPresentador {
   @GetMapping()
   public Commands mostrarPantalla(@RequestParam(value = "numeroCarrera", required = false) Integer numeroCarrera,
       HttpSession session) throws HipodromoException {
-        Administrador adminLogueado =  ()obtenerAdministradorLogueado(session);
 
-    if (usuarioAdministradorLogueado(session)) {
-      return redirigirLoginAdmin();
+    if (!AuxiliarSesion.usuarioAdministradorLogueado(session)) {
+      return AuxiliarSesion.redirigirLoginAdmin();
     }
 
     if (numeroCarrera == null || numeroCarrera <= 0) {
@@ -55,16 +54,16 @@ public class GestionarCarreraPresentador {
 
     return Commands.create(
         new Command("mostrarCarreraSeleccionada", new CarreraDto(carreraSeleccionada)),
-        new Command("actualizarCaballos", ParticipanteDto.fromCarrera(carreraSeleccionada)),//desde participanteDto para enviar el dividendo de cada caballo.
+        new Command("actualizarCaballos", ParticipanteDto.fromCarrera(carreraSeleccionada)), // desde participanteDtopara enviar el dividendode cada caballo.
         new Command("mostrarCaballoSeleccionado", null));
   }
-
+//select de carrera.
   @PostMapping("/seleccionar-carrera")
   public Commands seleccionarCarrera(@RequestParam("carreraId") int carreraNumero, HttpSession session)
       throws HipodromoException {
 
-    if (!usuarioAdministradorLogueado(session)) {
-      return redirigirLoginAdmin();
+    if (!AuxiliarSesion.usuarioAdministradorLogueado(session)) {
+      return AuxiliarSesion.redirigirLoginAdmin();
     }
 
     try {
@@ -82,13 +81,13 @@ public class GestionarCarreraPresentador {
       return Commands.create(new Command("error", e.getMessage()));
     }
   }
-
+  //select de caballo.
   @PostMapping("/seleccionar-caballo")
   public Commands seleccionarCaballo(@RequestParam("caballoId") int caballoNumero,
       HttpSession session) throws HipodromoException {
 
-    if (!usuarioAdministradorLogueado(session)) {
-      return redirigirLoginAdmin();
+    if (!AuxiliarSesion.usuarioAdministradorLogueado(session)) {
+      return AuxiliarSesion.redirigirLoginAdmin();
     }
 
     Carrera carreraSeleccionada = (Carrera) session.getAttribute("carreraSeleccionada");
@@ -117,7 +116,7 @@ public class GestionarCarreraPresentador {
         new Command("actualizarCaballos", ParticipanteDto.fromCarrera(carreraSeleccionada)),
         new Command("mostrarCaballoSeleccionado", new CaballoDto(caballoSeleccionado)));
   }
-
+  //acciones de carrera: abrir, cerrar, finalizar con ganador, finalizar y pagar.
   @PostMapping("/abrir-carrera")
   public Commands abrirCarrera(HttpSession session) throws HipodromoException {
     if (!AuxiliarSesion.usuarioAdministradorLogueado(session)) {
@@ -174,7 +173,8 @@ public class GestionarCarreraPresentador {
       Carrera carreraSeleccionada = obtenerCarreraSeleccionada(session);
       Caballo caballoSeleccionado = obtenerCaballoSeleccionado(session);
       fachadaServicios.gestionarFinalizarCarreraYPagar(carreraSeleccionada, caballoSeleccionado);
-      return comandosCarreraActualizada(carreraSeleccionada, session, "Carrera finalizada y apuestas pagadas correctamente");
+      return comandosCarreraActualizada(carreraSeleccionada, session,
+          "Carrera finalizada y apuestas pagadas correctamente");
     } catch (HipodromoException e) {
       return Commands.create(new Command("error", e.getMessage()));
     }

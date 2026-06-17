@@ -19,7 +19,7 @@ public class Finalizada implements IEstadoCarrera {
 
     // la carrera se finaliza en estado Cerrado.
     public void finalizarCarrera(Carrera carrera, Caballo caballoGanador) throws HipodromoException {
-        throw new HipodromoException("La carrera ya ha finalizado");
+        throw new HipodromoException("La carrera ya se encuentra finalizada");
     }
 
     @Override
@@ -33,14 +33,11 @@ public class Finalizada implements IEstadoCarrera {
     }
 
     @Override
-    public boolean estaFinalizada() {
-        return true;
-
-    }
-
-    @Override
     public void actualizarEstadoPorDividendo(Carrera carrera) throws HipodromoException {
         throw new HipodromoException("No se puede actualizar el estado de una carrera finalizada por dividendo");
     }
-
+    @Override
+    public boolean estaFinalizada() {
+        return true;
+    }
 }

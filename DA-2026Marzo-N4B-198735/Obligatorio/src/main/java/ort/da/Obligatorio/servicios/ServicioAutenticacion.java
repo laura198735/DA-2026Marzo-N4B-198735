@@ -53,5 +53,23 @@ public class ServicioAutenticacion {
         throw new AutenticacionException("Credenciales inválidas");
     }
 
-   
+    public Administrador autenticarAdministrador(Credencial credencial) throws AutenticacionException {
+        for (Administrador admin : administradores) {
+            if (admin.validar(credencial)) {
+                return admin;
+            }
+        }
+
+        throw new AutenticacionException("Credenciales invalidas para administrador");
+    }
+
+    public Jugador autenticarJugador(Credencial credencial) throws AutenticacionException {
+        for (Jugador jugador : jugadores) {
+            if (jugador.validar(credencial)) {
+                return jugador;
+            }
+        }
+
+        throw new AutenticacionException("Credenciales invalidas para jugador");
+    }
 }

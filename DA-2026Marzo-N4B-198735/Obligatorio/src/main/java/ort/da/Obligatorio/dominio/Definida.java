@@ -31,12 +31,7 @@ public class Definida implements IEstadoCarrera {
         return "Definida";
     }
 
-    @Override
-    public boolean estaFinalizada() {
-        return false;
-    }
-
-    @Override
+     @Override
     public void actualizarEstadoPorDividendo(Carrera carrera) throws HipodromoException {
         throw new HipodromoException("No se puede actualizar el estado de una carrera definida por dividendo");
     }

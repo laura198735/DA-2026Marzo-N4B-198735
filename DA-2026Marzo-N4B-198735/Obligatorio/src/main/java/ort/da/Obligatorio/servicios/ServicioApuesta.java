@@ -6,6 +6,7 @@ import java.util.List;
 import ort.da.Obligatorio.dominio.Apuesta;
 import ort.da.Obligatorio.dominio.Carrera;
 import ort.da.Obligatorio.dominio.Participante;
+import ort.da.Obligatorio.excepciones.HipodromoException;
 
 public class ServicioApuesta {
     List<Apuesta> apuestas;
@@ -25,7 +26,7 @@ public class ServicioApuesta {
         apuestas.add(apuesta);
     }
 
-    public void pagarApuestasGanadoras(Carrera carrera) {
+    public void pagarApuestasGanadoras(Carrera carrera) throws HipodromoException {
         if (carrera == null || carrera.getRegistros() == null) {
             return;
         }

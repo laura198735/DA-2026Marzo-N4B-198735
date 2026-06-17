@@ -15,8 +15,14 @@ public interface IEstadoCarrera {
 
     String getNombreEstado();
 
-    public boolean estaFinalizada();
+    default boolean estaFinalizada() {
+        return false;
+    }
 
-    public void actualizarEstadoPorDividendo(Carrera carrera)throws HipodromoException;;
+    default boolean estaCerrada() {
+        return false;
+    }
+
+    public void actualizarEstadoPorDividendo(Carrera carrera) throws HipodromoException;;
 
 }

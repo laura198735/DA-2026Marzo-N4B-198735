@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpSession;
+import ort.da.Obligatorio.dominio.Administrador;
 import ort.da.Obligatorio.dominio.Credencial;
-import ort.da.Obligatorio.dominio.Usuario;
 import ort.da.Obligatorio.dtos.CredencialDto;
 import ort.da.Obligatorio.excepciones.AutenticacionException;
 import ort.da.Obligatorio.servicios.FachadaServicios;
@@ -26,8 +26,9 @@ public class LoginAdminPresentador {
             System.out.println("Nombre recibido: " + credencial.getNombre());
             System.out.println("Password recibido: " + credencial.getPassword());
             
-            Usuario administrador = FachadaServicios.getInstancia().autenticar(credencial);
-            session.setAttribute("usuarioLogueado", administrador);
+            Administrador administrador = FachadaServicios.getInstancia().autenticarAdministrador(credencial);
+            session.removeAttribute("jugadorLogueado");
+            session.setAttribute("administradorLogueado", administrador);
 
             System.out.println("Nombre recibido: " + administrador.getNombre());
           

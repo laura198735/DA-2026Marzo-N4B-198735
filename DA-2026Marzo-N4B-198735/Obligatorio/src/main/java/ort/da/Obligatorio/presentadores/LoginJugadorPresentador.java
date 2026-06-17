@@ -2,15 +2,12 @@ package ort.da.Obligatorio.presentadores;
 
 import jakarta.servlet.http.HttpSession;
 import ort.da.Obligatorio.dominio.Credencial;
-
-import ort.da.Obligatorio.dominio.Usuario;
+import ort.da.Obligatorio.dominio.Jugador;
 import ort.da.Obligatorio.dtos.CredencialDto;
 import ort.da.Obligatorio.excepciones.AutenticacionException;
-import ort.da.Obligatorio.excepciones.HipodromoException;
 import ort.da.Obligatorio.servicios.FachadaServicios;
 
 import org.springframework.context.annotation.Scope;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -32,8 +29,9 @@ public class LoginJugadorPresentador {
             System.out.println("Nombre recibido: " + credencial.getNombre());
             System.out.println("Password recibido: " + credencial.getPassword());
 
-            Usuario jugador = FachadaServicios.getInstancia().autenticar(credencial);
-            session.setAttribute("usuarioLogueado", jugador);
+            Jugador jugador = FachadaServicios.getInstancia().autenticarJugador(credencial);
+            session.removeAttribute("administradorLogueado");
+            session.setAttribute("jugadorLogueado", jugador);
 
             System.out.println("Nombre recibido: " + jugador.getNombre());
             return Commands.create(new Command("redirigir-tablero-jugador", "/tablero-jugador.html"));

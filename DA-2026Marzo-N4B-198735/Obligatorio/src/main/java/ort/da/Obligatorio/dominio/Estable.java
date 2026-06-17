@@ -27,6 +27,7 @@ public class Estable implements IEstadoCarrera {
         if (carrera.getRegistros() == null || carrera.getRegistros().isEmpty()) {
             throw new HipodromoException("No hay participantes en la carrera para cerrarla.");
         }
+        carrera.fijarDividendoFinalEnParticipantes(); // Fija el dividendo final en cada participante antes de cerrar la carrera
         carrera.setEstadoCarrera(new Cerrada()); // Cambia el estado de la carrera a "Cerrada"
     }
 
@@ -43,11 +44,6 @@ public class Estable implements IEstadoCarrera {
     @Override
     public String getNombreEstado() {
         return "Estable";
-    }
-
-    @Override
-    public boolean estaFinalizada() {
-        return false;
     }
 
     @Override
