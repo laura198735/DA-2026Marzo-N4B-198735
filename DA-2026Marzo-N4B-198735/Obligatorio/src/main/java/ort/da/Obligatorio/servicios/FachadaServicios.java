@@ -187,7 +187,11 @@ public class FachadaServicios {
     }
 
     public void gestionarFinalizarCarrera(Carrera carrera, Caballo caballoGanador) throws HipodromoException {
-        servicioCarrera.finalizarCarrera(carrera, caballoGanador);
+        servicioCarrera.finalizarCarreraConGanador(carrera, caballoGanador);
+    }
+
+    public void gestionarFinalizarCarreraYPagar(Carrera carrera, Caballo caballoGanador) throws HipodromoException {
+        servicioCarrera.finalizarCarreraYPagar(carrera, caballoGanador);
     }
 
     public Jornada buscarJornadaPorNumero(int numeroJornada) throws HipodromoException {

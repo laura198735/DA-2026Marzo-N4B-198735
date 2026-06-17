@@ -46,6 +46,16 @@
         </header>
 
         <section style="background:#fff;padding:18px;border-radius:10px;margin-top:16px;">
+            <div style="font-weight:900;margin-bottom:12px;color:#10243a">Acciones de carrera</div>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;">
+                <button type="button" class="action-button" data-action="abrir-carrera">Abrir Carrera</button>
+                <button type="button" class="action-button" data-action="cerrar-carrera">Cerrar Carrera</button>
+                <button type="button" class="action-button" data-action="finalizar-carrera-con-ganador">Finalizar Carrera con Ganador</button>
+                <button type="button" class="action-button" data-action="finalizar-carrera-y-pagar">Finalizar Carrera y Pagar</button>
+            </div>
+        </section>
+
+        <section style="background:#fff;padding:18px;border-radius:10px;margin-top:16px;">
             <div style="font-weight:900;margin-bottom:8px">Caballos participantes</div>
             <table class="admin-table" style="width:100%;background:#fff;border-collapse:collapse;">
                 <thead>
@@ -88,6 +98,12 @@
         const caballosVacio = document.getElementById('caballos-vacio');
         const caballoSeleccionado = document.getElementById('caballo-seleccionado');
         const vistaMensajes = document.getElementById('vista-mensajes');
+        const accionesCarrera = new Map([
+            ['abrir-carrera', '/gestionar-carrera/abrir-carrera'],
+            ['cerrar-carrera', '/gestionar-carrera/cerrar-carrera'],
+            ['finalizar-carrera-con-ganador', '/gestionar-carrera/finalizar-carrera-con-ganador'],
+            ['finalizar-carrera-y-pagar', '/gestionar-carrera/finalizar-carrera-y-pagar']
+        ]);
 
         const formateadorEntero = new Intl.NumberFormat('es-UY', {
             maximumFractionDigits: 0
@@ -381,6 +397,17 @@
                 dispatcher.submit('/gestionar-carrera/seleccionar-caballo', {
                     caballoId
                 });
+            });
+
+            document.addEventListener('click', (event) => {
+                const boton = event.target.closest('button[data-action]');
+
+                if (!boton || !accionesCarrera.has(boton.dataset.action)) {
+                    return;
+                }
+
+                mostrarMensaje(null, '');
+                dispatcher.submit(accionesCarrera.get(boton.dataset.action));
             });
         }
 

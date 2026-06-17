@@ -15,7 +15,7 @@ import ort.da.Obligatorio.dtos.CaballoDto;
 import ort.da.Obligatorio.dtos.CarreraDto;
 import ort.da.Obligatorio.dtos.ParticipanteDto;
 import ort.da.Obligatorio.excepciones.HipodromoException;
-import ort.da.Obligatorio.presentadores.auxiliar.AuxiliarSesion;
+
 import ort.da.Obligatorio.servicios.FachadaServicios;
 
 @RestController
@@ -27,9 +27,10 @@ public class GestionarCarreraPresentador {
   @GetMapping()
   public Commands mostrarPantalla(@RequestParam(value = "numeroCarrera", required = false) Integer numeroCarrera,
       HttpSession session) throws HipodromoException {
+        Administrador adminLogueado =  ()obtenerAdministradorLogueado(session);
 
-    if (!AuxiliarSesion.usuarioAdministradorLogueado(session)) {
-      return AuxiliarSesion.redirigirLoginAdmin();
+    if (usuarioAdministradorLogueado(session)) {
+      return redirigirLoginAdmin();
     }
 
     if (numeroCarrera == null || numeroCarrera <= 0) {
@@ -62,8 +63,8 @@ public class GestionarCarreraPresentador {
   public Commands seleccionarCarrera(@RequestParam("carreraId") int carreraNumero, HttpSession session)
       throws HipodromoException {
 
-    if (!AuxiliarSesion.usuarioAdministradorLogueado(session)) {
-      return AuxiliarSesion.redirigirLoginAdmin();
+    if (!usuarioAdministradorLogueado(session)) {
+      return redirigirLoginAdmin();
     }
 
     try {
@@ -86,8 +87,8 @@ public class GestionarCarreraPresentador {
   public Commands seleccionarCaballo(@RequestParam("caballoId") int caballoNumero,
       HttpSession session) throws HipodromoException {
 
-    if (!AuxiliarSesion.usuarioAdministradorLogueado(session)) {
-      return AuxiliarSesion.redirigirLoginAdmin();
+    if (!usuarioAdministradorLogueado(session)) {
+      return redirigirLoginAdmin();
     }
 
     Carrera carreraSeleccionada = (Carrera) session.getAttribute("carreraSeleccionada");
@@ -102,7 +103,7 @@ public class GestionarCarreraPresentador {
       return Commands.create(new Command("error", "No se encontro el caballo con numero: " + caballoNumero));
     }
 
-   Participante participanteSeleccionado = carreraSeleccionada.obtenerParticipanteEnCarrera(caballoNumero);
+    Participante participanteSeleccionado = carreraSeleccionada.obtenerParticipanteEnCarrera(caballoNumero);
 
     if (participanteSeleccionado == null) {
       return Commands.create(new Command("error", "El caballo seleccionado no participa en esta carrera."));
@@ -110,17 +111,104 @@ public class GestionarCarreraPresentador {
 
     session.setAttribute("caballoSeleccionado", caballoSeleccionado);
 
-    try {
-      fachadaServicios.gestionarFinalizarCarrera(carreraSeleccionada, caballoSeleccionado);
-    } catch (HipodromoException e) {
-      return Commands.create(new Command("error", e.getMessage()));
-    }
-
     return Commands.create(
-        new Command("mensaje", "Carrera finalizada correctamente"),
+        new Command("mensaje", "Caballo ganador seleccionado"),
         new Command("mostrarCarreraSeleccionada", new CarreraDto(carreraSeleccionada)),
         new Command("actualizarCaballos", ParticipanteDto.fromCarrera(carreraSeleccionada)),
         new Command("mostrarCaballoSeleccionado", new CaballoDto(caballoSeleccionado)));
+  }
+
+  @PostMapping("/abrir-carrera")
+  public Commands abrirCarrera(HttpSession session) throws HipodromoException {
+    if (!AuxiliarSesion.usuarioAdministradorLogueado(session)) {
+      return AuxiliarSesion.redirigirLoginAdmin();
+    }
+
+    try {
+      Carrera carreraSeleccionada = obtenerCarreraSeleccionada(session);
+      fachadaServicios.gestionAbrirCarrera(carreraSeleccionada);
+      return comandosCarreraActualizada(carreraSeleccionada, session, "Carrera abierta correctamente");
+    } catch (HipodromoException e) {
+      return Commands.create(new Command("error", e.getMessage()));
+    }
+  }
+
+  @PostMapping("/cerrar-carrera")
+  public Commands cerrarCarrera(HttpSession session) throws HipodromoException {
+    if (!AuxiliarSesion.usuarioAdministradorLogueado(session)) {
+      return AuxiliarSesion.redirigirLoginAdmin();
+    }
+
+    try {
+      Carrera carreraSeleccionada = obtenerCarreraSeleccionada(session);
+      fachadaServicios.gestionarCerrarCarrera(carreraSeleccionada.getNumeroCarrera());
+      return comandosCarreraActualizada(carreraSeleccionada, session, "Carrera cerrada correctamente");
+    } catch (HipodromoException e) {
+      return Commands.create(new Command("error", e.getMessage()));
+    }
+  }
+
+  @PostMapping("/finalizar-carrera-con-ganador")
+  public Commands finalizarCarreraConGanador(HttpSession session) throws HipodromoException {
+    if (!AuxiliarSesion.usuarioAdministradorLogueado(session)) {
+      return AuxiliarSesion.redirigirLoginAdmin();
+    }
+
+    try {
+      Carrera carreraSeleccionada = obtenerCarreraSeleccionada(session);
+      Caballo caballoSeleccionado = obtenerCaballoSeleccionado(session);
+      fachadaServicios.gestionarFinalizarCarrera(carreraSeleccionada, caballoSeleccionado);
+      return comandosCarreraActualizada(carreraSeleccionada, session, "Carrera finalizada con ganador correctamente");
+    } catch (HipodromoException e) {
+      return Commands.create(new Command("error", e.getMessage()));
+    }
+  }
+
+  @PostMapping("/finalizar-carrera-y-pagar")
+  public Commands finalizarCarreraYPagar(HttpSession session) throws HipodromoException {
+    if (!AuxiliarSesion.usuarioAdministradorLogueado(session)) {
+      return AuxiliarSesion.redirigirLoginAdmin();
+    }
+
+    try {
+      Carrera carreraSeleccionada = obtenerCarreraSeleccionada(session);
+      Caballo caballoSeleccionado = obtenerCaballoSeleccionado(session);
+      fachadaServicios.gestionarFinalizarCarreraYPagar(carreraSeleccionada, caballoSeleccionado);
+      return comandosCarreraActualizada(carreraSeleccionada, session, "Carrera finalizada y apuestas pagadas correctamente");
+    } catch (HipodromoException e) {
+      return Commands.create(new Command("error", e.getMessage()));
+    }
+  }
+
+  private Carrera obtenerCarreraSeleccionada(HttpSession session) throws HipodromoException {
+    Carrera carreraSeleccionada = (Carrera) session.getAttribute("carreraSeleccionada");
+
+    if (carreraSeleccionada == null) {
+      throw new HipodromoException("No hay carrera seleccionada. Fin caso de uso");
+    }
+
+    return carreraSeleccionada;
+  }
+
+  private Caballo obtenerCaballoSeleccionado(HttpSession session) throws HipodromoException {
+    Caballo caballoSeleccionado = (Caballo) session.getAttribute("caballoSeleccionado");
+
+    if (caballoSeleccionado == null) {
+      throw new HipodromoException("Debe seleccionar un caballo ganador.");
+    }
+
+    return caballoSeleccionado;
+  }
+
+  private Commands comandosCarreraActualizada(Carrera carreraSeleccionada, HttpSession session, String mensaje) {
+    Caballo caballoSeleccionado = (Caballo) session.getAttribute("caballoSeleccionado");
+
+    return Commands.create(
+        new Command("mensaje", mensaje),
+        new Command("mostrarCarreraSeleccionada", new CarreraDto(carreraSeleccionada)),
+        new Command("actualizarCaballos", ParticipanteDto.fromCarrera(carreraSeleccionada)),
+        new Command("mostrarCaballoSeleccionado",
+            caballoSeleccionado == null ? null : new CaballoDto(caballoSeleccionado)));
   }
 
   private Jornada obtenerJornadaSeleccionada(HttpSession session) throws HipodromoException {

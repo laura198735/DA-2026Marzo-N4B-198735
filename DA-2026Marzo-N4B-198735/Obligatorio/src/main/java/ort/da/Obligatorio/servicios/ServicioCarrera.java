@@ -43,7 +43,15 @@ public class ServicioCarrera {
         }
     }
 
-    public void finalizarCarrera(Carrera carrera, Caballo caballoGanador) throws HipodromoException {
+    public void finalizarCarreraConGanador(Carrera carrera, Caballo caballoGanador) throws HipodromoException {
+        try {
+            carrera.finalizarCarrera(caballoGanador);
+        } catch (Exception e) {
+            throw new HipodromoException(e.getMessage());
+        }
+    }
+
+    public void finalizarCarreraYPagar(Carrera carrera, Caballo caballoGanador) throws HipodromoException {
         try {
             carrera.finalizarCarrera(caballoGanador);
             servicioApuesta.pagarApuestasGanadoras(carrera);

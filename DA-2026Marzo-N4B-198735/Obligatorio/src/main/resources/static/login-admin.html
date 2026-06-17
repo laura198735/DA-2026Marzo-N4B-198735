@@ -32,14 +32,7 @@
             <label class="input-label" for="nombre">
               <span class="input-icon" aria-hidden="true">👤</span>
 
-              <input 
-                id="nombre" 
-                name="nombre" 
-                type="text" 
-                placeholder="Usuario" 
-                autocomplete="username" 
-                required 
-              />
+              <input id="nombre" name="nombre" type="text" placeholder="Usuario" autocomplete="username" required />
             </label>
           </div>
 
@@ -47,14 +40,8 @@
             <label class="input-label" for="password">
               <span class="input-icon" aria-hidden="true">🔒</span>
 
-              <input 
-                id="password" 
-                name="password" 
-                type="password" 
-                placeholder="Password" 
-                autocomplete="current-password" 
-                required 
-              />
+              <input id="password" name="password" type="password" placeholder="Password"
+                autocomplete="current-password" required />
             </label>
           </div>
 
@@ -75,7 +62,10 @@
 
   <!-- JavaScript usando CommandDispatcher -->
   <script type="module">
-    import dispatcher from  './CommandDispatcher.js';
+    import dispatcher from './CommandDispatcher.js';
+    import SSECommandDispatcher from './SSECommandDispatcher.js';
+    import { initNav } from './SSECommandDispatcher.js';
+    initNav('altaContacto');
 
     // ================================
     // 1. Elementos del HTML
@@ -116,7 +106,7 @@
     // ================================
 
     const view = dispatcher.registerView('loginAdmin', {
-   
+
       urlInicio: null,
 
       onError: (status, texto) => {
@@ -138,7 +128,7 @@
       window.location.href = url;
     });
 
-   
+
     view.handler('error', (mensaje) => {
       desbloquearBoton();
       mostrarError(mensaje);
@@ -151,6 +141,13 @@
 
     // Iniciamos la vista
     dispatcher.startView(view);
+
+    // Conectar SSE automáticamente
+    window.sseConnection = new SSECommandDispatcher(
+      "/login-admin",//url del controlador que registra la conexión SSE para esta vista
+      dispatcher,
+      () => console.log("Conexión cerrada")
+    );
 
     // ================================
     // 5. Envío del formulario
