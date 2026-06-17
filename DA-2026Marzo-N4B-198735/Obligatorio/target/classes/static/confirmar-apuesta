@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Confirmar Apuesta</title>
+
+  <style>
+    :root {
+      --bg: #eef5f4;
+      --bg-dark: #0f172a;
+      --panel: #162236;
+      --panel-soft: #1d2d44;
+      --card: #111827;
+      --card-light: #182337;
+      --border: rgba(255, 255, 255, 0.12);
+      --text: #f8fafc;
+      --muted: #aebbd0;
+      --primary: #f2c94c;
+      --primary-hover: #ffd95f;
+      --success: #4ade80;
+      --success-soft: rgba(74, 222, 128, 0.12);
+      --danger: #f87171;
+      --danger-soft: rgba(248, 113, 113, 0.12);
+      --blue: #38bdf8;
+      --shadow: 0 24px 60px rgba(15, 23, 42, 0.28);
+      --radius-lg: 26px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(56, 189, 248, 0.16), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(74, 222, 128, 0.15), transparent 30%),
+        linear-gradient(135deg, #edf7f5, #dfeceb);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+      color: var(--text);
+    }
+
+    .page {
+      width: 100%;
+      max-width: 930px;
+    }
+
+    .title {
+      text-align: center;
+      color: #24364b;
+      margin-bottom: 28px;
+    }
+
+    .title span {
+      display: inline-block;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 800;
+      font-style: italic;
+      letter-spacing: -1px;
+      position: relative;
+    }
+
+    .title span::after {
+      content: "";
+      position: absolute;
+      left: 12%;
+      right: 12%;
+      bottom: -8px;
+      height: 4px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, transparent, #64b6ac, transparent);
+    }
+
+    .bet-shell {
+      background: linear-gradient(145deg, #142136, #111a2b);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      transform: translateY(0);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .bet-shell:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 32px 80px rgba(15, 23, 42, 0.34);
+    }
+
+    .header {
+      background:
+        linear-gradient(135deg, rgba(56, 189, 248, 0.14), transparent),
+        #183452;
+      padding: 30px 44px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    .content {
+      padding: 38px 44px 42px;
+    }
+
+    .summary-card,
+    .password-card {
+      background: rgba(17, 24, 39, 0.78);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 28px 32px;
+      backdrop-filter: blur(10px);
+    }
+
+    .summary-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px;
+      align-items: center;
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+    }
+
+    .summary-row:last-child {
+      border-bottom: none;
+    }
+
+    .label {
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .value {
+      color: var(--text);
+      font-weight: 750;
+      font-size: 1.05rem;
+      text-align: right;
+    }
+
+    .money {
+      color: var(--primary);
+      font-size: 1.2rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 7px 16px;
+      border-radius: 999px;
+      background: rgba(242, 201, 76, 0.12);
+      border: 1px solid rgba(242, 201, 76, 0.45);
+      color: var(--primary);
+      font-size: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+    }
+
+    .win-card {
+      margin: 32px 0;
+      padding: 30px 24px;
+      text-align: center;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(74, 222, 128, 0.45);
+      background:
+        linear-gradient(135deg, rgba(74, 222, 128, 0.13), rgba(56, 189, 248, 0.06)),
+        rgba(22, 42, 42, 0.9);
+      transition: transform 0.25s ease, border-color 0.25s ease;
+    }
+
+    .win-card:hover {
+      transform: scale(1.015);
+      border-color: rgba(74, 222, 128, 0.75);
+    }
+
+    .win-card .caption {
+      color: #d8e8e2;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-weight: 800;
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+    }
+
+    .win-amount {
+      font-size: clamp(2.4rem, 7vw, 4rem);
+      line-height: 1;
+      color: var(--success);
+      font-weight: 900;
+      margin-bottom: 14px;
+      text-shadow: 0 0 25px rgba(74, 222, 128, 0.28);
+    }
+
+    .win-card small {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    .password-card {
+      margin-bottom: 30px;
+    }
+
+    .password-card h2 {
+      margin: 0 0 22px;
+      color: #dbeafe;
+      font-size: 1.05rem;
+      text-transform: uppercase;
+      letter-spacing: 2.2px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .field label {
+      display: block;
+      color: var(--muted);
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    input {
+      width: 100%;
+      padding: 16px 52px 16px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      outline: none;
+      background: #0d1320;
+      color: var(--text);
+      font-size: 1.05rem;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input:focus {
+      border-color: rgba(56, 189, 248, 0.75);
+      box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.13);
+    }
+
+    .toggle-pass {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 10px;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .toggle-pass:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+    }
+
+    .actions {
+      display: grid;
+      gap: 18px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 18px 24px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), #f6d96b);
+      color: #172033;
+      box-shadow: 0 12px 28px rgba(242, 201, 76, 0.24);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, var(--primary-hover), #f9df7e);
+      transform: translateY(-2px);
+      box-shadow: 0 16px 36px rgba(242, 201, 76, 0.3);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .btn-secondary:hover {
+      background: var(--danger-soft);
+      border-color: rgba(248, 113, 113, 0.4);
+      color: #fecaca;
+      transform: translateY(-2px);
+    }
+
+    .message {
+      display: none;
+      margin-top: 20px;
+      padding: 15px 18px;
+      border-radius: var(--radius-sm);
+      background: var(--success-soft);
+      border: 1px solid rgba(74, 222, 128, 0.35);
+      color: #bbf7d0;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .message.show {
+      display: block;
+      animation: fadeIn 0.28s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 680px) {
+      body {
+        padding: 22px 12px;
+      }
+
+      .header,
+      .content {
+        padding-left: 22px;
+        padding-right: 22px;
+      }
+
+      .summary-card,
+      .password-card {
+        padding: 22px 20px;
+      }
+
+      .summary-row {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+
+      .value {
+        text-align: left;
+      }
+
+      .win-card .caption {
+        letter-spacing: 1.6px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <div class="title">
+      <span>CU: Confirma apuesta</span>
+    </div>
+
+    <section class="bet-shell">
+      <header class="header">
+        <h1>💰 Confirmar Apuesta</h1>
+        <p>Revisá los detalles antes de confirmar. Esta operación descontará el monto correspondiente de tu saldo.</p>
+      </header>
+
+      <div class="content">
+        <section class="summary-card">
+          <div class="summary-row">
+            <div class="label">N° de Carrera</div>
+            <div class="value">7 — Gran Premio del Litoral</div>
+          </div>
+
+          <div class="summary-row">
+            <div class="label">Caballo</div>
+            <div class="value">N° 4 — El Paisano</div>
+          </div>
+
+          <div class="summary-row">
+            <div class="label">Tipo de Apuesta</div>
+            <div class="value">
+              <span class="badge">🏅 Simple</span>
+            </div>
+          </div>
+
+          <div class="summary-row">
+            <div class="label">Dividendo Actual</div>
+            <div class="value money">$ 2,90</div>
+          </div>
+
+          <div class="summary-row">
+            <div class="label">Monto Apostado</div>
+            <div class="value money">$ 1.500</div>
+          </div>
+
+          <div class="summary-row">
+            <div class="label">Monto a debitar del saldo</div>
+            <div class="value money">$ 1.500</div>
+          </div>
+        </section>
+
+        <section class="win-card">
+          <div class="caption">🏆 Cobrarías si El Paisano gana</div>
+          <div class="win-amount">$ 4.350</div>
+          <small>Cálculo realizado en base al dividendo actual. El monto final puede variar.</small>
+        </section>
+
+        <section class="password-card">
+          <h2>🔐 Ingresar contraseña</h2>
+
+          <div class="field">
+            <label for="password">Contraseña</label>
+
+            <div class="input-wrap">
+              <input
+                id="password"
+                type="password"
+                value="12345678"
+                autocomplete="current-password"
+              />
+              <button class="toggle-pass" type="button" onclick="togglePassword()">
+                👁️
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <div class="actions">
+          <button class="btn btn-primary" type="button" onclick="confirmBet()">
+            ✅ Confirmar Apuesta
+          </button>
+
+          <button class="btn btn-secondary" type="button" onclick="discardBet()">
+            ✕ Descartar Apuesta
+          </button>
+        </div>
+
+        <div id="message" class="message"></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function togglePassword() {
+      const input = document.getElementById("password");
+      input.type = input.type === "password" ? "text" : "password";
+    }
+
+    function confirmBet() {
+      const message = document.getElementById("message");
+      message.textContent = "Apuesta confirmada correctamente. ¡Ahora sí, que corra El Paisano!";
+      message.className = "message show";
+    }
+
+    function discardBet() {
+      const message = document.getElementById("message");
+      message.textContent = "Apuesta descartada. El saldo no fue modificado.";
+      message.className = "message show";
+      message.style.background = "rgba(248, 113, 113, 0.12)";
+      message.style.borderColor = "rgba(248, 113, 113, 0.35)";
+      message.style.color = "#fecaca";
+    }
+  </script>
+</body>
+</html>

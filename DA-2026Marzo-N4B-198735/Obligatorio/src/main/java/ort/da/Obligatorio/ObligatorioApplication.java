@@ -55,48 +55,49 @@ public class ObligatorioApplication {
 			Jornada jornada10 = new Jornada(10, new Date(System.currentTimeMillis() + 30 * dia));
 			Jornada jornada11 = new Jornada(11, new Date(System.currentTimeMillis() + 30 * dia));
 
-			Carrera carrera1 = new Carrera(1, "Velocidad Suprema", jornada1);
-			Carrera carrera2 = new Carrera(2, "Gran Premio Oriental", jornada1);
-			Carrera carrera3 = new Carrera(3, "Copa Montevideo", jornada1);
+			Carrera carrera1 = new Carrera("Velocidad Suprema", jornada1);
+			Carrera carrera2 = new Carrera( "Gran Premio Oriental", jornada1);
+			Carrera carrera3 = new Carrera( "Copa Montevideo", jornada1);
 
-			Carrera carrera4 = new Carrera(4, "Desafío del Sur", jornada2);
-			Carrera carrera5 = new Carrera(5, "Clásico de los Campeones", jornada2);
-			Carrera carrera6 = new Carrera(6, "Trofeo Libertad", jornada2);
+			Carrera carrera4 = new Carrera( "Desafío del Sur", jornada2);
+			Carrera carrera5 = new Carrera( "Clásico de los Campeones", jornada2);
+			Carrera carrera6 = new Carrera( "Trofeo Libertad", jornada2);
 
-			Carrera carrera7 = new Carrera(7, "Gran Derby Nacional", jornada3);
-			Carrera carrera8 = new Carrera(8, "Premio Primavera", jornada3);
-			Carrera carrera9 = new Carrera(9, "Carrera de las Estrellas", jornada3);
+			Carrera carrera7 = new Carrera("Gran Derby Nacional", jornada3);
+			Carrera carrera8 = new Carrera( "Premio Primavera", jornada3);
+			Carrera carrera9 = new Carrera( "Carrera de las Estrellas", jornada3);
 
-			Carrera carrera10 = new Carrera(10, "Desafío del Hipódromo", jornada4);
-			Carrera carrera11 = new Carrera(11, "Clásico Invierno", jornada4);
-			Carrera carrera12 = new Carrera(12, "Premio Relámpago", jornada4);
+			Carrera carrera10 = new Carrera( "Desafío del Hipódromo", jornada4);
+			Carrera carrera11 = new Carrera( "Clásico Invierno", jornada4);
+			Carrera carrera12 = new Carrera("Premio Relámpago", jornada4);
 
-			Carrera carrera13 = new Carrera(13, "Gran Premio Verano", jornada5);
-			Carrera carrera14 = new Carrera(14, "Copa de Oro", jornada5);
-			Carrera carrera15 = new Carrera(15, "Clásico del Río", jornada5);
+			Carrera carrera13 = new Carrera( "Gran Premio Verano", jornada5);
+			Carrera carrera14 = new Carrera( "Copa de Oro", jornada5);
+			Carrera carrera15 = new Carrera( "Clásico del Río", jornada5);
 
-			Carrera carrera16 = new Carrera(16, "Premio Centenario", jornada6);
-			Carrera carrera17 = new Carrera(17, "Carrera de Campeones", jornada6);
-			Carrera carrera18 = new Carrera(18, "Desafío del Este", jornada6);
+			Carrera carrera16 = new Carrera( "Premio Centenario", jornada6);
+			Carrera carrera17 = new Carrera( "Carrera de Campeones", jornada6);
+			Carrera carrera18 = new Carrera("Desafío del Este", jornada6);
 
-			Carrera carrera19 = new Carrera(19, "Trofeo Victoria", jornada7);
-			Carrera carrera20 = new Carrera(20, "Gran Premio Internacional", jornada7);
-			Carrera carrera21 = new Carrera(21, "Premio Horizonte", jornada7);
+			Carrera carrera19 = new Carrera("Trofeo Victoria", jornada7);
+			Carrera carrera20 = new Carrera( "Gran Premio Internacional", jornada7);
+			Carrera carrera21 = new Carrera( "Premio Horizonte", jornada7);
 
-			Carrera carrera22 = new Carrera(22, "Copa del Plata", jornada8);
-			Carrera carrera23 = new Carrera(23, "Clásico Federal", jornada8);
-			Carrera carrera24 = new Carrera(24, "Premio Eclipse", jornada8);
+			Carrera carrera22 = new Carrera( "Copa del Plata", jornada8);
+			Carrera carrera23 = new Carrera("Clásico Federal", jornada8);
+			Carrera carrera24 = new Carrera("Premio Eclipse", jornada8);
 
-			Carrera carrera25 = new Carrera(25, "Gran Premio Uruguay", jornada9);
-			Carrera carrera26 = new Carrera(26, "Desafío de Campeones", jornada9);
-			Carrera carrera27 = new Carrera(27, "Premio Tradición", jornada9);
+			Carrera carrera25 = new Carrera( "Gran Premio Uruguay", jornada9);
+			Carrera carrera26 = new Carrera("Desafío de Campeones", jornada9);
+			Carrera carrera27 = new Carrera("Premio Tradición", jornada9);
 
-			Carrera carrera28 = new Carrera(28, "Copa Final", jornada10);
-			Carrera carrera29 = new Carrera(29, "Clásico Clausura", jornada10);
-			Carrera carrera30 = new Carrera(30, "Gran Premio Fin de Temporada", jornada10);
+			Carrera carrera28 = new Carrera( "Copa Final", jornada10);
+			Carrera carrera29 = new Carrera( "Clásico Clausura", jornada10);
+			Carrera carrera30 = new Carrera( "Gran Premio Fin de Temporada", jornada10);
 
-			Carrera carrera31 = new Carrera(31, "Desafío del Hipódromo", jornada11);
-			Carrera carrera32 = new Carrera(32, "Clásico Invierno", jornada11);			Carrera carrera33 = new Carrera(33, "Premio Relámpago", jornada11);
+			Carrera carrera31 = new Carrera( "Desafío del Hipódromo", jornada11);
+			Carrera carrera32 = new Carrera("Clásico Invierno", jornada11);		
+			Carrera carrera33 = new Carrera("Premio Relámpago", jornada11);
 
 			agregarCarreras(jornada1, carrera1, carrera2, carrera3);
 			agregarCarreras(jornada2, carrera4, carrera5, carrera6);

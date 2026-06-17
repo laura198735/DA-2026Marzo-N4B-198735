@@ -6,17 +6,20 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import ort.da.Obligatorio.excepciones.HipodromoException;
+import ort.da.Obligatorio.observer.Observable;
+
 
 @Getter
 @Setter
-public class Carrera {
+public class Carrera extends Observable {
 
-    private int numeroCarrera;
+    private int numeroCarrera; // se asigna automáticamente al crear la carrera, utilizando un contador
+                               // estático para garantizar la unicidad.
     private static int contadorCarreras = 1; // Contador para generar números de carrera únicos empieza en 1.
     private String nombre;
     private IEstadoCarrera estadoCarrera;
     private Jornada jornada;
-    public static final double COMISION = 0.15; // se asume comisión del hipódromo (15%){
+    public static final double COMISION = 0.10; // se asume comisión del hipódromo (10%){
 
     // Lista de registros y jornada correspondiente
     private List<Participante> registros;
@@ -28,10 +31,9 @@ public class Carrera {
         this.estadoCarrera = new Definida(); // estado inicial de la carrera es "Definida"
     }
 
-    public Carrera(int numeroCarrera, String nombre, Jornada jornada) {
+    public Carrera(String nombre, Jornada jornada) {
         this.numeroCarrera = contadorCarreras++;
         this.nombre = nombre;
-        this.numeroCarrera = numeroCarrera;
         this.jornada = jornada;
         this.registros = new ArrayList<>();
         this.estadoCarrera = new Definida(); // estado inicial de la carrera es "Definida"
@@ -40,21 +42,27 @@ public class Carrera {
     // acciones con carrera.
     public void abrirCarrera() throws HipodromoException {
         estadoCarrera.abrirCarrera(this);
+        notificar(Evento.ESTADO_CARRERA_MODIFICADO);
     };
 
     public void cerrarCarrera() throws HipodromoException {
         estadoCarrera.cerrarCarrera(this);
+        notificar(Evento.ESTADO_CARRERA_MODIFICADO);
     }
-
+//** */
     public void finalizarCarrera(Caballo caballoGanador) throws HipodromoException {
         estadoCarrera.finalizarCarrera(this, caballoGanador);
+        notificar(Evento.ESTADO_CARRERA_FINALIZADO);
+        notificar(Evento.APUESTA_AGREGADA);
+        notificar(Evento.CARRERA_DIVIDENDO_ACTUALIZADO);
+        notificar(Evento.CARRERA_DIVIDENDO_FINAL_ACTUALIZADO);
     }
 
     // **ver si se puede apostar */
     public boolean puedeApostar() {
         return estadoCarrera.puedeApostar(this);
     };
-
+//**/ */
     public void agregarApuesta(Caballo caballo, Apuesta apuesta) throws HipodromoException {
         if (caballo == null) {
             throw new HipodromoException("El caballo no puede ser nulo");
@@ -73,7 +81,11 @@ public class Carrera {
             throw new HipodromoException("El caballo no participa en la carrera. ");
         }
         participante.agregarApuesta(apuesta);
+
         actualizarDividendosActuales(); // actualiza los dividendos actuales de los participantes con cada nuva apuesta.
+        notificar(Evento.APUESTA_AGREGADA);
+        notificar(Evento.CARRERA_TOTAL_APOSTADO_ACTUALIZADO);
+        notificar(Evento.CARRERA_DIVIDENDO_ACTUALIZADO);
 
     }
 
@@ -126,6 +138,7 @@ public class Carrera {
         for (Participante participante : registros) {
             if (participante != null) {
                 participante.actualizarDividendoActual();
+                
             }
         }
 
@@ -139,6 +152,7 @@ public class Carrera {
     // si 1 dividendo es inválido cambia estado estable a abierta.
     public void actualizarEstadoPorDividendos() throws HipodromoException {
         estadoCarrera.actualizarEstadoPorDividendo(this);
+        notificar(Evento.ESTADO_CARRERA_MODIFICADO);
     }
 
     public void fijarDividendoFinalEnParticipantes() {
@@ -153,8 +167,11 @@ public class Carrera {
         if (registros != null) {
             for (Participante participante : registros) {
                 participante.invalidarDividendo();
+                notificar(Evento.ESTADO_CARRERA_MODIFICADO);
             }
         }
+        notificar(Evento.CARRERA_DIVIDENDO_ACTUALIZADO);
+        notificar(Evento.ESTADO_CARRERA_MODIFICADO);
     }
 
     // obtener el dividendo final del caballo ganador para mostrar en el tablero
@@ -167,6 +184,7 @@ public class Carrera {
 
         if (participanteGanador != null && participanteGanador.getDividendoFinal() > 0) {
             return participanteGanador.getDividendoFinal();
+
         }
 
         return 0.0;
@@ -200,6 +218,7 @@ public class Carrera {
 
     public String obtenerCaballoGanador() {
         return caballoGanador != null ? caballoGanador.getNombre() : "-";
+        
     }
 
     // cantidad de apuestas realizadas en la carrera
@@ -215,13 +234,15 @@ public class Carrera {
         }
         return cantidad;
     }
+
     public boolean estaFinalizada() {
-        return estadoCarrera instanceof Finalizada;
+        return estadoCarrera.estaFinalizada();
     }
 
     public boolean estaCerrada() {
-        return estadoCarrera instanceof Cerrada;
+        return estadoCarrera.estaCerrada();
     }
 
+  
 
 }

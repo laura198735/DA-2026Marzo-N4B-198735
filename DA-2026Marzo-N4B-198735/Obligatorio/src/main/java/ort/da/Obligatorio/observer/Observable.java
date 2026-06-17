@@ -6,7 +6,9 @@ import java.util.List;
 public abstract class Observable {
 
     public enum Evento {
-        AGENDA_ACTUALIZADA, USUARIOS_CONECTADOS_ACTUALIZADOS
+        ESTADO_CARRERA_MODIFICADO, CARRERA_DIVIDENDO_ACTUALIZADO, APUESTA_AGREGADA, 
+        CARRERA_TOTAL_PAGADO_ACTUALIZADO, CARRERA_TOTAL_APOSTADO_ACTUALIZADO,CARRERA, ESTADO_CARRERA_FINALIZADO, CARRERA_DIVIDENDO_FINAL_ACTUALIZADO
+
     }
 
     private List<Observador> observadores;
@@ -16,7 +18,7 @@ public abstract class Observable {
     }
 
     public void subscribir(Observador observador) {
-        if(!observadores.contains(observador))
+        if (!observadores.contains(observador))
             this.observadores.add(observador);
     }
 
