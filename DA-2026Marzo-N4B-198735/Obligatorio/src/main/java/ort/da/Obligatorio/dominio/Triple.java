@@ -2,7 +2,7 @@ package ort.da.Obligatorio.dominio;
 
 import ort.da.Obligatorio.excepciones.HipodromoException;
 
-public class Triple extends Modalidad {
+public class Triple implements IModalidad {
     // Se descuenta del saldo lo apostado multiplicado por 1.5 y en caso de ganar
     // pagará monto
     // apostado * el dividendo del caballo * 2 si monto total apostado por todos los

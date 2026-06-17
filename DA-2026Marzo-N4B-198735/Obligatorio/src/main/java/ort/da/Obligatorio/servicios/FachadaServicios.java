@@ -5,15 +5,18 @@ import java.util.Date;
 import java.util.List;
 
 import ort.da.Obligatorio.dominio.Administrador;
+import ort.da.Obligatorio.dominio.Apuesta;
 import ort.da.Obligatorio.dominio.Caballo;
 import ort.da.Obligatorio.dominio.Carrera;
 import ort.da.Obligatorio.dominio.Credencial;
+import ort.da.Obligatorio.dominio.IModalidad;
 import ort.da.Obligatorio.dominio.Jornada;
 import ort.da.Obligatorio.dominio.Jugador;
-import ort.da.Obligatorio.dominio.Modalidad;
 import ort.da.Obligatorio.dominio.Usuario;
 import ort.da.Obligatorio.excepciones.AutenticacionException;
 import ort.da.Obligatorio.excepciones.HipodromoException;
+import ort.da.Obligatorio.dominio.IModalidad;
+import ort.da.Obligatorio.dominio.Simple;
 import ort.da.Obligatorio.servicios.ServicioApuesta;
 import ort.da.Obligatorio.servicios.ServicioCarrera;
 
@@ -26,7 +29,7 @@ public class FachadaServicios {
 
     private List<Usuario> usuarios; // Lista de usuarios para autenticación
     private List<Caballo> caballos; // Lista de caballos para gestión de carreras
-    private List<Modalidad> modalidades; // Lista de modalidades de apuesta
+    private List<IModalidad> modalidades; // Lista de modalidades de apuesta
 
     public static FachadaServicios getInstancia() {
         if (instancia == null) {
@@ -166,8 +169,7 @@ public class FachadaServicios {
         if (numeroCarrera <= 0) {
             throw new HipodromoException("Número de carrera inválido: " + numeroCarrera);
         }
-        if (jornada.getCarreras() == null || jornada.getCarreras().isEmpty()) {// las carreras se cargan en Jornadas en
-                                                                               // la precarga de datos.
+        if (jornada.getCarreras() == null || jornada.getCarreras().isEmpty()) {/* las carreras se cargan en Jornadas en la precarga de datos.*/
             throw new HipodromoException("La jornada seleccionada no tiene carreras");
         }
         for (Carrera carrera : jornada.getCarreras()) {
@@ -225,5 +227,25 @@ public class FachadaServicios {
 
     public List<Caballo> getCaballosCarrera(Carrera carrera) throws HipodromoException {
         return servicioCarrera.getCaballosCarrera(carrera);
+    }
+
+    public List<IModalidad> getModalidadesDisponibles() {
+        return servicioApuesta.getModalidadesDisponibles();
+    }
+
+
+    public void confirmarApuesta(Apuesta apuesta) {
+        servicioApuesta.confirmarApuesta(apuesta);
+    }
+    //apuestas
+    public List<Apuesta> getApuestasCarrera(Carrera carrera) throws HipodromoException {
+        return servicioApuesta.getApuestasCarrera(carrera);
+    }
+//modaliad
+    public IModalidad obtenerModalidadPorNombre(String nombreModalidad) {
+        return servicioApuesta.getModalidadesDisponibles().stream()
+                .filter(modalidad -> modalidad != null && modalidad.getNombre().equalsIgnoreCase(nombreModalidad))
+                .findFirst()
+                .orElse(null);
     }
 }

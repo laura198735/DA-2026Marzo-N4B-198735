@@ -12,6 +12,7 @@ import ort.da.Obligatorio.excepciones.HipodromoException;
 public class Carrera {
 
     private int numeroCarrera;
+    private static int contadorCarreras = 1; // Contador para generar números de carrera únicos empieza en 1.
     private String nombre;
     private IEstadoCarrera estadoCarrera;
     private Jornada jornada;
@@ -28,6 +29,7 @@ public class Carrera {
     }
 
     public Carrera(int numeroCarrera, String nombre, Jornada jornada) {
+        this.numeroCarrera = contadorCarreras++;
         this.nombre = nombre;
         this.numeroCarrera = numeroCarrera;
         this.jornada = jornada;
@@ -220,4 +222,6 @@ public class Carrera {
     public boolean estaCerrada() {
         return estadoCarrera instanceof Cerrada;
     }
+
+
 }

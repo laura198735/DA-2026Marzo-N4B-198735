@@ -2,7 +2,7 @@ package ort.da.Obligatorio.dominio;
 
 import ort.da.Obligatorio.excepciones.HipodromoException;
 
-public class Simple extends Modalidad {
+public class Simple implements IModalidad {
 
     // El sistema descuenta de el saldo el monto apostado y en caso de ganar
     // acreditará

@@ -65,7 +65,7 @@ public class ServicioJornada {
                 .orElse(null);
     }
 
-    // * • Cantidad de carreras que faltan por correr en la jornada actual
+
 
     public double getTotalApostado(Jornada jornada) throws HipodromoException {
         if (jornada == null)
@@ -107,12 +107,12 @@ public class ServicioJornada {
             return 0;
         int cantidad = 0;
         for (Carrera ca : jornada.getCarreras()) {
-            if (ca.getEstadoCarrera() instanceof Finalizada)
+            if (ca.estaFinalizada())
                 cantidad++;
         }
         return cantidad;
     }
-
+    // * • Cantidad de carreras que faltan por correr en la jornada actual
     public int getCantidadProximasCarrerasJornada(Jornada jornada) throws HipodromoException {
         if (jornada == null)
             throw new HipodromoException("No hay jornada seleccionada");
@@ -120,7 +120,7 @@ public class ServicioJornada {
             return 0;
         int c = 0;
         for (Carrera ca : jornada.getCarreras()) {
-            if (!(ca.getEstadoCarrera() instanceof Finalizada))
+            if (!ca.estaFinalizada())
                 c++;
         }
         return c;
@@ -133,7 +133,7 @@ public class ServicioJornada {
         if (jornada.getCarreras() == null)
             return res;
         for (Carrera ca : jornada.getCarreras()) {
-            if (ca.getEstadoCarrera() instanceof Finalizada)
+            if (ca.estaFinalizada())
                 res.add(ca);
         }
         res.sort(Comparator.comparingInt(Carrera::getNumeroCarrera).reversed());// se ordenan de más reciente a más antigua

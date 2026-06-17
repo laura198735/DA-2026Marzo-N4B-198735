@@ -1,23 +1,28 @@
 package ort.da.Obligatorio.dominio;
 
 import lombok.Getter;
-import lombok.Setter;
+
 import ort.da.Obligatorio.excepciones.HipodromoException;
 
 @Getter
-@Setter
 public class Apuesta {
+    private final int id; // ID único de la apuesta
+    private static int contadorId = 1; // Contador para generar IDs únicos
     private double monto;
     private Jugador jugador;
-    private Modalidad modalidad;
+    private IModalidad modalidad;
     private Participante participante; // El caballo al que se le apuesta
 
-    public Apuesta(double monto, Modalidad modalidad, Participante participante) {
+    public Apuesta(double monto, IModalidad modalidad, Participante participante) {
+        this.id = contadorId++;
         this.monto = monto;
         this.modalidad = modalidad;
         this.participante = participante;
-        this.jugador = null; // El jugador se asigna cuando se realice la apuesta a través del método
-                             // realizarApuesta del jugador
+        this.jugador = null; // El jugador se asigna cuando se realiza la apuesta a través del método realizarApuesta del jugador
+    }
+
+    public void asignarJugador(Jugador jugador) {
+        this.jugador = jugador;
     }
 
     public double calcularCosto() throws HipodromoException {
@@ -41,5 +46,12 @@ public class Apuesta {
         }
         return 0.0; // Si la apuesta no es ganadora, no se gana nada
     }
+ 
+    public String getModalidadNombre() {
+        return modalidad.getNombre();
+    }
 
+    public IModalidad getModalidadesDisponibles() {
+        return modalidad;
+    }
 }

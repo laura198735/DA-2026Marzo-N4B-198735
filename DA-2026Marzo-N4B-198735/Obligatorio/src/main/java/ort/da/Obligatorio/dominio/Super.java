@@ -3,7 +3,7 @@ package ort.da.Obligatorio.dominio;
 import lombok.Data;
 import ort.da.Obligatorio.excepciones.HipodromoException;
 
-public class Super extends Modalidad {
+public class Super implements IModalidad  {
     // Se descuenta del saldo lo apostado multiplicado por 2 y en caso de ganar
     // pagará monto
     // apostado * el dividendo del caballo * 3 si dividendo del caballo es mayor o

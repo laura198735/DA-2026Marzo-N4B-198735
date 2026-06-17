@@ -9,9 +9,9 @@ C:\DDA\ddaGitHub\DA-2026Marzo-N4B-198735\DA-2026Marzo-N4B-198735\Obligatorio\src
 C:\DDA\ddaGitHub\DA-2026Marzo-N4B-198735\DA-2026Marzo-N4B-198735\Obligatorio\src\main\java\ort\da\Obligatorio\dominio\Estable.java
 C:\DDA\ddaGitHub\DA-2026Marzo-N4B-198735\DA-2026Marzo-N4B-198735\Obligatorio\src\main\java\ort\da\Obligatorio\dominio\Finalizada.java
 C:\DDA\ddaGitHub\DA-2026Marzo-N4B-198735\DA-2026Marzo-N4B-198735\Obligatorio\src\main\java\ort\da\Obligatorio\dominio\IEstadoCarrera.java
+C:\DDA\ddaGitHub\DA-2026Marzo-N4B-198735\DA-2026Marzo-N4B-198735\Obligatorio\src\main\java\ort\da\Obligatorio\dominio\IModalidad.java
 C:\DDA\ddaGitHub\DA-2026Marzo-N4B-198735\DA-2026Marzo-N4B-198735\Obligatorio\src\main\java\ort\da\Obligatorio\dominio\Jornada.java
 C:\DDA\ddaGitHub\DA-2026Marzo-N4B-198735\DA-2026Marzo-N4B-198735\Obligatorio\src\main\java\ort\da\Obligatorio\dominio\Jugador.java
-C:\DDA\ddaGitHub\DA-2026Marzo-N4B-198735\DA-2026Marzo-N4B-198735\Obligatorio\src\main\java\ort\da\Obligatorio\dominio\Modalidad.java
 C:\DDA\ddaGitHub\DA-2026Marzo-N4B-198735\DA-2026Marzo-N4B-198735\Obligatorio\src\main\java\ort\da\Obligatorio\dominio\Participante.java
 C:\DDA\ddaGitHub\DA-2026Marzo-N4B-198735\DA-2026Marzo-N4B-198735\Obligatorio\src\main\java\ort\da\Obligatorio\dominio\Simple.java
 C:\DDA\ddaGitHub\DA-2026Marzo-N4B-198735\DA-2026Marzo-N4B-198735\Obligatorio\src\main\java\ort\da\Obligatorio\dominio\Super.java
@@ -24,6 +24,7 @@ C:\DDA\ddaGitHub\DA-2026Marzo-N4B-198735\DA-2026Marzo-N4B-198735\Obligatorio\src
 C:\DDA\ddaGitHub\DA-2026Marzo-N4B-198735\DA-2026Marzo-N4B-198735\Obligatorio\src\main\java\ort\da\Obligatorio\dtos\JornadaDto.java
 C:\DDA\ddaGitHub\DA-2026Marzo-N4B-198735\DA-2026Marzo-N4B-198735\Obligatorio\src\main\java\ort\da\Obligatorio\dtos\JornadaTableroDto.java
 C:\DDA\ddaGitHub\DA-2026Marzo-N4B-198735\DA-2026Marzo-N4B-198735\Obligatorio\src\main\java\ort\da\Obligatorio\dtos\ParticipanteDto.java
+C:\DDA\ddaGitHub\DA-2026Marzo-N4B-198735\DA-2026Marzo-N4B-198735\Obligatorio\src\main\java\ort\da\Obligatorio\dtos\TableroJugadorDto.java
 C:\DDA\ddaGitHub\DA-2026Marzo-N4B-198735\DA-2026Marzo-N4B-198735\Obligatorio\src\main\java\ort\da\Obligatorio\excepciones\AutenticacionException.java
 C:\DDA\ddaGitHub\DA-2026Marzo-N4B-198735\DA-2026Marzo-N4B-198735\Obligatorio\src\main\java\ort\da\Obligatorio\excepciones\EstadoException.java
 C:\DDA\ddaGitHub\DA-2026Marzo-N4B-198735\DA-2026Marzo-N4B-198735\Obligatorio\src\main\java\ort\da\Obligatorio\excepciones\HipodromoException.java
@@ -40,6 +41,7 @@ C:\DDA\ddaGitHub\DA-2026Marzo-N4B-198735\DA-2026Marzo-N4B-198735\Obligatorio\src
 C:\DDA\ddaGitHub\DA-2026Marzo-N4B-198735\DA-2026Marzo-N4B-198735\Obligatorio\src\main\java\ort\da\Obligatorio\presentadores\LogoutAdminPresentador.java
 C:\DDA\ddaGitHub\DA-2026Marzo-N4B-198735\DA-2026Marzo-N4B-198735\Obligatorio\src\main\java\ort\da\Obligatorio\presentadores\LogoutJugadorPresentador.java
 C:\DDA\ddaGitHub\DA-2026Marzo-N4B-198735\DA-2026Marzo-N4B-198735\Obligatorio\src\main\java\ort\da\Obligatorio\presentadores\TableroAdminPresentador.java
+C:\DDA\ddaGitHub\DA-2026Marzo-N4B-198735\DA-2026Marzo-N4B-198735\Obligatorio\src\main\java\ort\da\Obligatorio\presentadores\tableroJugadorPresentador.java
 C:\DDA\ddaGitHub\DA-2026Marzo-N4B-198735\DA-2026Marzo-N4B-198735\Obligatorio\src\main\java\ort\da\Obligatorio\servicios\FachadaServicios.java
 C:\DDA\ddaGitHub\DA-2026Marzo-N4B-198735\DA-2026Marzo-N4B-198735\Obligatorio\src\main\java\ort\da\Obligatorio\servicios\ServicioApuesta.java
 C:\DDA\ddaGitHub\DA-2026Marzo-N4B-198735\DA-2026Marzo-N4B-198735\Obligatorio\src\main\java\ort\da\Obligatorio\servicios\ServicioAutenticacion.java

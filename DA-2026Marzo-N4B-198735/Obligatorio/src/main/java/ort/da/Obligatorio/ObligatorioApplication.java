@@ -29,6 +29,10 @@ public class ObligatorioApplication {
 
 			Jugador jugador1 = new Jugador("j1", "j1");
 			Jugador jugador2 = new Jugador("j2", "j2");
+			jugador1.setNombre("Carlos Méndez");
+			jugador2.setNombre("Ana Rodríguez");
+			jugador1.setSaldo(14850);
+			jugador2.setSaldo(12000);
 
 			Caballo caballo1 = new Caballo("Relámpago", 3);
 			Caballo caballo2 = new Caballo("Tornado", 7);

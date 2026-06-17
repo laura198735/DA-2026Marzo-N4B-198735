@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
+import ort.da.Obligatorio.excepciones.HipodromoException;
 
 
 public class Jugador extends Usuario {
@@ -29,18 +30,39 @@ public class Jugador extends Usuario {
         return this.getNombreUsuario().equals(credencial.getNombre()) && this.getPassword().equals(credencial.getPassword());
     }
 
-    public void realizarApuesta(Apuesta apuesta) {
-        if (apuesta.getMonto() > saldo) {
-            throw new IllegalArgumentException("Saldo insuficiente para realizar la apuesta.");
+    public void realizarApuesta(Apuesta apuesta) throws HipodromoException {
+        if (apuesta == null) {
+            throw new HipodromoException("La apuesta no puede ser nula.");
         }
-        saldo -= apuesta.getMonto();
+
+        double costo = apuesta.calcularCosto();
+        if (costo > saldo) {
+            throw new HipodromoException("Saldo insuficiente para realizar la apuesta.");
+        }
+
+        saldo -= costo;
         totalApostado += apuesta.getMonto();
+        apuesta.asignarJugador(this);
         apuestas.add(apuesta);
     }
 
     public void setSaldo(double nuevoSaldo) {
-   
-        throw new UnsupportedOperationException("Unimplemented method 'setSaldo'");
+        this.saldo = nuevoSaldo;
+    }
+
+    public double getTotalGanado() {
+        double total = 0.0;
+        for (Apuesta apuesta : apuestas) {
+            if (apuesta == null || !apuesta.esApuestaGanadora()) {
+                continue;
+            }
+            try {
+                total += apuesta.calcularGanancia();
+            } catch (HipodromoException e) {
+                // Si no se puede calcular, no se suma al total ganado.
+            }
+        }
+        return total;
     }
     //actualiza saldo después de  que jugador apuesta
     public void descontarSaldo(double monto) {

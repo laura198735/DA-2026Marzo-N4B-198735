@@ -22,6 +22,10 @@ public class ServicioAutenticacion {
             
             Jugador jugador1 = new Jugador("j1", "j1");
             Jugador jugador2 = new Jugador("j2", "j2");
+            jugador1.setNombre("Carlos Méndez");
+            jugador2.setNombre("Ana Rodríguez");
+            jugador1.setSaldo(14850);
+            jugador2.setSaldo(12000);
             this.administradores.add(administrador1);
             this.administradores.add(administrador2);
             this.jugadores.add(jugador1);

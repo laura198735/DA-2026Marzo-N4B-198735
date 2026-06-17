@@ -3,22 +3,24 @@ package ort.da.Obligatorio.servicios;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Getter;
 import ort.da.Obligatorio.dominio.Apuesta;
 import ort.da.Obligatorio.dominio.Carrera;
+import ort.da.Obligatorio.dominio.IModalidad;
 import ort.da.Obligatorio.dominio.Participante;
 import ort.da.Obligatorio.excepciones.HipodromoException;
+import ort.da.Obligatorio.dominio.IModalidad;
+import ort.da.Obligatorio.dominio.Simple;
+import ort.da.Obligatorio.dominio.Super;
+import ort.da.Obligatorio.dominio.Triple;
 
+@Getter
 public class ServicioApuesta {
-    List<Apuesta> apuestas;
+   
+    private List<Apuesta> apuestas = new ArrayList<>();
+    private IModalidad modalidad;
 
-    public ServicioApuesta() {
-        this.apuestas = new ArrayList<>();
-    }
-
-    public ServicioApuesta(List<Apuesta> apuestas) {
-        this.apuestas = apuestas;
-    }
-
+  
     public void confirmarApuesta(Apuesta apuesta) {
         if (apuesta == null) {
             return;
@@ -26,6 +28,21 @@ public class ServicioApuesta {
         apuestas.add(apuesta);
     }
 
+    public List<Apuesta> getApuestasCarrera(Carrera carrera) throws HipodromoException {
+        if (carrera == null) {
+            throw new HipodromoException("Carrera no puede ser nula.");
+        }
+        List<Apuesta> apuestasCarrera = new ArrayList<>();
+        for (Participante participante : carrera.getRegistros()) {
+            if (participante == null || participante.getApuestas() == null) {
+                continue;
+            }
+            apuestasCarrera.addAll(participante.getApuestas());
+        }
+        return apuestasCarrera;
+    }
+
+ 
     public void pagarApuestasGanadoras(Carrera carrera) throws HipodromoException {
         if (carrera == null || carrera.getRegistros() == null) {
             return;
@@ -45,5 +62,13 @@ public class ServicioApuesta {
                 apuesta.getJugador().setSaldo(apuesta.getJugador().getSaldo() + pago);
             }
         }
+    }
+    public List<IModalidad> getModalidadesDisponibles() {
+        // Aquí se podrían agregar más modalidades según sea necesario
+        return List.of(
+                new Simple(),
+                new Super(),
+                new Triple()
+        );
     }
 }

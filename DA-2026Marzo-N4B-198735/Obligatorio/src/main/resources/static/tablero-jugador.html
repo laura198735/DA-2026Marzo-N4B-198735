@@ -1,187 +1,559 @@
-﻿<!DOCTYPE html>
+﻿<!doctype html>
 <html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MalaPATA - Tablero Jugador</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body class="dashboard">
-    <header class="dashboard__top">
-        <div style="display: flex; align-items: center; gap: 16px;">
-            <img src="https://img.icons8.com/ios-filled/50/ffd700/horse-racing.png" alt="Logo" style="height: 38px;">
-            <span style="font-size: 1.5rem; font-weight: 900; color: #f5b914; letter-spacing: 1px;">MalaPATA</span>
-        </div>
-        <div style="display: flex; align-items: center; gap: 18px;">
-            <span style="background: #024b37; color: #fff; padding: 7px 18px; border-radius: 999px; font-weight: 900;">Saldo <span class="money">$14.850</span></span>
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <span class="pill pill--warning" style="font-size: 1.1rem;">CM</span>
-                <span style="font-weight: 900; color: #fff;">Carlos Méndez</span>
+    <header class="dashboard__top" style="align-items:center; padding-bottom: 6px;">
+        <div style="display:flex; align-items:center; gap:14px;">
+            <img src="https://img.icons8.com/ios-filled/50/ffd700/horse-racing.png" alt="Logo" style="height:38px;" />
+            <div>
+                <div style="font-size:1.45rem; font-weight:900; color:#f5b914; letter-spacing:0.04em;">MalaPATA</div>
+                <div style="font-size:0.88rem; color:#8e989b;">Tablero Jugador</div>
             </div>
-            <a href="#" style="color: #fff; text-decoration: underline; font-weight: 700;">Cerrar sesión</a>
+        </div>
+        <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap; justify-content:flex-end;">
+            <div class="kpi-card kpi-card--money" style="min-width:180px; padding:12px 16px;">
+                <span>Saldo actual</span>
+                <strong id="saldoActual">$0</strong>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <span id="avatarJugador" class="pill pill--warning" style="font-size:1rem;">JG</span>
+                <div>
+                    <div id="nombreJugador" style="font-weight:900; color:#fff; line-height:1.1;">Jugador</div>
+                    <div style="color:#8e989b; font-size:0.85rem;">Sesión activa</div>
+                </div>
+            </div>
+            <button id="btnCerrarSesion" class="action-button" type="button" style="background: linear-gradient(180deg, #e53c4f, #b72334); box-shadow:none;">
+                Cerrar sesión
+            </button>
         </div>
     </header>
-    <section class="dashboard__top" style="margin-bottom: 0;">
-        <div style="background: #10243a; border-radius: 12px; padding: 18px 32px; width: 100%; display: flex; align-items: center; gap: 40px;">
-            <div>
-                <span style="color: #8e989b; font-size: 0.95rem;">JUGADOR</span>
-                <div style="font-size: 1.3rem; font-weight: 900; color: #fff;">Carlos Andrés Méndez</div>
-            </div>
-            <div class="kpi-grid" style="flex: 1; gap: 24px;">
+
+    <main style="padding-bottom: 24px;">
+        <section class="panel" style="margin-top: 10px;">
+            <div class="kpi-grid" style="grid-template-columns: repeat(3, minmax(180px, 1fr)); margin-bottom: 12px;">
                 <div class="kpi-card kpi-card--money">
-                    <span>SALDO ACTUAL</span>
-                    <strong>$14.850</strong>
+                    <span>Saldo actual</span>
+                    <strong id="saldoActualResumen">$0</strong>
                 </div>
                 <div class="kpi-card">
-                    <span>TOTAL APOSTADO</span>
-                    <strong>$32.500</strong>
+                    <span>Total apostado</span>
+                    <strong id="totalApostado">$0</strong>
                 </div>
                 <div class="kpi-card">
-                    <span>TOTAL GANADO</span>
-                    <strong>$41.200</strong>
-                </div>
-            </div>
-        </div>
-    </section>
-    <main>
-        <section class="panel">
-            <div class="section-heading">
-                <h3><span class="section-icon section-icon--success"></span> Carreras Disponibles para Apostar</h3>
-            </div>
-            <div style="display: flex; gap: 24px; flex-wrap: wrap;">
-                <!-- Carrera 1 -->
-                <div class="kpi-card carrera-card" style="min-width: 320px; background: #637d99; color: #fff;">
-                    <div class="carrera-header" style="display: flex; align-items: center; gap: 12px;">
-                        <span class="numero-carrera" style="background: #ffc847; color: #151515; font-weight: 900; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">7</span>
-                        <div>
-                            <div style="font-weight: 900; font-size: 1.1rem;">Gran Premio del Litoral</div>
-                            <div style="font-size: 0.9rem; color: #ffd700;">Jue 17 abr 2026</div>
-                        </div>
-                    </div>
-                    <table class="admin-table" style="margin: 14px 0 10px; background: transparent;">
-                        <thead>
-                            <tr><th>N°</th><th>Caballo</th><th>Dividendo</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>1</td><td>Relámpago Celeste</td><td>3.20</td></tr>
-                            <tr><td>2</td><td>Fuerza Norteña</td><td>4.80</td></tr>
-                            <tr><td>3</td><td>Sombra de Luna</td><td>6.50</td></tr>
-                            <tr><td>4</td><td>El Paisano</td><td>2.90</td></tr>
-                            <tr><td>5</td><td>Tormenta del Sur</td><td>5.40</td></tr>
-                            <tr><td>6</td><td>Chaqui Real</td><td>5.40</td></tr>
-                            <tr><td>7</td><td>Cielo Pampeano</td><td>11.20</td></tr>
-                            <tr><td>8</td><td>Trueno Negro</td><td>7.80</td></tr>
-                        </tbody>
-                    </table>
-                    <button class="action-button" style="width: 100%; margin-top: 8px;">Apostar</button>
-                </div>
-                <!-- Carrera 2 -->
-                <div class="kpi-card carrera-card" style="min-width: 320px; background: #7b9bbc; color: #fff;">
-                    <div class="carrera-header" style="display: flex; align-items: center; gap: 12px;">
-                        <span class="numero-carrera" style="background: #ffc847; color: #151515; font-weight: 900; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">9</span>
-                        <div>
-                            <div style="font-weight: 900; font-size: 1.1rem;">Clásico Río de la Plata</div>
-                            <div style="font-size: 0.9rem; color: #ffd700;">Jue 17 abr 2026</div>
-                        </div>
-                    </div>
-                    <table class="admin-table" style="margin: 14px 0 10px; background: transparent;">
-                        <thead>
-                            <tr><th>N°</th><th>Caballo</th><th>Dividendo</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>1</td><td>La Pampa Libre</td><td>3.10</td></tr>
-                            <tr><td>2</td><td>Viento Sur</td><td>S/E</td></tr>
-                            <tr><td>3</td><td>Estancia Real</td><td>8.40</td></tr>
-                            <tr><td>4</td><td>Querubín</td><td>2.40</td></tr>
-                            <tr><td>5</td><td>Río Dulce</td><td>6.90</td></tr>
-                            <tr><td>6</td><td>Porteño</td><td>12.30</td></tr>
-                            <tr><td>7</td><td>El Chaparral</td><td>12.80</td></tr>
-                            <tr><td>8</td><td>Brisa Campestre</td><td>9.70</td></tr>
-                        </tbody>
-                    </table>
-                    <button class="action-button" style="width: 100%; margin-top: 8px;">Apostar</button>
-                </div>
-                <!-- Carrera 3 -->
-                <div class="kpi-card carrera-card" style="min-width: 320px; background: #7b9ec4; color: #fff;">
-                    <div class="carrera-header" style="display: flex; align-items: center; gap: 12px;">
-                        <span class="numero-carrera" style="background: #ffc847; color: #151515; font-weight: 900; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">10</span>
-                        <div>
-                            <div style="font-weight: 900; font-size: 1.1rem;">Copa San Martín</div>
-                            <div style="font-size: 0.9rem; color: #ffd700;">Jue 17 abr 2026</div>
-                        </div>
-                    </div>
-                    <table class="admin-table" style="margin: 14px 0 10px; background: transparent;">
-                        <thead>
-                            <tr><th>N°</th><th>Caballo</th><th>Dividendo</th></tr>
-                        </thead>
-                        <tbody>//actualizar
-                            <tr><td>1</td><td>Libertad Gaucha</td><td>4.50</td></tr>
-                            <tr><td>2</td><td>Pampero Bravío</td><td>7.20</td></tr>
-                            <tr><td>3</td><td>El Correntino</td><td>3.80</td></tr>
-                            <tr><td>4</td><td>Luna Criolla</td><td>S/E</td></tr>
-                            <tr><td>5</td><td>Rey del Turf</td><td>2.60</td></tr>
-                            <tr><td>6</td><td>Gaucho de Oro</td><td>15.00</td></tr>
-                            <tr><td>7</td><td>Viento Cálido</td><td>6.10</td></tr>
-                        </tbody>
-                    </table>
-                    <button class="action-button" style="width: 100%; margin-top: 8px;">Apostar</button>
+                    <span>Total ganado</span>
+                    <strong id="totalGanado">$0</strong>
                 </div>
             </div>
         </section>
+
         <section class="panel">
             <div class="section-heading">
-                <h3><span class="section-icon section-icon--success"></span> Tipos de Apuesta disponibles</h3>
+                <h3><span class="section-icon section-icon--success"></span> Carreras abiertas para apostar</h3>
             </div>
-            <div style="display: flex; gap: 12px; margin-bottom: 18px;">
-                <span class="pill pill--warning">Simple</span>
-                <span class="pill pill--success">Triple</span>
-                <span class="pill pill--success">Super</span>
-            </div>
+            <div id="mensajeCarrerasVacias" class="error hidden" style="margin-bottom:14px;">No hay carreras abiertas</div>
+            <div id="carrerasDisponibles" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:16px;"></div>
         </section>
+
         <section class="panel">
             <div class="section-heading">
-                <h3><span class="section-icon section-icon--success"></span> Mis Apuestas</h3>
+                <h3><span class="section-icon section-icon--success"></span> Realizar apuesta</h3>
+            </div>
+            <form id="formApuesta" class="kpi-card" style="display:grid; gap:14px; padding:18px;">
+                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:12px;">
+                    <label style="display:grid; gap:6px; color:#4f5f6f; font-weight:800; font-size:0.82rem; text-transform:uppercase; letter-spacing:0.05em;">
+                        Carrera
+                        <select id="selectorCarrera" class="input-control"></select>
+                    </label>
+                    <label style="display:grid; gap:6px; color:#4f5f6f; font-weight:800; font-size:0.82rem; text-transform:uppercase; letter-spacing:0.05em;">
+                        Caballo
+                        <select id="selectorCaballo" class="input-control"></select>
+                    </label>
+                    <label style="display:grid; gap:6px; color:#4f5f6f; font-weight:800; font-size:0.82rem; text-transform:uppercase; letter-spacing:0.05em;">
+                        Tipo de apuesta
+                        <select id="selectorModalidad" class="input-control"></select>
+                    </label>
+                    <label style="display:grid; gap:6px; color:#4f5f6f; font-weight:800; font-size:0.82rem; text-transform:uppercase; letter-spacing:0.05em;">
+                        Monto
+                        <input id="montoApuesta" class="input-control" type="number" min="1" step="1" placeholder="Ej. 1500" />
+                    </label>
+                </div>
+                <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between;">
+                    <div id="detalleSeleccion" style="color:#4f5f6f; font-size:0.95rem; font-weight:650;">Seleccioná una carrera abierta para ver sus caballos.</div>
+                    <button id="btnConfirmarApuesta" class="action-button" type="submit">Confirmar apuesta</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="panel">
+            <div class="section-heading">
+                <h3><span class="section-icon section-icon--success"></span> Tipos de apuesta disponibles</h3>
+            </div>
+            <div id="tiposApuesta" style="display:flex; gap:10px; flex-wrap:wrap;"></div>
+        </section>
+
+        <section class="panel">
+            <div class="section-heading">
+                <h3><span class="section-icon section-icon--success"></span> Mis apuestas</h3>
             </div>
             <div class="table-wrap">
-                <table class="admin-table">
+                <table class="admin-table" style="table-layout:auto;">
                     <thead>
                         <tr>
-                            <th>FECHA</th>
-                            <th>N° CARRERA</th>
-                            <th>CARRERA</th>
-                            <th>N° CABALLO</th>
-                            <th>CABALLO</th>
-                            <th>MONTO APOSTADO</th>
-                            <th>TIPO</th>
-                            <th>DIVIDENDO FINAL</th>
-                            <th>MONTO COBRADO</th>
-                            <th>ESTADO</th>
+                            <th>Fecha</th>
+                            <th>N° carrera</th>
+                            <th>Carrera</th>
+                            <th>N° caballo</th>
+                            <th>Caballo</th>
+                            <th>Monto apostado</th>
+                            <th>Tipo</th>
+                            <th>Dividendo final</th>
+                            <th>Monto cobrado</th>
+                            <th>Estado</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="tablaApuestas">
                         <tr>
-                            <td>17/04/2026</td><td>7</td><td>Gran Premio del Litoral</td><td>4</td><td>El Paisano</td><td class="money">$1.500</td><td>Simple</td><td>�?"</td><td>�?"</td><td><span class="status status--open">POR CORRER</span></td>
-                        </tr>
-                        <tr>
-                            <td>17/04/2026</td><td>6</td><td>Sprint del Centro</td><td>3</td><td>Tormenta del Sur</td><td class="money">$2.000</td><td>Simple</td><td>5.40</td><td class="money">$10.800</td><td><span class="status pill--success">FINALIZADA</span></td>
-                        </tr>
-                        <tr>
-                            <td>17/04/2026</td><td>5</td><td>Premio Independencia</td><td>1</td><td>Viento Pampeano</td><td class="money">$1.000</td><td>Triple</td><td>�?"</td><td>�?"</td><td><span class="status pill--warning">FINALIZADA</span></td>
-                        </tr>
-                        <tr>
-                            <td>16/04/2026</td><td>4</td><td>Clásico del Norte</td><td>3</td><td>Don Cornelio</td><td class="money">$3.500</td><td>Super</td><td>7.80</td><td class="money">$27.300</td><td><span class="status pill--success">FINALIZADA</span></td>
-                        </tr>
-                        <tr>
-                            <td>16/04/2026</td><td>5</td><td>Copa Fundación</td><td>5</td><td>Bruma Serrana</td><td class="money">$500</td><td>Super</td><td>�?"</td><td>�?"</td><td><span class="status pill--warning">FINALIZADA</span></td>
-                        </tr>
-                        <tr>
-                            <td>15/04/2026</td><td>8</td><td>Premio Mayor</td><td>1</td><td>Rayo de Fuego</td><td class="money">$2.500</td><td>Simple</td><td>2.90</td><td class="money">$7.250</td><td><span class="status pill--success">FINALIZADA</span></td>
+                            <td colspan="10" style="text-align:center; color:#7a8589;">No hay apuestas registradas.</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </section>
+
+        <div id="mensajeEstado" class="error hidden" role="status" aria-live="polite" style="margin-top:16px;"></div>
     </main>
+
+    <script type="module">
+        import dispatcher from './CommandDispatcher.js';
+
+        const formateadorMoneda = new Intl.NumberFormat('es-UY', {
+            style: 'currency',
+            currency: 'UYU',
+            maximumFractionDigits: 0
+        });
+
+        const formateadorFecha = new Intl.DateTimeFormat('es-UY', {
+            weekday: 'short',
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+
+        const estado = {
+            carreras: [],
+            seleccionCarrera: null,
+            seleccionCaballo: null,
+            seleccionModalidad: null
+        };
+
+        const $ = (id) => document.getElementById(id);
+
+        const elementos = {
+            saldoActual: $('saldoActual'),
+            saldoActualResumen: $('saldoActualResumen'),
+            totalApostado: $('totalApostado'),
+            totalGanado: $('totalGanado'),
+            avatarJugador: $('avatarJugador'),
+            nombreJugador: $('nombreJugador'),
+            mensajeCarrerasVacias: $('mensajeCarrerasVacias'),
+            carrerasDisponibles: $('carrerasDisponibles'),
+            selectorCarrera: $('selectorCarrera'),
+            selectorCaballo: $('selectorCaballo'),
+            selectorModalidad: $('selectorModalidad'),
+            montoApuesta: $('montoApuesta'),
+            detalleSeleccion: $('detalleSeleccion'),
+            tiposApuesta: $('tiposApuesta'),
+            tablaApuestas: $('tablaApuestas'),
+            mensajeEstado: $('mensajeEstado'),
+            formApuesta: $('formApuesta'),
+            btnCerrarSesion: $('btnCerrarSesion'),
+            btnConfirmarApuesta: $('btnConfirmarApuesta')
+        };
+
+        function mostrarMensaje(texto) {
+            if (!elementos.mensajeEstado) return;
+            elementos.mensajeEstado.textContent = texto;
+            elementos.mensajeEstado.classList.remove('hidden');
+        }
+
+        function ocultarMensaje() {
+            if (!elementos.mensajeEstado) return;
+            elementos.mensajeEstado.textContent = '';
+            elementos.mensajeEstado.classList.add('hidden');
+        }
+
+        function mostrarCarrerasVacias(mostrar) {
+            if (!elementos.mensajeCarrerasVacias) return;
+            elementos.mensajeCarrerasVacias.classList.toggle('hidden', !mostrar);
+        }
+
+        function formatearFecha(fecha) {
+            if (!fecha) {
+                return 'Sin fecha';
+            }
+
+            const date = new Date(fecha);
+            if (Number.isNaN(date.getTime())) {
+                return 'Sin fecha';
+            }
+
+            return formateadorFecha.format(date);
+        }
+
+        function formatearDividendo(valor) {
+            if (valor === null || valor === undefined || valor === '') {
+                return 'S/E';
+            }
+            const numero = Number(valor);
+            return Number.isFinite(numero) ? numero.toFixed(2) : 'S/E';
+        }
+
+        function formatearImporte(valor) {
+            const numero = Number(valor ?? 0);
+            return formateadorMoneda.format(Number.isFinite(numero) ? numero : 0);
+        }
+
+        function inicialesDesdeNombre(nombre) {
+            if (!nombre) {
+                return 'JG';
+            }
+
+            const partes = String(nombre).trim().split(/\s+/).filter(Boolean);
+            const iniciales = partes.map((parte) => parte[0]).join('').slice(0, 2).toUpperCase();
+            return iniciales || 'JG';
+        }
+
+        function limpiarTablaApuestas() {
+            if (!elementos.tablaApuestas) return;
+            elementos.tablaApuestas.innerHTML = `
+                <tr>
+                    <td colspan="10" style="text-align:center; color:#7a8589;">No hay apuestas registradas.</td>
+                </tr>
+            `;
+        }
+
+        function renderJugador(jugador) {
+            if (!jugador) return;
+
+            const nombre = jugador.nombreCompleto ?? jugador.nombre ?? 'Jugador';
+            const saldo = jugador.saldoActual ?? 0;
+
+            if (elementos.nombreJugador) {
+                elementos.nombreJugador.textContent = nombre;
+            }
+            if (elementos.avatarJugador) {
+                elementos.avatarJugador.textContent = jugador.iniciales ?? inicialesDesdeNombre(nombre);
+            }
+
+            [elementos.saldoActual, elementos.saldoActualResumen].forEach((elemento) => {
+                if (elemento) {
+                    elemento.textContent = formatearImporte(saldo);
+                }
+            });
+
+            if (elementos.totalApostado) {
+                elementos.totalApostado.textContent = formatearImporte(jugador.totalApostado ?? 0);
+            }
+
+            if (elementos.totalGanado) {
+                elementos.totalGanado.textContent = formatearImporte(jugador.totalGanado ?? 0);
+            }
+        }
+
+        function renderTiposApuesta(tipos) {
+            if (!elementos.tiposApuesta) return;
+            elementos.tiposApuesta.innerHTML = '';
+
+            if (!Array.isArray(tipos) || tipos.length === 0) {
+                elementos.tiposApuesta.innerHTML = '<span class="pill pill--warning">Sin tipos</span>';
+                return;
+            }
+
+            tipos.forEach((tipo) => {
+                const nombre = tipo?.nombre ?? tipo;
+                const pill = document.createElement('span');
+                pill.className = 'pill pill--success';
+                pill.textContent = nombre;
+                elementos.tiposApuesta.appendChild(pill);
+            });
+        }
+
+        function renderSelectorCarreras(carreras) {
+            if (!elementos.selectorCarrera) return;
+            elementos.selectorCarrera.innerHTML = '';
+
+            carreras.forEach((carrera, index) => {
+                const option = document.createElement('option');
+                option.value = String(carrera.numero);
+                option.textContent = `Carrera ${carrera.numero} - ${carrera.nombre}`;
+                option.dataset.index = String(index);
+                elementos.selectorCarrera.appendChild(option);
+            });
+
+            const carreraInicial = carreras[0] ?? null;
+            estado.seleccionCarrera = carreraInicial;
+            if (carreraInicial) {
+                elementos.selectorCarrera.value = String(carreraInicial.numero);
+            }
+        }
+
+        function renderSelectorCaballos(carrera) {
+            if (!elementos.selectorCaballo) return;
+            elementos.selectorCaballo.innerHTML = '';
+
+            const caballos = carrera?.caballos ?? [];
+            caballos.forEach((caballo) => {
+                const option = document.createElement('option');
+                option.value = String(caballo.numero);
+                option.textContent = `#${caballo.numero} - ${caballo.nombre}`;
+                elementos.selectorCaballo.appendChild(option);
+            });
+
+            estado.seleccionCaballo = caballos[0] ?? null;
+            if (estado.seleccionCaballo) {
+                elementos.selectorCaballo.value = String(estado.seleccionCaballo.numero);
+            }
+        }
+
+        function renderSelectorModalidades(tipos) {
+            if (!elementos.selectorModalidad) return;
+            elementos.selectorModalidad.innerHTML = '';
+
+            tipos.forEach((tipo) => {
+                const nombre = tipo?.nombre ?? tipo;
+                const option = document.createElement('option');
+                option.value = nombre;
+                option.textContent = nombre;
+                elementos.selectorModalidad.appendChild(option);
+            });
+
+            estado.seleccionModalidad = tipos[0]?.nombre ?? tipos[0] ?? null;
+            if (estado.seleccionModalidad) {
+                elementos.selectorModalidad.value = estado.seleccionModalidad;
+            }
+        }
+
+        function renderCarrerasDisponibles(carreras) {
+            if (!elementos.carrerasDisponibles) return;
+            elementos.carrerasDisponibles.innerHTML = '';
+
+            estado.carreras = Array.isArray(carreras) ? carreras : [];
+            mostrarCarrerasVacias(estado.carreras.length === 0);
+
+            if (estado.carreras.length === 0) {
+                elementos.carrerasDisponibles.innerHTML = `
+                    <div class="kpi-card" style="grid-column:1/-1; text-align:center; padding:24px;">
+                        <span>No hay carreras abiertas</span>
+                        <strong style="font-size:1rem;">Esperá a que el sistema habilite una jornada apostable.</strong>
+                    </div>
+                `;
+                elementos.selectorCarrera.innerHTML = '<option value="">Sin carreras</option>';
+                elementos.selectorCaballo.innerHTML = '<option value="">Sin caballos</option>';
+                elementos.selectorCarrera.disabled = true;
+                elementos.selectorCaballo.disabled = true;
+                elementos.selectorModalidad.disabled = true;
+                elementos.montoApuesta.disabled = true;
+                elementos.btnConfirmarApuesta.disabled = true;
+                elementos.detalleSeleccion.textContent = 'No hay carreras abiertas para apostar.';
+                return;
+            }
+
+            elementos.selectorCarrera.disabled = false;
+            elementos.selectorCaballo.disabled = false;
+            elementos.selectorModalidad.disabled = false;
+            elementos.montoApuesta.disabled = false;
+            elementos.btnConfirmarApuesta.disabled = false;
+
+            estado.carreras.forEach((carrera, index) => {
+                const card = document.createElement('article');
+                card.className = 'kpi-card carrera-card';
+                card.style.background = index % 2 === 0 ? '#637d99' : '#7b9bbc';
+                card.style.color = '#fff';
+                card.style.minWidth = '320px';
+
+                const caballosHtml = (carrera.caballos ?? []).map((caballo) => `
+                    <tr>
+                        <td>${caballo.numero}</td>
+                        <td>${caballo.nombre}</td>
+                        <td>${formatearDividendo(caballo.dividendoActual)}</td>
+                    </tr>
+                `).join('');
+
+                card.innerHTML = `
+                    <div class="carrera-header" style="display:flex; align-items:center; gap:12px; border-bottom:1px solid rgba(255,255,255,0.18); padding-bottom:14px; margin-bottom:14px;">
+                        <span class="numero-carrera" style="background:#ffc847; color:#151515; font-weight:900; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center;">${carrera.numero}</span>
+                        <div>
+                            <div style="font-weight:900; font-size:1.1rem;">${carrera.nombre}</div>
+                            <div style="font-size:0.9rem; color:#ffd700;">${formatearFecha(carrera.fecha)}</div>
+                        </div>
+                    </div>
+                    <table class="admin-table" style="margin:0 0 10px; background:transparent; color:#fff; table-layout:auto;">
+                        <thead>
+                            <tr><th>N°</th><th>Caballo</th><th>Dividendo</th></tr>
+                        </thead>
+                        <tbody>
+                            ${caballosHtml || '<tr><td colspan="3" style="text-align:center; color:#f1f5f7;">Sin caballos participantes.</td></tr>'}
+                        </tbody>
+                    </table>
+                    <button class="action-button" type="button" style="width:100%; margin-top:8px;" data-carrera="${carrera.numero}">Apostar</button>
+                `;
+
+                elementos.carrerasDisponibles.appendChild(card);
+            });
+
+            elementos.carrerasDisponibles.querySelectorAll('button[data-carrera]').forEach((button) => {
+                button.addEventListener('click', () => {
+                    const numeroCarrera = Number(button.dataset.carrera);
+                    const carrera = estado.carreras.find((item) => Number(item.numero) === numeroCarrera);
+                    if (!carrera) return;
+
+                    estado.seleccionCarrera = carrera;
+                    if (elementos.selectorCarrera) {
+                        elementos.selectorCarrera.value = String(carrera.numero);
+                    }
+                    renderSelectorCaballos(carrera);
+                    actualizarDetalleSeleccion();
+                    document.getElementById('formApuesta')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            });
+
+            renderSelectorCarreras(estado.carreras);
+            renderSelectorCaballos(estado.seleccionCarrera);
+            actualizarDetalleSeleccion();
+        }
+
+        function actualizarDetalleSeleccion() {
+            const carrera = estado.seleccionCarrera;
+            const caballo = estado.seleccionCaballo;
+            const modalidad = estado.seleccionModalidad;
+
+            if (!elementos.detalleSeleccion) return;
+
+            if (!carrera || !caballo || !modalidad) {
+                elementos.detalleSeleccion.textContent = 'Seleccioná una carrera abierta para ver sus caballos.';
+                return;
+            }
+
+            elementos.detalleSeleccion.textContent = `Carrera ${carrera.numero} - ${carrera.nombre} | Caballo #${caballo.numero} ${caballo.nombre} | Tipo ${modalidad}`;
+        }
+
+        function renderApuestas(apuestas) {
+            if (!elementos.tablaApuestas) return;
+            elementos.tablaApuestas.innerHTML = '';
+
+            if (!Array.isArray(apuestas) || apuestas.length === 0) {
+                limpiarTablaApuestas();
+                return;
+            }
+
+            apuestas.forEach((apuesta) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${formatearFecha(apuesta.fecha)}</td>
+                    <td>${apuesta.numeroCarrera ?? '-'}</td>
+                    <td>${apuesta.nombreCarrera ?? '-'}</td>
+                    <td>${apuesta.numeroCaballo ?? '-'}</td>
+                    <td>${apuesta.nombreCaballo ?? '-'}</td>
+                    <td class="money">${formatearImporte(apuesta.montoApostado)}</td>
+                    <td>${apuesta.tipoApuesta ?? '-'}</td>
+                    <td>${formatearDividendo(apuesta.dividendoFinal)}</td>
+                    <td class="money">${apuesta.montoCobrado === null || apuesta.montoCobrado === undefined ? 'S/E' : formatearImporte(apuesta.montoCobrado)}</td>
+                    <td><span class="status ${apuesta.estado === 'Finalizada' ? 'pill--success' : 'status--open'}">${apuesta.estado ?? 'Por correr'}</span></td>
+                `;
+                elementos.tablaApuestas.appendChild(tr);
+            });
+        }
+
+        function renderTablero(data) {
+            ocultarMensaje();
+            renderJugador(data?.jugador);
+            renderTiposApuesta(data?.tiposApuesta);
+            renderCarrerasDisponibles(data?.carrerasDisponibles);
+            renderSelectorModalidades(data?.tiposApuesta ?? []);
+            renderApuestas(data?.apuestasRealizadas);
+        }
+
+        const vista = dispatcher.registerView('TableroJugador', {
+            urlInicio: '/tablero-jugador/cargar-datos-tablero',
+            onError: (_status, texto) => mostrarMensaje(texto || 'No se pudo cargar el tablero del jugador.'),
+            onException: (mensaje) => mostrarMensaje(mensaje)
+        });
+
+        vista.handler('redirigirLogin', (url) => {
+            window.location.href = url;
+        });
+
+        vista.handler('error', (mensaje) => {
+            mostrarMensaje(mensaje);
+        });
+
+        vista.handler('mostrarMensaje', (mensaje) => {
+            mostrarMensaje(mensaje);
+            window.setTimeout(ocultarMensaje, 2500);
+        });
+
+        vista.handler('mostrarTableroJugador', (data) => {
+            renderTablero(data);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            dispatcher.startView(vista);
+
+            elementos.selectorCarrera?.addEventListener('change', () => {
+                const numero = Number(elementos.selectorCarrera.value);
+                const carrera = estado.carreras.find((item) => Number(item.numero) === numero) ?? null;
+                estado.seleccionCarrera = carrera;
+                renderSelectorCaballos(carrera);
+                actualizarDetalleSeleccion();
+            });
+
+            elementos.selectorCaballo?.addEventListener('change', () => {
+                const numero = Number(elementos.selectorCaballo.value);
+                const carrera = estado.seleccionCarrera;
+                estado.seleccionCaballo = carrera?.caballos?.find((caballo) => Number(caballo.numero) === numero) ?? null;
+                actualizarDetalleSeleccion();
+            });
+
+            elementos.selectorModalidad?.addEventListener('change', () => {
+                estado.seleccionModalidad = elementos.selectorModalidad.value;
+                actualizarDetalleSeleccion();
+            });
+
+            elementos.btnCerrarSesion?.addEventListener('click', () => {
+                dispatcher.submit('/logout-jugador', {});
+            });
+
+            elementos.formApuesta?.addEventListener('submit', (event) => {
+                event.preventDefault();
+                ocultarMensaje();
+
+                const numeroCarrera = Number(elementos.selectorCarrera?.value);
+                const numeroCaballo = Number(elementos.selectorCaballo?.value);
+                const modalidad = elementos.selectorModalidad?.value;
+                const monto = Number(elementos.montoApuesta?.value);
+
+                if (!numeroCarrera || !numeroCaballo || !modalidad || !monto) {
+                    mostrarMensaje('Completá carrera, caballo, tipo de apuesta y monto.');
+                    return;
+                }
+
+                dispatcher.submit('/tablero-jugador/confirmar-apuesta', {
+                    numeroCarrera,
+                    numeroCaballo,
+                    modalidad,
+                    monto
+                });
+            });
+        });
+    </script>
 </body>
+
 </html>
 

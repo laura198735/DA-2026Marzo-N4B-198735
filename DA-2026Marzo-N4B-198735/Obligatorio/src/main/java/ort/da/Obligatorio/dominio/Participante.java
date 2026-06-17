@@ -61,7 +61,13 @@ public class Participante {
             }
         }
         return total;
+    }
 
+    public Apuesta buscarApuestaPorId(int id) {
+        return apuestas.stream()
+                .filter(a -> a != null && a.getId() == id)
+                .findFirst()
+                .orElse(null);
     }
 
     private double calcularDividendo() {
@@ -103,4 +109,7 @@ public class Participante {
         dividendoFinal = this.dividendoActual;
     }
 
+    public String getNombreCaballo() {
+        return caballo != null ? caballo.getNombre() : "Caballo sin nombre";
+    }
 }
