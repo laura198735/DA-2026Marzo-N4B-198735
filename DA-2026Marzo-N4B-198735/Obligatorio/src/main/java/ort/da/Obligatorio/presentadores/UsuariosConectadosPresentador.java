@@ -19,7 +19,6 @@ import ort.da.Obligatorio.observer.Observable;
 import ort.da.Obligatorio.observer.Observador;
 
 import ort.da.Obligatorio.servicios.FachadaServicios;
-import ort.da.Obligatorio.servicios.SistemaAcceso;
 
 @RestController
 @Scope("session")
@@ -32,7 +31,7 @@ public class UsuariosConectadosPresentador implements Observador {
     public UsuariosConectadosPresentador(@Autowired ConexionNavegador conexionNavegador, HttpSession session) {
         this.conexionNavegador = conexionNavegador;
         this.session = session;
-        SistemaAcceso.getInstancia().subscribir(this);
+        FachadaServicios.getInstancia().subscribirAutenticacion(this);
     }
 
     @GetMapping(value = "/registrarSSE", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
@@ -57,10 +56,10 @@ public class UsuariosConectadosPresentador implements Observador {
     }
 
     @Override
-    public void actualizar(Observable origen, Object evento) {//SOLO ADMINISTRADOR CONECTADO
-        if (origen instanceof SistemaAcceso
-                && (evento == Observable.Evento.ADMINISTRADOR_CONECTADO)
-                  ) {
+    public void actualizar(Observable origen, Object evento) {
+        if (origen instanceof FachadaServicios
+                && (evento == Observable.Evento.ADMINISTRADOR_CONECTADO
+                        || evento == Observable.Evento.JUGADOR_CONECTADO)) {
             conexionNavegador.enviarCommands(Commands.create(generarCommandsDeLogines()));
         }
     }

@@ -63,11 +63,11 @@ public class ServicioCarrera {
 
     // CU Gestionar carreras
     public Carrera buscarCarreraPorNumero(int numeroCarrera) throws HipodromoException {
-        if (servicioJornada == null || servicioJornada.getJornadaActual() == null) {
-            throw new HipodromoException("No hay jornada actual para buscar la carrera.");
+        if (servicioJornada == null || servicioJornada.getJornadas() == null) {
+            throw new HipodromoException("No hay jornadas cargadas para buscar la carrera.");
         }
         for (Jornada jornada : servicioJornada.getJornadas()) {
-            if (jornada.getCarreras() != null && jornada != null) {// las carreras se cargan en Jornadas en la precarga
+            if (jornada != null && jornada.getCarreras() != null) {// las carreras se cargan en Jornadas en la precarga
                                                                    // de datos.
 
                 for (Carrera carrera : jornada.getCarreras()) {
@@ -95,12 +95,12 @@ public class ServicioCarrera {
 
     // CU Gestionar carreras - mostrar carrera seleccionada y caballos participantes
     public Caballo buscarCaballoPorNumero(int numeroCaballo) throws HipodromoException {
-        if (servicioJornada == null || servicioJornada.getJornadaActual() == null) {
-            throw new HipodromoException("No hay jornada actual para buscar el caballo.");
+        if (servicioJornada == null || servicioJornada.getJornadas() == null) {
+            throw new HipodromoException("No hay jornadas cargadas para buscar el caballo.");
         }
         for (Jornada jornada : servicioJornada.getJornadas()) {// las carreras se cargan en Jornadas en la precarga de
                                                                // datos.
-            if (jornada.getCarreras() != null) {
+            if (jornada != null && jornada.getCarreras() != null) {
                 for (Carrera carrera : jornada.getCarreras()) {
                     if (carrera.getRegistros() != null) {
                         for (Participante participante : carrera.getRegistros()) {// la carrera tiene los participantes

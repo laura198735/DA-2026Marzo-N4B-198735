@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.servlet.http.HttpSession;
 import ort.da.Obligatorio.dominio.Caballo;
 import ort.da.Obligatorio.dominio.Carrera;
-import ort.da.Obligatorio.dominio.Jornada;
 import ort.da.Obligatorio.dominio.Participante;
 import ort.da.Obligatorio.dtos.CaballoDto;
 import ort.da.Obligatorio.dtos.CarreraDto;
@@ -36,26 +35,18 @@ public class GestionarCarreraPresentador {
       return Commands.create(new Command("error", "No se recibio el numero de carrera."));
     }
 
-    Carrera carreraSeleccionada;
-
     try {
-      Jornada jornadaActual = obtenerJornadaSeleccionada(session);
-      carreraSeleccionada = fachadaServicios.buscarCarreraEnJornada(jornadaActual, numeroCarrera);
+      Carrera carreraSeleccionada = fachadaServicios.buscarCarreraPorNumero(numeroCarrera);
+      session.setAttribute("carreraSeleccionada", carreraSeleccionada);
+      session.removeAttribute("caballoSeleccionado");
+
+      return Commands.create(
+          new Command("mostrarCarreraSeleccionada", new CarreraDto(carreraSeleccionada)),
+          new Command("actualizarCaballos", ParticipanteDto.fromCarrera(carreraSeleccionada)),
+          new Command("mostrarCaballoSeleccionado", null));
     } catch (HipodromoException e) {
       return Commands.create(new Command("error", e.getMessage()));
     }
-
-    if (carreraSeleccionada == null) {
-      return Commands.create(new Command("error", "No se encontro la carrera con numero: " + numeroCarrera));
-    }
-
-    session.setAttribute("carreraSeleccionada", carreraSeleccionada);
-    session.removeAttribute("caballoSeleccionado");
-
-    return Commands.create(
-        new Command("mostrarCarreraSeleccionada", new CarreraDto(carreraSeleccionada)),
-        new Command("actualizarCaballos", ParticipanteDto.fromCarrera(carreraSeleccionada)), // desde participanteDtopara enviar el dividendode cada caballo.
-        new Command("mostrarCaballoSeleccionado", null));
   }
 //select de carrera.
   @PostMapping("/seleccionar-carrera")
@@ -67,8 +58,7 @@ public class GestionarCarreraPresentador {
     }
 
     try {
-      Jornada jornadaActual = obtenerJornadaSeleccionada(session);
-      Carrera carreraSeleccionada = fachadaServicios.buscarCarreraEnJornada(jornadaActual, carreraNumero);
+      Carrera carreraSeleccionada = fachadaServicios.buscarCarreraPorNumero(carreraNumero);
 
       session.setAttribute("carreraSeleccionada", carreraSeleccionada);
       session.removeAttribute("caballoSeleccionado");
@@ -209,20 +199,5 @@ public class GestionarCarreraPresentador {
         new Command("actualizarCaballos", ParticipanteDto.fromCarrera(carreraSeleccionada)),
         new Command("mostrarCaballoSeleccionado",
             caballoSeleccionado == null ? null : new CaballoDto(caballoSeleccionado)));
-  }
-
-  private Jornada obtenerJornadaSeleccionada(HttpSession session) throws HipodromoException {
-    Jornada jornada = (Jornada) session.getAttribute("jornadaActual");
-
-    if (jornada == null) {
-      jornada = fachadaServicios.getJornadaActual();
-      session.setAttribute("jornadaActual", jornada);
-    }
-
-    if (jornada == null) {
-      throw new HipodromoException("No hay jornada seleccionada");
-    }
-
-    return jornada;
   }
 }
