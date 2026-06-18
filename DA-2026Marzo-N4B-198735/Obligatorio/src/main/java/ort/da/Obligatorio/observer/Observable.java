@@ -12,6 +12,9 @@ public abstract class Observable {
 
         //ACCESO
         ADMINISTRADOR_CONECTADO, JUGADOR_CONECTADO,
+
+        //JUGADOR
+        JUGADOR_SALDO_ACTUALIZADO, JUGADOR_APUESTA_AGREGADA
        
 
     }

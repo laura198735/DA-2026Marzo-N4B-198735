@@ -5,10 +5,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import jakarta.servlet.http.HttpSession;
 import ort.da.Obligatorio.dominio.Apuesta;
@@ -25,21 +30,53 @@ import ort.da.Obligatorio.dtos.TableroJugadorDto.CarreraDisponibleDto;
 import ort.da.Obligatorio.dtos.TableroJugadorDto.JugadorResumenDto;
 import ort.da.Obligatorio.dtos.TableroJugadorDto.ModalidadDisponibleDto;
 import ort.da.Obligatorio.excepciones.HipodromoException;
+import ort.da.Obligatorio.observer.Observable;
+import ort.da.Obligatorio.observer.Observador;
 import ort.da.Obligatorio.presentadores.auxiliar.AuxiliarSesion;
 import ort.da.Obligatorio.servicios.FachadaServicios;
 
 @RestController
 @RequestMapping("/tablero-jugador")
-public class tableroJugadorPresentador {
+@Scope("session")
+public class tableroJugadorPresentador implements Observador {
+
+    private ConexionNavegador conexionNavegador;
+    private HttpSession session;
+
     private final FachadaServicios fachadaServicios = FachadaServicios.getInstancia();
+
+    public tableroJugadorPresentador(@Autowired ConexionNavegador conexionNavegador) {
+        this.conexionNavegador = conexionNavegador;
+    }
+    /**observa saldo, apuesta, historial de apuestas, total apostado */
+    private void suscribirAJugador(Jugador jugador) {
+        if (jugador != null) {
+            jugador.subscribir(this);
+        }
+    }
+
+    /**observa cambios en carrera por ej que hace el administrador */
+    private void suscribirACarreras(List<Carrera> carreras) {
+        if (carreras == null) {
+            return;
+        }
+        for (Carrera carrera : carreras) {
+            if (carrera != null) {
+                carrera.subscribir(this);
+            }
+        }
+    }
 
     @PostMapping("/cargar-datos-tablero")
     public Commands cargarDatosTablero(HttpSession session) throws HipodromoException {
-        if (!AuxiliarSesion.usuarioJugadorLogueado(session)) {
+        if (!AuxiliarSesion.usuarioJugadorLogueado(session)) {//si no hay un jugador logueado, redirigir al login
             return AuxiliarSesion.redirigirLoginJugador();
         }
 
+        this.session = session;
         Jugador jugador = AuxiliarSesion.obtenerJugadorLogueado(session);
+        suscribirAJugador(jugador);
+        suscribirACarreras(fachadaServicios.getCarreras());
         return construirTablero(jugador);
     }
 
@@ -53,11 +90,14 @@ public class tableroJugadorPresentador {
         if (!AuxiliarSesion.usuarioJugadorLogueado(session)) {
             return AuxiliarSesion.redirigirLoginJugador();
         }
+        this.session = session;
         Jugador jugador = AuxiliarSesion.obtenerJugadorLogueado(session);
         session.setAttribute("jugadorLogueado", jugador);
         if (jugador == null) {
             return Commands.create(new Command("error", "No hay un jugador logueado."));
         }
+        suscribirAJugador(jugador);
+        suscribirACarreras(fachadaServicios.getCarreras());
         if (monto <= 0) {
             return Commands.create(new Command("error", "El monto de la apuesta debe ser mayor a cero."));
         }
@@ -89,10 +129,17 @@ public class tableroJugadorPresentador {
         jugador.realizarApuesta(apuesta);
         carrera.agregarApuesta(caballo, apuesta);
         fachadaServicios.confirmarApuesta(apuesta);
-   
+
         return Commands.create(
                 new Command("mostrarMensaje", "Apuesta confirmada correctamente."),
                 new Command("mostrarTableroJugador", crearTableroJugadorDto(jugador)));
+    }
+
+    @GetMapping(value = "/registrarSSE", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter registrarSSE(HttpSession session) {
+        this.session = session;
+        conexionNavegador.conectarSSE();
+        return conexionNavegador.getConexionSSE();
     }
 
     private Commands construirTablero(Jugador jugador) throws HipodromoException {
@@ -219,7 +266,8 @@ public class tableroJugadorPresentador {
         String usuario = jugador.getNombreUsuario();
         return usuario == null || usuario.isBlank() ? "Jugador" : usuario;
     }
-    //mostrar iniciales ugador
+
+    // mostrar iniciales ugador
     private String iniciales(String nombre) {
         if (nombre == null || nombre.isBlank()) {
             return "JG";
@@ -240,5 +288,42 @@ public class tableroJugadorPresentador {
             builder.append('J');
         }
         return builder.toString();
+    }
+
+    @Override
+    public void actualizar(Observable origen, Object evento) {
+        if (!(evento instanceof Observable.Evento eventoObservable)) {
+            return;
+        }
+
+        switch (eventoObservable) {
+            case JUGADOR_APUESTA_AGREGADA:
+            case JUGADOR_SALDO_ACTUALIZADO:
+            case APUESTA_AGREGADA:
+            case ESTADO_CARRERA_MODIFICADO:
+            case ESTADO_CARRERA_FINALIZADO:
+            case CARRERA_DIVIDENDO_ACTUALIZADO:
+            case CARRERA_DIVIDENDO_FINAL_ACTUALIZADO:
+                break;
+            default:
+                return;
+        }
+
+        if (conexionNavegador == null || session == null) {
+            return;
+        }
+
+        Jugador jugador = origen instanceof Jugador jugadorOrigen
+                ? jugadorOrigen
+                : AuxiliarSesion.obtenerJugadorLogueado(session);
+        if (jugador == null) {
+            return;
+        }
+
+        try {
+            conexionNavegador.enviarCommands(construirTablero(jugador));
+        } catch (HipodromoException e) {
+            conexionNavegador.enviarCommands(Commands.create(new Command("error", e.getMessage())));
+        }
     }
 }

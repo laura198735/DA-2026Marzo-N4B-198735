@@ -57,23 +57,33 @@ public class FachadaServicios extends Observable {
     }
 
     public Login autenticarAdministrador(Credencial credencial) throws AutenticacionException {
-        return servicioAutenticacion.autenticarAdministrador(credencial);
+        Login login = servicioAutenticacion.autenticarAdministrador(credencial);
+        SistemaAcceso.getInstancia().agregarAdministradorConectado(login.getUsuario());
+        notificar(Evento.ADMINISTRADOR_CONECTADO);
+        return login;
     }
 
     public Login autenticarJugador(Credencial credencial) throws AutenticacionException {
-        return servicioAutenticacion.autenticarJugador(credencial);
+        Login login = servicioAutenticacion.autenticarJugador(credencial);
+        SistemaAcceso.getInstancia().setUsuarioLogueado(login.getUsuario());
+        notificar(Evento.JUGADOR_CONECTADO);
+        return login;
     }
 
     public void cerrarSesionAdministrador(Administrador administrador) {
         servicioAutenticacion.cerrarSesionAdministrador(administrador);
+        SistemaAcceso.getInstancia().quitarAdministradorConectado(administrador);
+        notificar(Evento.ADMINISTRADOR_CONECTADO);
     }
 
     public void cerrarSesionJugador(Jugador jugador) {
         servicioAutenticacion.cerrarSesionJugador(jugador);
+        SistemaAcceso.getInstancia().notificarJugadorConectado();
+        notificar(Evento.JUGADOR_CONECTADO);
     }
 
     public void subscribirAutenticacion(Observador observador) {
-        servicioAutenticacion.subscribir(observador);
+        subscribir(observador);
     }
 
     // tablero administrador

@@ -10,15 +10,13 @@ import ort.da.Obligatorio.dominio.Jugador;
 import ort.da.Obligatorio.dominio.Login;
 import ort.da.Obligatorio.dominio.Usuario;
 import ort.da.Obligatorio.excepciones.AutenticacionException;
-import ort.da.Obligatorio.observer.Observable;
 
-public class ServicioAutenticacion extends Observable {
+public class ServicioAutenticacion {
     private List<Administrador> administradores;
     private List<Jugador> jugadores;
     private List<Login> logins;
 
     public ServicioAutenticacion() {
-        super();
         this.administradores = new ArrayList<>();
         this.jugadores = new ArrayList<>();
         this.logins = new ArrayList<>();
@@ -77,7 +75,6 @@ public class ServicioAutenticacion extends Observable {
                 }
                 Login nuevoLogin = new Login(new Date(), admin);
                 logins.add(nuevoLogin);
-                notificar(Evento.ADMINISTRADOR_CONECTADO);// notifico a la fachada observador que se actualiza el acceso
                 return nuevoLogin;
             }
         }
@@ -90,7 +87,6 @@ public class ServicioAutenticacion extends Observable {
             if (jugador.validar(credencial)) {
                 Login nuevoLogin = new Login(new Date(), jugador);
                 logins.add(nuevoLogin);
-                notificar(Evento.JUGADOR_CONECTADO);//notifico a la fachada observador que se actualiza el acceso
                 return nuevoLogin;
             }
         }
@@ -98,16 +94,12 @@ public class ServicioAutenticacion extends Observable {
         throw new AutenticacionException("Credenciales invalidas para jugador");
     }
 
- 
-    /*  envio notificacion a la fachada quien avisa al presentador para actualice vista.*/
     public void cerrarSesionAdministrador(Administrador administrador) {
         cerrarSesion(administrador);
-        notificar(Evento.ADMINISTRADOR_CONECTADO);
     }
 
     public void cerrarSesionJugador(Jugador jugador) {
         cerrarSesion(jugador);
-        notificar(Evento.JUGADOR_CONECTADO);
     }
 
     // Un mismo administrador no podrá ingresar a la aplicación simultáneamente con

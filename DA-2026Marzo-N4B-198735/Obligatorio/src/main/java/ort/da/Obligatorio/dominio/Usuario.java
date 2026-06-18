@@ -2,9 +2,10 @@ package ort.da.Obligatorio.dominio;
 
 import lombok.Getter;
 import lombok.Setter;
+import ort.da.Obligatorio.observer.Observable;
 
 
-public abstract class Usuario{
+public abstract class Usuario extends Observable{
     @Getter
     private String nombreUsuario;
     @Getter

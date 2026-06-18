@@ -29,7 +29,8 @@
                     <div style="color:#8e989b; font-size:0.85rem;">Sesión activa</div>
                 </div>
             </div>
-            <button id="btnCerrarSesion" class="action-button" type="button" style="background: linear-gradient(180deg, #e53c4f, #b72334); box-shadow:none;">
+            <button id="btnCerrarSesion" class="action-button" type="button"
+                style="background: linear-gradient(180deg, #e53c4f, #b72334); box-shadow:none;">
                 Cerrar sesión
             </button>
         </div>
@@ -57,8 +58,10 @@
             <div class="section-heading">
                 <h3><span class="section-icon section-icon--success"></span> Carreras abiertas para apostar</h3>
             </div>
-            <div id="mensajeCarrerasVacias" class="error hidden" style="margin-bottom:14px;">No hay carreras abiertas</div>
-            <div id="carrerasDisponibles" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:16px;"></div>
+            <div id="mensajeCarrerasVacias" class="error hidden" style="margin-bottom:14px;">No hay carreras abiertas
+            </div>
+            <div id="carrerasDisponibles"
+                style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:16px;"></div>
         </section>
 
         <section class="panel">
@@ -67,26 +70,33 @@
             </div>
             <form id="formApuesta" class="kpi-card" style="display:grid; gap:14px; padding:18px;">
                 <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:12px;">
-                    <label style="display:grid; gap:6px; color:#4f5f6f; font-weight:800; font-size:0.82rem; text-transform:uppercase; letter-spacing:0.05em;">
+                    <label
+                        style="display:grid; gap:6px; color:#4f5f6f; font-weight:800; font-size:0.82rem; text-transform:uppercase; letter-spacing:0.05em;">
                         Carrera
                         <select id="selectorCarrera" class="input-control"></select>
                     </label>
-                    <label style="display:grid; gap:6px; color:#4f5f6f; font-weight:800; font-size:0.82rem; text-transform:uppercase; letter-spacing:0.05em;">
+                    <label
+                        style="display:grid; gap:6px; color:#4f5f6f; font-weight:800; font-size:0.82rem; text-transform:uppercase; letter-spacing:0.05em;">
                         Caballo
                         <select id="selectorCaballo" class="input-control"></select>
                     </label>
-                    <label style="display:grid; gap:6px; color:#4f5f6f; font-weight:800; font-size:0.82rem; text-transform:uppercase; letter-spacing:0.05em;">
+                    <label
+                        style="display:grid; gap:6px; color:#4f5f6f; font-weight:800; font-size:0.82rem; text-transform:uppercase; letter-spacing:0.05em;">
                         Tipo de apuesta
                         <select id="selectorModalidad" class="input-control" style="display:none;"></select>
-                        <span id="modalidadElegida" class="input-control" style="display:flex; align-items:center;">Simple</span>
+                        <span id="modalidadElegida" class="input-control"
+                            style="display:flex; align-items:center;">Simple</span>
                     </label>
-                    <label style="display:grid; gap:6px; color:#4f5f6f; font-weight:800; font-size:0.82rem; text-transform:uppercase; letter-spacing:0.05em;">
+                    <label
+                        style="display:grid; gap:6px; color:#4f5f6f; font-weight:800; font-size:0.82rem; text-transform:uppercase; letter-spacing:0.05em;">
                         Monto
-                        <input id="montoApuesta" class="input-control" type="number" min="1" step="1" placeholder="Ej. 1500" />
+                        <input id="montoApuesta" class="input-control" type="number" min="1" step="1"
+                            placeholder="Ej. 1500" />
                     </label>
                 </div>
                 <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between;">
-                    <div id="detalleSeleccion" style="color:#4f5f6f; font-size:0.95rem; font-weight:650;">Seleccioná una carrera abierta para ver sus caballos.</div>
+                    <div id="detalleSeleccion" style="color:#4f5f6f; font-size:0.95rem; font-weight:650;">Seleccioná una
+                        carrera abierta para ver sus caballos.</div>
                     <button id="btnConfirmarApuesta" class="action-button" type="submit">Confirmar apuesta</button>
                 </div>
             </form>
@@ -134,7 +144,14 @@
 
     <script type="module">
         import dispatcher from './CommandDispatcher.js';
+        import SSECommandDispatcher from './SSECommandDispatcher.js';
 
+        // Conectar SSE automáticamente
+        window.sseConnection = new SSECommandDispatcher(
+            "/tablero-jugador/registrarSSE",
+            dispatcher,
+            () => console.log("Conexión cerrada")
+        );
         const formateadorMoneda = new Intl.NumberFormat('es-UY', {
             style: 'currency',
             currency: 'UYU',
@@ -661,4 +678,3 @@
 </body>
 
 </html>
-

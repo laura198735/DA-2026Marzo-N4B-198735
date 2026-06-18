@@ -1,5 +1,7 @@
+ort\da\Obligatorio\presentadores\ConfirmarApuestaPresentador.class
 ort\da\Obligatorio\dominio\Definida.class
 ort\da\Obligatorio\dominio\Simple.class
+ort\da\Obligatorio\dtos\LoginDto.class
 ort\da\Obligatorio\excepciones\EstadoException.class
 ort\da\Obligatorio\presentadores\LogoutJugadorPresentador.class
 ort\da\Obligatorio\dominio\Administrador.class
@@ -12,6 +14,7 @@ ort\da\Obligatorio\observer\Observable.class
 ort\da\Obligatorio\dominio\Carrera.class
 ort\da\Obligatorio\dtos\TableroJugadorDto$CarreraDisponibleDto.class
 ort\da\Obligatorio\dtos\TableroJugadorDto.class
+ort\da\Obligatorio\presentadores\tableroJugadorPresentador$1.class
 ort\da\Obligatorio\excepciones\HipodromoException.class
 ort\da\Obligatorio\observer\Observador.class
 ort\da\Obligatorio\dtos\JornadaTableroDto.class
@@ -41,12 +44,14 @@ ort\da\Obligatorio\servicios\ServicioApuesta.class
 ort\da\Obligatorio\dominio\Caballo.class
 ort\da\Obligatorio\dtos\TableroJugadorDto$JugadorResumenDto.class
 ort\da\Obligatorio\dtos\ParticipanteDto.class
+ort\da\Obligatorio\presentadores\UsuariosConectadosPresentador.class
 ort\da\Obligatorio\dominio\Jornada.class
 ort\da\Obligatorio\dtos\TableroJugadorDto$ModalidadDisponibleDto.class
 ort\da\Obligatorio\presentadores\LoginAdminPresentador.class
 ort\da\Obligatorio\dominio\Finalizada.class
 ort\da\Obligatorio\dominio\Usuario.class
 ort\da\Obligatorio\observer\Observable$Evento.class
+ort\da\Obligatorio\DatosDePrueba.class
 ort\da\Obligatorio\presentadores\GestionarCarreraPresentador.class
 ort\da\Obligatorio\servicios\ServicioJornada.class
 ort\da\Obligatorio\dtos\CarreraDto$CarreraProximaDto.class
@@ -56,3 +61,4 @@ ort\da\Obligatorio\dominio\IModalidad.class
 ort\da\Obligatorio\presentadores\ConexionNavegador.class
 ort\da\Obligatorio\dtos\CarreraDto.class
 ort\da\Obligatorio\presentadores\TableroAdminPresentador.class
+ort\da\Obligatorio\dominio\Login.class

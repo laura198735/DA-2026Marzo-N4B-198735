@@ -47,10 +47,8 @@ public class TableroAdminPresentador implements Observador {
 
     public TableroAdminPresentador(@Autowired ConexionNavegador conexionNavegador) {
         this.conexionNavegador = conexionNavegador;
-
-
     }
-    //subscribo al tablero  a carrera como Observador.
+    //subscribo el tablero  a carrera como Observador.
     private void subscribirACarreras(Jornada jornada) {
     if (jornada == null || jornada.getCarreras() == null) {
         return;

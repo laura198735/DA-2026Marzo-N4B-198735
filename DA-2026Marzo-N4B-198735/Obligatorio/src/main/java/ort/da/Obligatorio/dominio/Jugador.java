@@ -34,20 +34,22 @@ public class Jugador extends Usuario {
         if (apuesta == null) {
             throw new HipodromoException("La apuesta no puede ser nula.");
         }
-
         double costo = apuesta.calcularCosto();
         if (costo > saldo) {
             throw new HipodromoException("Saldo insuficiente para realizar la apuesta.");
         }
 
-        saldo -= costo;
+        saldo -= costo;//se resta el costo del saldo
         totalApostado += apuesta.getMonto();
         apuesta.asignarJugador(this);
         apuestas.add(apuesta);
+        notificar(Evento.JUGADOR_APUESTA_AGREGADA);
+        notificar(Evento.JUGADOR_SALDO_ACTUALIZADO);
     }
 
     public void setSaldo(double nuevoSaldo) {
         this.saldo = nuevoSaldo;
+        notificar(Evento.JUGADOR_SALDO_ACTUALIZADO);
     }
 
     public double getTotalGanado() {
@@ -73,5 +75,6 @@ public class Jugador extends Usuario {
             throw new IllegalArgumentException("Saldo insuficiente para realizar la operación.");
         }
         saldo -= monto;
+        notificar(Evento.JUGADOR_SALDO_ACTUALIZADO);
     }
 }
