@@ -12,6 +12,7 @@ import ort.da.Obligatorio.dominio.Credencial;
 import ort.da.Obligatorio.dominio.IModalidad;
 import ort.da.Obligatorio.dominio.Jornada;
 import ort.da.Obligatorio.dominio.Jugador;
+import ort.da.Obligatorio.dominio.Participante;
 import ort.da.Obligatorio.dominio.Usuario;
 import ort.da.Obligatorio.excepciones.AutenticacionException;
 import ort.da.Obligatorio.excepciones.HipodromoException;
@@ -169,7 +170,10 @@ public class FachadaServicios {
         if (numeroCarrera <= 0) {
             throw new HipodromoException("Número de carrera inválido: " + numeroCarrera);
         }
-        if (jornada.getCarreras() == null || jornada.getCarreras().isEmpty()) {/* las carreras se cargan en Jornadas en la precarga de datos.*/
+        if (jornada.getCarreras() == null || jornada.getCarreras().isEmpty()) {/*
+                                                                                * las carreras se cargan en Jornadas en
+                                                                                * la precarga de datos.
+                                                                                */
             throw new HipodromoException("La jornada seleccionada no tiene carreras");
         }
         for (Carrera carrera : jornada.getCarreras()) {
@@ -233,19 +237,33 @@ public class FachadaServicios {
         return servicioApuesta.getModalidadesDisponibles();
     }
 
-
-    public void confirmarApuesta(Apuesta apuesta) {
-        servicioApuesta.confirmarApuesta(apuesta);
-    }
-    //apuestas
+    // apuestas
     public List<Apuesta> getApuestasCarrera(Carrera carrera) throws HipodromoException {
         return servicioApuesta.getApuestasCarrera(carrera);
     }
-//modaliad
+
+    // modalidad
     public IModalidad obtenerModalidadPorNombre(String nombreModalidad) {
         return servicioApuesta.getModalidadesDisponibles().stream()
                 .filter(modalidad -> modalidad != null && modalidad.getNombre().equalsIgnoreCase(nombreModalidad))
                 .findFirst()
                 .orElse(null);
+    }
+
+    // CU Confirmar apuesta
+    public void confirmarApuesta(Apuesta apuesta) {
+        servicioApuesta.confirmarApuesta(apuesta);
+    }
+
+    public Apuesta buscarApuestaPorNumero(Carrera carrera, int numeroApuesta) {
+        return servicioApuesta.buscarApuestaPorNumero(carrera, numeroApuesta);
+    }
+
+    public IModalidad buscarModalidadPorNumeroApuesta(Carrera carrera, int numeroApuesta) {
+        return servicioApuesta.buscarModalidadPorNumeroApuesta(carrera, numeroApuesta);
+    }
+
+   public Participante obtenerParticipante(Caballo caballo, Carrera carrera) {
+        return servicioCarrera.obtenerParticipante(caballo, carrera);
     }
 }

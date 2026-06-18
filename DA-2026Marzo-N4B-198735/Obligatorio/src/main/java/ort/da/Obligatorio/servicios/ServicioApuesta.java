@@ -9,7 +9,6 @@ import ort.da.Obligatorio.dominio.Carrera;
 import ort.da.Obligatorio.dominio.IModalidad;
 import ort.da.Obligatorio.dominio.Participante;
 import ort.da.Obligatorio.excepciones.HipodromoException;
-import ort.da.Obligatorio.dominio.IModalidad;
 import ort.da.Obligatorio.dominio.Simple;
 import ort.da.Obligatorio.dominio.Super;
 import ort.da.Obligatorio.dominio.Triple;
@@ -70,5 +69,29 @@ public class ServicioApuesta {
                 new Super(),
                 new Triple()
         );
+    }
+
+    public Apuesta buscarApuestaPorNumero(Carrera carrera, int numeroApuesta) {
+        if (carrera == null || carrera.getRegistros() == null) {
+            return null;
+        }
+
+        for (Participante participante : carrera.getRegistros()) {
+            if (participante == null || participante.getApuestas() == null) {
+                continue;
+            }
+
+            for (Apuesta apuesta : participante.getApuestas()) {
+                if (apuesta != null && apuesta.getId() == numeroApuesta) {
+                    return apuesta;
+                }
+            }
+        }
+        return null; // Si no se encuentra la apuesta, se devuelve null
+    }
+
+    public IModalidad buscarModalidadPorNumeroApuesta(Carrera carrera, int numeroApuesta) {
+        Apuesta apuesta = buscarApuestaPorNumero(carrera, numeroApuesta);
+        return apuesta == null ? null : apuesta.getModalidad();
     }
 }

@@ -63,9 +63,6 @@
   <!-- JavaScript usando CommandDispatcher -->
   <script type="module">
     import dispatcher from './CommandDispatcher.js';
-    import SSECommandDispatcher from './SSECommandDispatcher.js';
-    import { initNav } from './SSECommandDispatcher.js';
-    initNav('altaContacto');
 
     // ================================
     // 1. Elementos del HTML
@@ -143,11 +140,11 @@
     dispatcher.startView(view);
 
     // Conectar SSE automáticamente
-    window.sseConnection = new SSECommandDispatcher(
-      "/login-admin",//url del controlador que registra la conexión SSE para esta vista
-      dispatcher,
-      () => console.log("Conexión cerrada")
-    );
+    // window.sseConnection = new SSECommandDispatcher(
+    //   "/login-admin",
+    //   dispatcher,
+    //   () => console.log("Conexion cerrada")
+    // );
 
     // ================================
     // 5. Envío del formulario

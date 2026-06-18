@@ -156,5 +156,13 @@ public class ServicioCarrera {
         }
         return carreras;
     }
-  
+  public Participante obtenerParticipante(Caballo caballo, Carrera carrera) {
+        if (caballo == null || carrera == null || carrera.getRegistros() == null) {
+            return null;
+        }
+        return carrera.getRegistros().stream()
+                .filter(participante -> participante != null && participante.esCaballoDelRegistro(caballo))
+                .findFirst()
+                .orElse(null);
+    }
 }

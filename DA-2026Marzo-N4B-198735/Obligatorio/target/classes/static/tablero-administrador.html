@@ -193,6 +193,12 @@
 
     let jornadasDisponibles = [];
     let indiceJornadaActual = -1;
+    const $ = (id) => document.getElementById(id);
+    const formateadorMoneda = new Intl.NumberFormat('es-UY', {
+      style: 'currency',
+      currency: 'UYU',
+      maximumFractionDigits: 0
+    });
 
     function mostrarTexto(id, valor) {
       const elemento = $(id);
@@ -352,7 +358,7 @@
 
       const jornada = jornadasDisponibles[indice];
       indiceJornadaActual = indice;
-      CommandDispatcher.submit('/tablero-administrador/seleccionar-jornada', {
+      dispatcher.submit('/tablero-administrador/seleccionar-jornada', {
         jornadaId: jornada.numero
       });
     }
@@ -429,7 +435,7 @@
       });
     }
 
-    const vista = CommandDispatcher.registerView('TableroAdministrador', {
+    const vista = dispatcher.registerView('TableroAdministrador', {
       urlInicio: '/tablero-administrador/cargar-datos-tablero',
       onError: (_status, texto) => mostrarError(texto || 'No se pudo cargar el tablero.'),
       onException: (mensaje) => mostrarError(mensaje)
@@ -511,7 +517,7 @@
     vista.handler('mostrarProximasCarreras', mostrarProximasCarreras);
 
     document.addEventListener('DOMContentLoaded', () => {
-      CommandDispatcher.startView(vista);
+      dispatcher.startView(vista);
 
       $('btnJornadaAnterior')?.addEventListener('click', () => {
         seleccionarJornadaPorIndice(indiceJornadaActual - 1);
@@ -525,7 +531,7 @@
 
         if (!numeroJornada) return;
 
-        CommandDispatcher.submit('/tablero-administrador/seleccionar-jornada', {
+        dispatcher.submit('/tablero-administrador/seleccionar-jornada', {
           jornadaId: numeroJornada
         });
       });
