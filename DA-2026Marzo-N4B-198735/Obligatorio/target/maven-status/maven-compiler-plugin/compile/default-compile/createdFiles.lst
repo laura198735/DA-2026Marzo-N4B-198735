@@ -3,7 +3,6 @@ ort\da\Obligatorio\dominio\Definida.class
 ort\da\Obligatorio\dominio\Simple.class
 ort\da\Obligatorio\dtos\LoginDto.class
 ort\da\Obligatorio\excepciones\EstadoException.class
-ort\da\Obligatorio\presentadores\LogoutJugadorPresentador.class
 ort\da\Obligatorio\dominio\Administrador.class
 ort\da\Obligatorio\presentadores\LoginJugadorPresentador.class
 ort\da\Obligatorio\dominio\Estable.class
@@ -19,7 +18,6 @@ ort\da\Obligatorio\excepciones\HipodromoException.class
 ort\da\Obligatorio\observer\Observador.class
 ort\da\Obligatorio\dtos\JornadaTableroDto.class
 ort\da\Obligatorio\dtos\TableroJugadorDto$ApuestaRealizadaDto.class
-ort\da\Obligatorio\presentadores\LogoutAdminPresentador.class
 ort\da\Obligatorio\dominio\Participante.class
 ort\da\Obligatorio\dominio\Credencial.class
 ort\da\Obligatorio\dtos\CaballoDto.class

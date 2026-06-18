@@ -6,24 +6,23 @@ import ort.da.Obligatorio.dominio.Jugador;
 import ort.da.Obligatorio.dominio.Login;
 import ort.da.Obligatorio.dtos.CredencialDto;
 import ort.da.Obligatorio.excepciones.AutenticacionException;
+import ort.da.Obligatorio.presentadores.auxiliar.AuxiliarSesion;
 import ort.da.Obligatorio.servicios.FachadaServicios;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/login-jugador") // ruta para acceder al login del jugador
 @Scope("session") // Mantener el estado del usuario logueado en la sesión
 public class LoginJugadorPresentador {
 
     public LoginJugadorPresentador() {
     }
 
-    @PostMapping()
+    @PostMapping("/login-jugador")
     public Commands login(HttpSession session, @ModelAttribute CredencialDto credencialDto) {
         try {
             Credencial credencial = credencialDto.toCredencial();
@@ -44,4 +43,11 @@ public class LoginJugadorPresentador {
 
 
 
+    @PostMapping("/logout-jugador")
+    public Commands logout(HttpSession session) {
+        Jugador jugador = AuxiliarSesion.obtenerJugadorLogueado(session);
+        FachadaServicios.getInstancia().cerrarSesionJugador(jugador);
+        session.removeAttribute("jugadorLogueado");
+        return Commands.create(new Command("redirigirLogin", "/login-jugador.html"));
+    }
 }
