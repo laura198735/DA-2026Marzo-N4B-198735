@@ -9,9 +9,19 @@
 </head>
 
 <body class="dashboard">
+    <nav class="app-menu" aria-label="Navegacion jugador">
+        <div class="app-menu__grid">
+            <a class="app-menu__card" href="confirmar-apuesta.html">
+                <span class="app-menu__label">Confirmar Apuesta</span>
+            </a>
+            <a class="app-menu__card app-menu__card--danger" href="login-jugador.html">
+                <span class="app-menu__label">Logout</span>
+            </a>
+        </div>
+    </nav>
+
     <header class="dashboard__top" style="align-items:center; padding-bottom: 6px;">
         <div style="display:flex; align-items:center; gap:14px;">
-            <img src="https://img.icons8.com/ios-filled/50/ffd700/horse-racing.png" alt="Logo" style="height:38px;" />
             <div>
                 <div style="font-size:1.45rem; font-weight:900; color:#f5b914; letter-spacing:0.04em;">MalaPATA</div>
                 <div style="font-size:0.88rem; color:#8e989b;">Tablero Jugador</div>
@@ -265,6 +275,70 @@
                     <td colspan="10" style="text-align:center; color:#7a8589;">No hay apuestas registradas.</td>
                 </tr>
             `;
+        }
+
+        function claveApuesta(apuesta) {
+            return [
+                apuesta?.numeroCarrera ?? '',
+                apuesta?.numeroCaballo ?? '',
+                apuesta?.montoApostado ?? '',
+                apuesta?.tipoApuesta ?? ''
+            ].join('|');
+        }
+
+        function apuestasPendientesConfirmadas() {
+            const pendientes = [];
+
+            try {
+                const guardadas = JSON.parse(sessionStorage.getItem('apuestasConfirmadasPendientes') || '[]');
+                if (Array.isArray(guardadas)) {
+                    pendientes.push(...guardadas.filter(Boolean));
+                }
+            } catch (_error) {
+                sessionStorage.removeItem('apuestasConfirmadasPendientes');
+            }
+
+            const guardada = sessionStorage.getItem('ultimaApuestaConfirmada');
+            if (guardada) {
+                try {
+                    pendientes.unshift(JSON.parse(guardada));
+                } catch (_error) {
+                    sessionStorage.removeItem('ultimaApuestaConfirmada');
+                }
+            }
+
+            const unicas = new Map();
+            pendientes
+                .filter(Boolean)
+                .forEach((apuesta) => unicas.set(claveApuesta(apuesta), apuesta));
+
+            return [...unicas.values()];
+        }
+
+        function guardarPendientesConfirmadas(pendientes) {
+            if (!pendientes.length) {
+                sessionStorage.removeItem('apuestasConfirmadasPendientes');
+                sessionStorage.removeItem('ultimaApuestaConfirmada');
+                return;
+            }
+
+            sessionStorage.setItem('apuestasConfirmadasPendientes', JSON.stringify(pendientes));
+            sessionStorage.setItem('ultimaApuestaConfirmada', JSON.stringify(pendientes[0]));
+        }
+
+        function apuestasConConfirmada(apuestas) {
+            const lista = Array.isArray(apuestas) ? [...apuestas] : [];
+            const pendientes = apuestasPendientesConfirmadas();
+
+            if (pendientes.length === 0) {
+                return lista;
+            }
+
+            const clavesServidor = new Set(lista.map(claveApuesta));
+            const pendientesSinConfirmar = pendientes.filter((apuesta) => !clavesServidor.has(claveApuesta(apuesta)));
+            guardarPendientesConfirmadas(pendientesSinConfirmar);
+
+            return [...pendientesSinConfirmar, ...lista];
         }
 
         function renderJugador(jugador) {
@@ -554,18 +628,19 @@
 
         function renderApuestas(apuestas) {
             if (!elementos.tablaApuestas) return;
+            const apuestasVisibles = apuestasConConfirmada(apuestas);
             elementos.tablaApuestas.innerHTML = '';
 
-            if (!Array.isArray(apuestas) || apuestas.length === 0) {
+            if (!Array.isArray(apuestasVisibles) || apuestasVisibles.length === 0) {
                 limpiarTablaApuestas();
                 return;
             }
 
             if (elementos.contadorApuestas) {
-                elementos.contadorApuestas.textContent = `${apuestas.length} ${apuestas.length === 1 ? 'apuesta' : 'apuestas'}`;
+                elementos.contadorApuestas.textContent = `${apuestasVisibles.length} ${apuestasVisibles.length === 1 ? 'apuesta' : 'apuestas'}`;
             }
 
-            apuestas.forEach((apuesta) => {
+            apuestasVisibles.forEach((apuesta) => {
                 const estadoApuesta = apuesta.estado ?? 'Por correr';
                 const estadoNormalizado = String(estadoApuesta).toLowerCase();
                 const claseEstado = estadoNormalizado.includes('finalizada')
@@ -627,6 +702,7 @@
         });
 
         document.addEventListener('DOMContentLoaded', () => {
+            renderApuestas([]);
             dispatcher.startView(vista);
 
             elementos.selectorCarrera?.addEventListener('change', () => {

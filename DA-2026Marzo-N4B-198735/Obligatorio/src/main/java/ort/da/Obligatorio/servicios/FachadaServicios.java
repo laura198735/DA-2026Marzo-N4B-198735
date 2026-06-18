@@ -259,6 +259,10 @@ public class FachadaServicios extends Observable {
         return servicioApuesta.getApuestasCarrera(carrera);
     }
 
+    public List<Apuesta> getApuestas() {
+        return servicioApuesta.getApuestas();
+    }
+
     // modalidad
     public IModalidad obtenerModalidadPorNombre(String nombreModalidad) {
         return servicioApuesta.getModalidadesDisponibles().stream()

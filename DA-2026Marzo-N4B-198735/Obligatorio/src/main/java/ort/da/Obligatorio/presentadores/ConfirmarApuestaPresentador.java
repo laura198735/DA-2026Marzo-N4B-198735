@@ -18,6 +18,7 @@ import ort.da.Obligatorio.dominio.Jugador;
 import ort.da.Obligatorio.dominio.Participante;
 import ort.da.Obligatorio.dtos.CarreraDto;
 import ort.da.Obligatorio.dtos.ParticipanteDto;
+import ort.da.Obligatorio.dtos.TableroJugadorDto.ApuestaRealizadaDto;
 import ort.da.Obligatorio.dtos.TableroJugadorDto.ModalidadDisponibleDto;
 import ort.da.Obligatorio.excepciones.HipodromoException;
 import ort.da.Obligatorio.presentadores.auxiliar.AuxiliarSesion;
@@ -90,10 +91,12 @@ public class ConfirmarApuestaPresentador {
         jugador.realizarApuesta(apuesta);
         carrera.agregarApuesta(caballo, apuesta);
         fachadaServicios.confirmarApuesta(apuesta);
+        session.setAttribute("jugadorLogueado", jugador);
         session.removeAttribute("apuestaEnCurso");
 
         return Commands.create(
                 new Command("mostrarMensaje", "Apuesta confirmada correctamente."),
+                new Command("guardarApuestaConfirmada", crearApuestaRealizadaDto(apuesta)),
                 new Command("redirigirTableroJugador", "tablero-jugador.html"));
     }
 
@@ -145,5 +148,23 @@ public class ConfirmarApuestaPresentador {
                 new Command("mostrarDividendoActual", dividendoActual),
                 new Command("mostrarMontoApostado", montoApostado),
                 new Command("mostrarMontoADebitarDelSaldo", saldoJugador));
+    }
+
+    private ApuestaRealizadaDto crearApuestaRealizadaDto(Apuesta apuesta) {
+        Participante participante = apuesta.getParticipante();
+        Carrera carrera = participante == null ? null : participante.getCarrera();
+        Caballo caballo = participante == null ? null : participante.getCaballo();
+
+        return new ApuestaRealizadaDto(
+                carrera == null || carrera.getJornada() == null ? null : carrera.getJornada().getDia(),
+                carrera == null ? 0 : carrera.getNumeroCarrera(),
+                carrera == null ? "" : carrera.getNombre(),
+                caballo == null ? 0 : caballo.getNumero(),
+                caballo == null ? "" : caballo.getNombre(),
+                apuesta.getMonto(),
+                apuesta.getModalidad() == null ? "" : apuesta.getModalidad().getNombre(),
+                null,
+                null,
+                "Por correr");
     }
 }

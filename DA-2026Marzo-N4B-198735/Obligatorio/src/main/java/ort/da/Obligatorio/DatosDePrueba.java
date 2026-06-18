@@ -43,6 +43,20 @@ public class DatosDePrueba {
         Carrera carrera5 = new Carrera("Carrera 5", jornada5);
         Carrera carrera6 = new Carrera("Carrera 6", jornada6);
         Carrera carrera7 = new Carrera("Carrera 7", jornada7);
+        Carrera carrera8 = new Carrera("Premio Amanecer", jornada1);
+        Carrera carrera9 = new Carrera("Premio del Prado", jornada1);
+        Carrera carrera10 = new Carrera("Clásico Norte", jornada2);
+        Carrera carrera11 = new Carrera("Gran Premio Sur", jornada2);
+        Carrera carrera12 = new Carrera("Premio Las Piedras", jornada3);
+        Carrera carrera13 = new Carrera("Handicap del Este", jornada3);
+        Carrera carrera14 = new Carrera("Premio Primavera", jornada4);
+        Carrera carrera15 = new Carrera("Clásico Costero", jornada4);
+        Carrera carrera16 = new Carrera("Premio del Río", jornada5);
+        Carrera carrera17 = new Carrera("Gran Premio Central", jornada5);
+        Carrera carrera18 = new Carrera("Premio Matinal", jornada6);
+        Carrera carrera19 = new Carrera("Clásico de la Tarde", jornada6);
+        Carrera carrera20 = new Carrera("Premio Futuro", jornada7);
+        Carrera carrera21 = new Carrera("Gran Premio Estelar", jornada7);
 
         carrera1.getRegistros().add(new Participante(caballo1, carrera1));
         carrera1.getRegistros().add(new Participante(caballo2, carrera1));
@@ -93,13 +107,42 @@ public class DatosDePrueba {
         carrera7.getRegistros().add(new Participante(caballo5, carrera7));
         carrera7.getRegistros().add(new Participante(caballo6, carrera7));
 
+        agregarParticipantes(carrera8, caballo1, caballo2, caballo3, caballo4, caballo5, caballo6);
+        agregarParticipantes(carrera9, caballo1, caballo2, caballo3, caballo4, caballo5, caballo6);
+        agregarParticipantes(carrera10, caballo1, caballo2, caballo3, caballo4, caballo5, caballo6);
+        agregarParticipantes(carrera11, caballo1, caballo2, caballo3, caballo4, caballo5, caballo6);
+        agregarParticipantes(carrera12, caballo1, caballo2, caballo3, caballo4, caballo5, caballo6);
+        agregarParticipantes(carrera13, caballo1, caballo2, caballo3, caballo4, caballo5, caballo6);
+        agregarParticipantes(carrera14, caballo1, caballo2, caballo3, caballo4, caballo5, caballo6);
+        agregarParticipantes(carrera15, caballo1, caballo2, caballo3, caballo4, caballo5, caballo6);
+        agregarParticipantes(carrera16, caballo1, caballo2, caballo3, caballo4, caballo5, caballo6);
+        agregarParticipantes(carrera17, caballo1, caballo2, caballo3, caballo4, caballo5, caballo6);
+        agregarParticipantes(carrera18, caballo1, caballo2, caballo3, caballo4, caballo5, caballo6);
+        agregarParticipantes(carrera19, caballo1, caballo2, caballo3, caballo4, caballo5, caballo6);
+        agregarParticipantes(carrera20, caballo1, caballo2, caballo3, caballo4, caballo5, caballo6);
+        agregarParticipantes(carrera21, caballo1, caballo2, caballo3, caballo4, caballo5, caballo6);
+
         jornada1.getCarreras().add(carrera1);
+        jornada1.getCarreras().add(carrera8);
+        jornada1.getCarreras().add(carrera9);
         jornada2.getCarreras().add(carrera2);
+        jornada2.getCarreras().add(carrera10);
+        jornada2.getCarreras().add(carrera11);
         jornada3.getCarreras().add(carrera3);
+        jornada3.getCarreras().add(carrera12);
+        jornada3.getCarreras().add(carrera13);
         jornada4.getCarreras().add(carrera4);
+        jornada4.getCarreras().add(carrera14);
+        jornada4.getCarreras().add(carrera15);
         jornada5.getCarreras().add(carrera5);
+        jornada5.getCarreras().add(carrera16);
+        jornada5.getCarreras().add(carrera17);
         jornada6.getCarreras().add(carrera6);
+        jornada6.getCarreras().add(carrera18);
+        jornada6.getCarreras().add(carrera19);
         jornada7.getCarreras().add(carrera7);
+        jornada7.getCarreras().add(carrera20);
+        jornada7.getCarreras().add(carrera21);
 
         try {
             precargarCarreraEstable(carrera1, fachadaServicios);
@@ -127,6 +170,12 @@ public class DatosDePrueba {
             Apuesta apuesta = new Apuesta(1, new Simple(), participante);
             carrera.agregarApuesta(participante.getCaballo(), apuesta);
             fachadaServicios.confirmarApuesta(apuesta);
+        }
+    }
+
+    private static void agregarParticipantes(Carrera carrera, Caballo... caballos) {
+        for (Caballo caballo : caballos) {
+            carrera.getRegistros().add(new Participante(caballo, carrera));
         }
     }
 }

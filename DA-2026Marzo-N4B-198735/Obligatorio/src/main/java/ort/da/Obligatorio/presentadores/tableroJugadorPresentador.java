@@ -2,8 +2,10 @@ package ort.da.Obligatorio.presentadores;
 
 import java.util.Comparator;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -210,13 +212,55 @@ public class tableroJugadorPresentador implements Observador {
     }
 
     private List<ApuestaRealizadaDto> crearApuestasRealizadasDto(Jugador jugador) {
-        return jugador == null || jugador.getApuestas() == null ? List.of()
-                : jugador.getApuestas().stream()
-                        .filter(apuesta -> apuesta != null)
-                        .map(this::crearApuestaRealizadaDto)
-                        .sorted(Comparator.comparing(ApuestaRealizadaDto::fecha,
-                                Comparator.nullsLast(Comparator.reverseOrder())))
-                        .toList();
+        if (jugador == null) {
+            return List.of();
+        }
+
+        Map<Integer, Apuesta> apuestas = new LinkedHashMap<>();
+
+        if (jugador.getApuestas() != null) {
+            jugador.getApuestas().stream()
+                    .filter(apuesta -> apuesta != null)
+                    .forEach(apuesta -> apuestas.put(apuesta.getId(), apuesta));
+        }
+
+        try {
+            List<Carrera> carreras = fachadaServicios.getCarreras();
+            if (carreras != null) {
+                carreras.stream()
+                        .filter(carrera -> carrera != null && carrera.getRegistros() != null)
+                        .flatMap(carrera -> carrera.getRegistros().stream())
+                        .filter(participante -> participante != null && participante.getApuestas() != null)
+                        .flatMap(participante -> participante.getApuestas().stream())
+                        .filter(apuesta -> apuesta != null && esApuestaDelJugador(apuesta, jugador))
+                        .forEach(apuesta -> apuestas.put(apuesta.getId(), apuesta));
+            }
+        } catch (HipodromoException e) {
+            // Si falla la reconstruccion global, se muestran al menos las apuestas del jugador en sesion.
+        }
+
+        List<Apuesta> apuestasConfirmadas = fachadaServicios.getApuestas();
+        if (apuestasConfirmadas != null) {
+            apuestasConfirmadas.stream()
+                    .filter(apuesta -> apuesta != null && esApuestaDelJugador(apuesta, jugador))
+                    .forEach(apuesta -> apuestas.put(apuesta.getId(), apuesta));
+        }
+
+        return apuestas.values().stream()
+                .map(this::crearApuestaRealizadaDto)
+                .sorted(Comparator.comparing(ApuestaRealizadaDto::fecha,
+                        Comparator.nullsLast(Comparator.reverseOrder())))
+                .toList();
+    }
+
+    private boolean esApuestaDelJugador(Apuesta apuesta, Jugador jugador) {
+        if (apuesta == null || apuesta.getJugador() == null || jugador == null) {
+            return false;
+        }
+
+        String usuarioApuesta = apuesta.getJugador().getNombreUsuario();
+        String usuarioJugador = jugador.getNombreUsuario();
+        return usuarioApuesta != null && usuarioApuesta.equals(usuarioJugador);
     }
 
     private ApuestaRealizadaDto crearApuestaRealizadaDto(Apuesta apuesta) {

@@ -145,8 +145,8 @@ public class ServicioCarrera {
 
         List<Carrera> carreras = new ArrayList<>();
 
-        if (servicioJornada == null || servicioJornada.getJornadaActual() == null) {
-            throw new HipodromoException("No hay jornada actual para obtener las carreras.");
+        if (servicioJornada == null || servicioJornada.getJornadas() == null) {
+            throw new HipodromoException("No hay jornadas cargadas para obtener las carreras.");
         }
         for (Jornada jornada : servicioJornada.getJornadas()) {
             if (jornada != null && jornada.getCarreras() != null) { // las carreras se cargan en Jornadas en la precarga de datos.

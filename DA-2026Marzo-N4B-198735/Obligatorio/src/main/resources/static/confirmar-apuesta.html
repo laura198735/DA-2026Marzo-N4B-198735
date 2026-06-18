@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Confirmar Apuesta</title>
+  <link rel="stylesheet" href="styles.css" />
 
   <style>
     :root {
@@ -40,6 +41,7 @@
       font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       background: linear-gradient(135deg, #edf7f5, #dfeceb);
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       padding: 32px 16px;
@@ -53,7 +55,7 @@
       inset: -22px;
       z-index: -2;
       background: url("images/hipodromo-background.jpg") center / cover no-repeat;
-      filter: blur(14px) saturate(0.68) brightness(1.08);
+      filter: blur(12px) saturate(0.9) brightness(0.98);
       transform: scale(1.04);
     }
 
@@ -65,7 +67,7 @@
       background:
         radial-gradient(circle at top left, rgba(56, 189, 248, 0.16), transparent 28%),
         radial-gradient(circle at bottom right, rgba(74, 222, 128, 0.15), transparent 30%),
-        linear-gradient(135deg, rgba(237, 247, 245, 0.72), rgba(16, 36, 58, 0.58));
+        linear-gradient(135deg, rgba(237, 247, 245, 0.56), rgba(16, 36, 58, 0.46));
     }
 
     .page {
@@ -380,6 +382,17 @@
 </head>
 
 <body>
+  <nav class="app-menu" aria-label="Navegacion jugador">
+    <div class="app-menu__grid">
+      <a class="app-menu__card" href="tablero-jugador.html">
+        <span class="app-menu__label">Tablero Jugador</span>
+      </a>
+      <a class="app-menu__card app-menu__card--danger" href="login-jugador.html">
+        <span class="app-menu__label">Logout</span>
+      </a>
+    </div>
+  </nav>
+
   <main class="page">
     <section class="bet-shell">
       <header class="header">
@@ -469,13 +482,13 @@
       input.type = input.type === "password" ? "text" : "password";
     }
 
-    function confirmBet() {
+    function confirmBetMock() {
       const message = document.getElementById("message");
       message.textContent = "Apuesta confirmada correctamente. ¡Ahora sí, que corra El Paisano!";
       message.className = "message show";
     }
 
-    function discardBet() {
+    function discardBetMock() {
       const message = document.getElementById("message");
       message.textContent = "Apuesta descartada. El saldo no fue modificado.";
       message.className = "message show";
@@ -599,7 +612,43 @@
       }
     }
 
+    function guardarApuestaConfirmada(apuesta) {
+      if (!apuesta) {
+        return;
+      }
+
+      let guardadas = [];
+      try {
+        const valorGuardado = JSON.parse(sessionStorage.getItem("apuestasConfirmadasPendientes") || "[]");
+        guardadas = Array.isArray(valorGuardado) ? valorGuardado : [];
+      } catch (_error) {
+        guardadas = [];
+      }
+      const clave = [
+        apuesta.numeroCarrera ?? "",
+        apuesta.numeroCaballo ?? "",
+        apuesta.montoApostado ?? "",
+        apuesta.tipoApuesta ?? ""
+      ].join("|");
+      const existe = guardadas.some((item) => [
+        item.numeroCarrera ?? "",
+        item.numeroCaballo ?? "",
+        item.montoApostado ?? "",
+        item.tipoApuesta ?? ""
+      ].join("|") === clave);
+
+      if (!existe) {
+        guardadas.unshift(apuesta);
+      }
+
+      sessionStorage.setItem("ultimaApuestaConfirmada", JSON.stringify(apuesta));
+      sessionStorage.setItem("apuestasConfirmadasPendientes", JSON.stringify(guardadas));
+    }
+
     function procesarCommands(data) {
+      let redireccionTablero = null;
+      let redireccionLogin = null;
+
       (data?.commands || []).forEach((command) => {
         if (command.id === "error") {
           mostrarMensaje(command.parametro, true);
@@ -607,14 +656,23 @@
         if (command.id === "mostrarMensaje") {
           mostrarMensaje(command.parametro);
         }
+        if (command.id === "guardarApuestaConfirmada") {
+          guardarApuestaConfirmada(command.parametro);
+        }
         if (command.id === "redirigirTableroJugador") {
-          sessionStorage.removeItem("apuestaPendiente");
-          window.location.href = command.parametro;
+          redireccionTablero = command.parametro;
         }
         if (command.id === "redirigirLogin") {
-          window.location.href = command.parametro;
+          redireccionLogin = command.parametro;
         }
       });
+
+      if (redireccionTablero) {
+        sessionStorage.removeItem("apuestaPendiente");
+        window.location.href = redireccionTablero;
+      } else if (redireccionLogin) {
+        window.location.href = redireccionLogin;
+      }
     }
 
     window.confirmBet = function () {
