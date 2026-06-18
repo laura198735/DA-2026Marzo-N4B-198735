@@ -82,7 +82,7 @@ public class Carrera extends Observable {
         }
         participante.agregarApuesta(apuesta);
 
-        actualizarDividendosActuales(); // actualiza los dividendos actuales de los participantes con cada nuva apuesta.
+        actualizarDividendosActuales(); // actualiza los dividendos y el estado de la carrera con cada nueva apuesta.
         notificar(Evento.APUESTA_AGREGADA);
         notificar(Evento.CARRERA_TOTAL_APOSTADO_ACTUALIZADO);
         notificar(Evento.CARRERA_DIVIDENDO_ACTUALIZADO);
@@ -131,16 +131,16 @@ public class Carrera extends Observable {
      * carrera tiene Lista de participantes => cada participante y actualiza su
      * dividendo actual.
      */
-    public void actualizarDividendosActuales() {
+    public void actualizarDividendosActuales() throws HipodromoException {
         if (registros == null) {
             return;
         }
         for (Participante participante : registros) {
             if (participante != null) {
                 participante.actualizarDividendoActual();
-                
             }
         }
+        actualizarEstadoPorDividendos();
 
     }
 

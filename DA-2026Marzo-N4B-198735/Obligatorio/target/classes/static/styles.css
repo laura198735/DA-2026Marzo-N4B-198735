@@ -356,6 +356,36 @@ button {
   background: var(--amber-100);
 }
 
+.bet-type-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+  min-height: 40px;
+  padding: 9px 18px;
+  border: 1px solid var(--slate-200);
+  border-radius: 999px;
+  color: #314252;
+  background: #f8fafc;
+  font-size: 0.9rem;
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, color 160ms ease;
+}
+
+.bet-type-button:hover {
+  transform: translateY(-1px);
+  border-color: var(--amber-500);
+  color: var(--amber-700);
+}
+
+.bet-type-button--selected {
+  border-color: var(--amber-500);
+  color: #1f2933;
+  background: linear-gradient(180deg, #ffd95f, #f2c94c);
+  box-shadow: 0 8px 18px rgba(242, 201, 76, 0.22);
+}
+
 .table-wrap {
   overflow: hidden;
   border: 1px solid rgba(217, 225, 232, 0.95);
@@ -522,6 +552,39 @@ button {
 .status--defined {
   color: #314252;
   background: #edf1f4;
+}
+
+.apuestas-table th {
+  white-space: nowrap;
+}
+
+.apuestas-table td {
+  white-space: nowrap;
+}
+
+.apuestas-table td:nth-child(3),
+.apuestas-table td:nth-child(5) {
+  white-space: normal;
+}
+
+.status--won {
+  color: #166534;
+  background: #dcfce7;
+}
+
+.status--won::before {
+  background: #22c55e;
+  border-color: #22c55e;
+}
+
+.status--lost {
+  color: #991b1b;
+  background: #fee2e2;
+}
+
+.status--lost::before {
+  background: #ef4444;
+  border-color: #ef4444;
 }
 
 .action-button {

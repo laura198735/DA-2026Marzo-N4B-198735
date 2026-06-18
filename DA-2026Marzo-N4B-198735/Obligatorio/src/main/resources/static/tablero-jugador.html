@@ -77,7 +77,8 @@
                     </label>
                     <label style="display:grid; gap:6px; color:#4f5f6f; font-weight:800; font-size:0.82rem; text-transform:uppercase; letter-spacing:0.05em;">
                         Tipo de apuesta
-                        <select id="selectorModalidad" class="input-control"></select>
+                        <select id="selectorModalidad" class="input-control" style="display:none;"></select>
+                        <span id="modalidadElegida" class="input-control" style="display:flex; align-items:center;">Simple</span>
                     </label>
                     <label style="display:grid; gap:6px; color:#4f5f6f; font-weight:800; font-size:0.82rem; text-transform:uppercase; letter-spacing:0.05em;">
                         Monto
@@ -101,9 +102,10 @@
         <section class="panel">
             <div class="section-heading">
                 <h3><span class="section-icon section-icon--success"></span> Mis apuestas</h3>
+                <span id="contadorApuestas" class="pill pill--warning">0 apuestas</span>
             </div>
             <div class="table-wrap">
-                <table class="admin-table" style="table-layout:auto;">
+                <table class="admin-table apuestas-table" style="table-layout:auto;">
                     <thead>
                         <tr>
                             <th>Fecha</th>
@@ -167,10 +169,12 @@
             selectorCarrera: $('selectorCarrera'),
             selectorCaballo: $('selectorCaballo'),
             selectorModalidad: $('selectorModalidad'),
+            modalidadElegida: $('modalidadElegida'),
             montoApuesta: $('montoApuesta'),
             detalleSeleccion: $('detalleSeleccion'),
             tiposApuesta: $('tiposApuesta'),
             tablaApuestas: $('tablaApuestas'),
+            contadorApuestas: $('contadorApuestas'),
             mensajeEstado: $('mensajeEstado'),
             formApuesta: $('formApuesta'),
             btnCerrarSesion: $('btnCerrarSesion'),
@@ -220,6 +224,10 @@
             return formateadorMoneda.format(Number.isFinite(numero) ? numero : 0);
         }
 
+        function valorSeguro(valor, fallback = '') {
+            return valor === null || valor === undefined || valor === '' ? fallback : valor;
+        }
+
         function inicialesDesdeNombre(nombre) {
             if (!nombre) {
                 return 'JG';
@@ -232,6 +240,9 @@
 
         function limpiarTablaApuestas() {
             if (!elementos.tablaApuestas) return;
+            if (elementos.contadorApuestas) {
+                elementos.contadorApuestas.textContent = '0 apuestas';
+            }
             elementos.tablaApuestas.innerHTML = `
                 <tr>
                     <td colspan="10" style="text-align:center; color:#7a8589;">No hay apuestas registradas.</td>
@@ -267,22 +278,59 @@
             }
         }
 
+        function normalizarTiposApuesta(tipos) {
+            const origen = Array.isArray(tipos) && tipos.length > 0
+                ? tipos.map((tipo) => tipo?.nombre ?? tipo)
+                : ['Simple', 'Triple', 'Super'];
+            const orden = ['Simple', 'Triple', 'Super'];
+            return orden.filter((nombre) => origen.some((tipo) => String(tipo).toLowerCase() === nombre.toLowerCase()));
+        }
+
+        function actualizarBotonesModalidad() {
+            elementos.tiposApuesta?.querySelectorAll('button[data-modalidad]').forEach((boton) => {
+                const seleccionada = boton.dataset.modalidad === estado.seleccionModalidad;
+                boton.classList.toggle('bet-type-button--selected', seleccionada);
+                boton.setAttribute('aria-pressed', String(seleccionada));
+            });
+
+            if (elementos.modalidadElegida) {
+                elementos.modalidadElegida.textContent = estado.seleccionModalidad || 'Sin modalidad';
+            }
+        }
+
+        function seleccionarModalidad(nombre) {
+            estado.seleccionModalidad = nombre;
+            if (elementos.selectorModalidad) {
+                elementos.selectorModalidad.value = nombre;
+            }
+            actualizarBotonesModalidad();
+            actualizarDetalleSeleccion();
+        }
+
         function renderTiposApuesta(tipos) {
             if (!elementos.tiposApuesta) return;
             elementos.tiposApuesta.innerHTML = '';
 
-            if (!Array.isArray(tipos) || tipos.length === 0) {
+            const tiposNormalizados = normalizarTiposApuesta(tipos);
+            if (tiposNormalizados.length === 0) {
                 elementos.tiposApuesta.innerHTML = '<span class="pill pill--warning">Sin tipos</span>';
                 return;
             }
 
-            tipos.forEach((tipo) => {
-                const nombre = tipo?.nombre ?? tipo;
-                const pill = document.createElement('span');
-                pill.className = 'pill pill--success';
-                pill.textContent = nombre;
-                elementos.tiposApuesta.appendChild(pill);
+            tiposNormalizados.forEach((nombre) => {
+                const boton = document.createElement('button');
+                boton.className = 'bet-type-button';
+                boton.type = 'button';
+                boton.dataset.modalidad = nombre;
+                boton.textContent = nombre;
+                boton.addEventListener('click', () => seleccionarModalidad(nombre));
+                elementos.tiposApuesta.appendChild(boton);
             });
+
+            if (!estado.seleccionModalidad || !tiposNormalizados.includes(estado.seleccionModalidad)) {
+                estado.seleccionModalidad = tiposNormalizados[0];
+            }
+            actualizarBotonesModalidad();
         }
 
         function renderSelectorCarreras(carreras) {
@@ -326,18 +374,19 @@
             if (!elementos.selectorModalidad) return;
             elementos.selectorModalidad.innerHTML = '';
 
-            tipos.forEach((tipo) => {
-                const nombre = tipo?.nombre ?? tipo;
+            const tiposNormalizados = normalizarTiposApuesta(tipos);
+            tiposNormalizados.forEach((nombre) => {
                 const option = document.createElement('option');
                 option.value = nombre;
                 option.textContent = nombre;
                 elementos.selectorModalidad.appendChild(option);
             });
 
-            estado.seleccionModalidad = tipos[0]?.nombre ?? tipos[0] ?? null;
+            estado.seleccionModalidad = tiposNormalizados[0] ?? null;
             if (estado.seleccionModalidad) {
                 elementos.selectorModalidad.value = estado.seleccionModalidad;
             }
+            actualizarBotonesModalidad();
         }
 
         function renderCarrerasDisponibles(carreras) {
@@ -383,6 +432,11 @@
                         <td>${caballo.numero}</td>
                         <td>${caballo.nombre}</td>
                         <td>${formatearDividendo(caballo.dividendoActual)}</td>
+                        <td>
+                            <button class="action-button" type="button" style="padding:8px 12px;" data-carrera="${carrera.numero}" data-caballo="${caballo.numero}">
+                                Apostar
+                            </button>
+                        </td>
                     </tr>
                 `).join('');
 
@@ -396,21 +450,21 @@
                     </div>
                     <table class="admin-table" style="margin:0 0 10px; background:transparent; color:#fff; table-layout:auto;">
                         <thead>
-                            <tr><th>N°</th><th>Caballo</th><th>Dividendo</th></tr>
+                            <tr><th>N°</th><th>Caballo</th><th>Dividendo</th><th>Acción</th></tr>
                         </thead>
                         <tbody>
-                            ${caballosHtml || '<tr><td colspan="3" style="text-align:center; color:#f1f5f7;">Sin caballos participantes.</td></tr>'}
+                            ${caballosHtml || '<tr><td colspan="4" style="text-align:center; color:#f1f5f7;">Sin caballos participantes.</td></tr>'}
                         </tbody>
                     </table>
-                    <button class="action-button" type="button" style="width:100%; margin-top:8px;" data-carrera="${carrera.numero}">Apostar</button>
                 `;
 
                 elementos.carrerasDisponibles.appendChild(card);
             });
 
-            elementos.carrerasDisponibles.querySelectorAll('button[data-carrera]').forEach((button) => {
+            elementos.carrerasDisponibles.querySelectorAll('button[data-carrera][data-caballo]').forEach((button) => {
                 button.addEventListener('click', () => {
                     const numeroCarrera = Number(button.dataset.carrera);
+                    const numeroCaballo = Number(button.dataset.caballo);
                     const carrera = estado.carreras.find((item) => Number(item.numero) === numeroCarrera);
                     if (!carrera) return;
 
@@ -419,8 +473,12 @@
                         elementos.selectorCarrera.value = String(carrera.numero);
                     }
                     renderSelectorCaballos(carrera);
+                    estado.seleccionCaballo = carrera.caballos?.find((caballo) => Number(caballo.numero) === numeroCaballo) ?? null;
+                    if (estado.seleccionCaballo && elementos.selectorCaballo) {
+                        elementos.selectorCaballo.value = String(estado.seleccionCaballo.numero);
+                    }
                     actualizarDetalleSeleccion();
-                    document.getElementById('formApuesta')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    irAConfirmarApuesta();
                 });
             });
 
@@ -444,6 +502,39 @@
             elementos.detalleSeleccion.textContent = `Carrera ${carrera.numero} - ${carrera.nombre} | Caballo #${caballo.numero} ${caballo.nombre} | Tipo ${modalidad}`;
         }
 
+        function irAConfirmarApuesta() {
+            const carrera = estado.seleccionCarrera;
+            const caballo = estado.seleccionCaballo;
+            const modalidad = estado.seleccionModalidad ?? elementos.selectorModalidad?.value;
+            const monto = Number(elementos.montoApuesta?.value || 0);
+
+            if (!carrera || !caballo) {
+                mostrarMensaje('Seleccioná una carrera y un caballo para apostar.');
+                return;
+            }
+
+            const borrador = {
+                numeroCarrera: carrera.numero,
+                nombreCarrera: carrera.nombre,
+                numeroCaballo: caballo.numero,
+                nombreCaballo: caballo.nombre,
+                dividendoActual: valorSeguro(caballo.dividendoActual, ''),
+                modalidad: modalidad || 'Simple',
+                monto: Number.isFinite(monto) && monto > 0 ? monto : ''
+            };
+
+            sessionStorage.setItem('apuestaPendiente', JSON.stringify(borrador));
+
+            const params = new URLSearchParams();
+            Object.entries(borrador).forEach(([clave, valor]) => {
+                if (valor !== undefined && valor !== null && valor !== '') {
+                    params.set(clave, valor);
+                }
+            });
+
+            window.location.href = `confirmar-apuesta.html?${params.toString()}`;
+        }
+
         function renderApuestas(apuestas) {
             if (!elementos.tablaApuestas) return;
             elementos.tablaApuestas.innerHTML = '';
@@ -453,19 +544,34 @@
                 return;
             }
 
+            if (elementos.contadorApuestas) {
+                elementos.contadorApuestas.textContent = `${apuestas.length} ${apuestas.length === 1 ? 'apuesta' : 'apuestas'}`;
+            }
+
             apuestas.forEach((apuesta) => {
+                const estadoApuesta = apuesta.estado ?? 'Por correr';
+                const estadoNormalizado = String(estadoApuesta).toLowerCase();
+                const claseEstado = estadoNormalizado.includes('finalizada')
+                    ? (Number(apuesta.montoCobrado ?? 0) > 0 ? 'status--won' : 'status--lost')
+                    : 'status--open';
+                const montoCobrado = apuesta.montoCobrado === null || apuesta.montoCobrado === undefined
+                    ? '-'
+                    : formatearImporte(apuesta.montoCobrado);
+                const dividendoFinal = apuesta.dividendoFinal === null || apuesta.dividendoFinal === undefined
+                    ? '-'
+                    : formatearDividendo(apuesta.dividendoFinal);
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${formatearFecha(apuesta.fecha)}</td>
-                    <td>${apuesta.numeroCarrera ?? '-'}</td>
-                    <td>${apuesta.nombreCarrera ?? '-'}</td>
-                    <td>${apuesta.numeroCaballo ?? '-'}</td>
-                    <td>${apuesta.nombreCaballo ?? '-'}</td>
-                    <td class="money">${formatearImporte(apuesta.montoApostado)}</td>
-                    <td>${apuesta.tipoApuesta ?? '-'}</td>
-                    <td>${formatearDividendo(apuesta.dividendoFinal)}</td>
-                    <td class="money">${apuesta.montoCobrado === null || apuesta.montoCobrado === undefined ? 'S/E' : formatearImporte(apuesta.montoCobrado)}</td>
-                    <td><span class="status ${apuesta.estado === 'Finalizada' ? 'pill--success' : 'status--open'}">${apuesta.estado ?? 'Por correr'}</span></td>
+                    <td data-label="Fecha">${formatearFecha(apuesta.fecha)}</td>
+                    <td data-label="N° carrera">${apuesta.numeroCarrera ?? '-'}</td>
+                    <td data-label="Carrera">${apuesta.nombreCarrera ?? '-'}</td>
+                    <td data-label="N° caballo">${apuesta.numeroCaballo ?? '-'}</td>
+                    <td data-label="Caballo">${apuesta.nombreCaballo ?? '-'}</td>
+                    <td data-label="Monto apostado" class="money">${formatearImporte(apuesta.montoApostado)}</td>
+                    <td data-label="Tipo">${apuesta.tipoApuesta ?? '-'}</td>
+                    <td data-label="Dividendo final">${dividendoFinal}</td>
+                    <td data-label="Monto cobrado" class="money">${montoCobrado}</td>
+                    <td data-label="Estado"><span class="status ${claseEstado}">${estadoApuesta}</span></td>
                 `;
                 elementos.tablaApuestas.appendChild(tr);
             });
@@ -475,8 +581,8 @@
             ocultarMensaje();
             renderJugador(data?.jugador);
             renderTiposApuesta(data?.tiposApuesta);
-            renderCarrerasDisponibles(data?.carrerasDisponibles);
             renderSelectorModalidades(data?.tiposApuesta ?? []);
+            renderCarrerasDisponibles(data?.carrerasDisponibles);
             renderApuestas(data?.apuestasRealizadas);
         }
 
@@ -544,12 +650,11 @@
                     return;
                 }
 
-                dispatcher.submit('/tablero-jugador/confirmar-apuesta', {
-                    numeroCarrera,
-                    numeroCaballo,
-                    modalidad,
-                    monto
-                });
+                const carrera = estado.carreras.find((item) => Number(item.numero) === numeroCarrera) ?? null;
+                estado.seleccionCarrera = carrera;
+                estado.seleccionCaballo = carrera?.caballos?.find((caballo) => Number(caballo.numero) === numeroCaballo) ?? null;
+                estado.seleccionModalidad = modalidad;
+                irAConfirmarApuesta();
             });
         });
     </script>

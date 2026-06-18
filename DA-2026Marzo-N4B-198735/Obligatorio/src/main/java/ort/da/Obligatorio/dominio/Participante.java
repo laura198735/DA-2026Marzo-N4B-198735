@@ -39,7 +39,9 @@ public class Participante {
         double total = 0.0;
 
         for (Apuesta apuesta : apuestas) {
-            total += apuesta.getMonto();
+            if (apuesta != null) {
+                total += apuesta.getMonto();
+            }
         }
 
         return total;

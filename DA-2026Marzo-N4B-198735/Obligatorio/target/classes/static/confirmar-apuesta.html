@@ -447,7 +447,7 @@
               <input
                 id="password"
                 type="password"
-                value="12345678"
+                placeholder="Ingrese su contraseña"
                 autocomplete="current-password"
               />
               <button class="toggle-pass" type="button" onclick="togglePassword()">
@@ -492,6 +492,170 @@
       message.style.borderColor = "rgba(248, 113, 113, 0.35)";
       message.style.color = "#fecaca";
     }
+    let apuestaPendiente = null;
+
+    function formatMoney(value) {
+      const number = Number(value || 0);
+      return new Intl.NumberFormat("es-UY", {
+        style: "currency",
+        currency: "UYU",
+        maximumFractionDigits: 0
+      }).format(Number.isFinite(number) ? number : 0);
+    }
+
+    function formatDividend(value) {
+      const number = Number(value);
+      return Number.isFinite(number) ? number.toFixed(2) : "S/E";
+    }
+
+    function calcularCosto(monto, modalidad) {
+      if (modalidad === "Triple") return monto * 1.5;
+      if (modalidad === "Super") return monto * 2;
+      return monto;
+    }
+
+    function calcularCobroEstimado(monto, dividendo, modalidad) {
+      if (modalidad === "Triple") return monto * dividendo * 3;
+      if (modalidad === "Super") return monto * dividendo * (dividendo >= 2 ? 3 : 4);
+      return monto * dividendo;
+    }
+
+    function readPendingBet() {
+      const params = new URLSearchParams(window.location.search);
+      const stored = sessionStorage.getItem("apuestaPendiente");
+      const fromStorage = stored ? JSON.parse(stored) : {};
+      const bet = { ...fromStorage };
+
+      params.forEach((value, key) => {
+        bet[key] = value;
+      });
+
+      return bet;
+    }
+
+    function setSummaryValue(rowIndex, value) {
+      const row = document.querySelectorAll(".summary-row")[rowIndex];
+      const target = row?.querySelector(".value");
+      if (target) {
+        target.textContent = value;
+      }
+    }
+
+    function renderPendingBet() {
+      apuestaPendiente = readPendingBet();
+
+      if (!apuestaPendiente?.numeroCarrera || !apuestaPendiente?.numeroCaballo) {
+        return;
+      }
+
+      const monto = Number(apuestaPendiente.monto || 0);
+      const dividendo = Number(apuestaPendiente.dividendoActual || 0);
+      const modalidad = apuestaPendiente.modalidad || "Simple";
+      const costo = monto > 0 ? calcularCosto(monto, modalidad) : 0;
+      const premioEstimado = monto > 0 && dividendo > 0 ? calcularCobroEstimado(monto, dividendo, modalidad) : 0;
+
+      setSummaryValue(0, `${apuestaPendiente.numeroCarrera} - ${apuestaPendiente.nombreCarrera || "Carrera"}`);
+      setSummaryValue(1, `N° ${apuestaPendiente.numeroCaballo} - ${apuestaPendiente.nombreCaballo || "Caballo"}`);
+      setSummaryValue(2, modalidad);
+      setSummaryValue(3, formatDividend(apuestaPendiente.dividendoActual));
+      setSummaryValue(4, monto > 0 ? formatMoney(monto) : "A definir");
+      setSummaryValue(5, costo > 0 ? formatMoney(costo) : "A definir");
+
+      const caption = document.querySelector(".win-card .caption");
+      const amount = document.querySelector(".win-amount");
+      if (caption) {
+        caption.textContent = `Cobrarias si ${apuestaPendiente.nombreCaballo || "el caballo"} gana`;
+      }
+      if (amount) {
+        amount.textContent = premioEstimado > 0 ? formatMoney(premioEstimado) : "A definir";
+      }
+    }
+
+    async function enviarApuesta(url, data = {}) {
+      const body = new URLSearchParams();
+      Object.entries(data).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          body.append(key, value);
+        }
+      });
+
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        credentials: "include",
+        body: body.toString()
+      });
+
+      const text = await response.text();
+      if (!response.ok) {
+        throw new Error(text || "No se pudo procesar la apuesta.");
+      }
+      return text ? JSON.parse(text) : { commands: [] };
+    }
+
+    function mostrarMensaje(texto, esError = false) {
+      const message = document.getElementById("message");
+      message.textContent = texto;
+      message.className = "message show";
+      if (esError) {
+        message.style.background = "rgba(248, 113, 113, 0.12)";
+        message.style.borderColor = "rgba(248, 113, 113, 0.35)";
+        message.style.color = "#fecaca";
+      } else {
+        message.style.background = "";
+        message.style.borderColor = "";
+        message.style.color = "";
+      }
+    }
+
+    function procesarCommands(data) {
+      (data?.commands || []).forEach((command) => {
+        if (command.id === "error") {
+          mostrarMensaje(command.parametro, true);
+        }
+        if (command.id === "mostrarMensaje") {
+          mostrarMensaje(command.parametro);
+        }
+        if (command.id === "redirigirTableroJugador") {
+          sessionStorage.removeItem("apuestaPendiente");
+          window.location.href = command.parametro;
+        }
+        if (command.id === "redirigirLogin") {
+          window.location.href = command.parametro;
+        }
+      });
+    }
+
+    window.confirmBet = function () {
+      if (!apuestaPendiente?.numeroCarrera || !apuestaPendiente?.numeroCaballo) {
+        mostrarMensaje("No hay una apuesta en curso para confirmar.", true);
+        return;
+      }
+
+      const password = document.getElementById("password")?.value || "";
+      if (!password) {
+        mostrarMensaje("Ingresá tu contraseña para confirmar la apuesta.", true);
+        return;
+      }
+
+      enviarApuesta("/confirmar-apuesta/confirmar", {
+        numeroCarrera: apuestaPendiente.numeroCarrera,
+        numeroCaballo: apuestaPendiente.numeroCaballo,
+        modalidad: apuestaPendiente.modalidad || "Simple",
+        monto: apuestaPendiente.monto,
+        password
+      })
+        .then(procesarCommands)
+        .catch((error) => mostrarMensaje(error.message, true));
+    };
+
+    window.discardBet = function () {
+      enviarApuesta("/confirmar-apuesta/descartar")
+        .then(procesarCommands)
+        .catch((error) => mostrarMensaje(error.message, true));
+    };
+
+    document.addEventListener("DOMContentLoaded", renderPendingBet);
   </script>
 </body>
 </html>

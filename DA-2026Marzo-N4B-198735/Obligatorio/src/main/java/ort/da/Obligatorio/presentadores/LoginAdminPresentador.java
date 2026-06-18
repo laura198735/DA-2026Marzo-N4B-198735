@@ -10,12 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.servlet.http.HttpSession;
 import ort.da.Obligatorio.dominio.Administrador;
 import ort.da.Obligatorio.dominio.Credencial;
+import ort.da.Obligatorio.dominio.Login;
 import ort.da.Obligatorio.dtos.CredencialDto;
 import ort.da.Obligatorio.excepciones.AutenticacionException;
 import ort.da.Obligatorio.servicios.FachadaServicios;
 
 @RestController
-@RequestMapping("/login-admin")
+@RequestMapping("/login-administrador")
 @Scope("session")
 public class LoginAdminPresentador {
    
@@ -26,11 +27,12 @@ public class LoginAdminPresentador {
             System.out.println("Nombre recibido: " + credencial.getNombre());
             System.out.println("Password recibido: " + credencial.getPassword());
             
-            Administrador administrador = FachadaServicios.getInstancia().autenticarAdministrador(credencial);
+            Login loginAdministrador = FachadaServicios.getInstancia().autenticarAdministrador(credencial);
+            Administrador administrador = (Administrador) loginAdministrador.getUsuario();
             session.removeAttribute("jugadorLogueado");
             session.setAttribute("administradorLogueado", administrador);
 
-            System.out.println("Nombre recibido: " + administrador.getNombre());
+            System.out.println("Nombre recibido: " + administrador.getNombreUsuario());
           
             return Commands.create(new Command("redirigir-tablero-admin", "/tablero-administrador.html"));
         } catch (AutenticacionException e) {

@@ -2,11 +2,9 @@ package ort.da.Obligatorio.dominio;
 
 import lombok.Getter;
 import lombok.Setter;
-import ort.da.Obligatorio.excepciones.AutenticacionException;
-import ort.da.Obligatorio.servicios.ServicioAutenticacion;
 
-public abstract class Usuario { // Inyección de dependencia
 
+public abstract class Usuario{
     @Getter
     private String nombreUsuario;
     @Getter

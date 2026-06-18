@@ -12,16 +12,16 @@ import ort.da.Obligatorio.dominio.Credencial;
 import ort.da.Obligatorio.dominio.IModalidad;
 import ort.da.Obligatorio.dominio.Jornada;
 import ort.da.Obligatorio.dominio.Jugador;
+import ort.da.Obligatorio.dominio.Login;
 import ort.da.Obligatorio.dominio.Participante;
 import ort.da.Obligatorio.dominio.Usuario;
 import ort.da.Obligatorio.excepciones.AutenticacionException;
 import ort.da.Obligatorio.excepciones.HipodromoException;
-import ort.da.Obligatorio.dominio.IModalidad;
+import ort.da.Obligatorio.observer.Observable;
+import ort.da.Obligatorio.observer.Observador;
 import ort.da.Obligatorio.dominio.Simple;
-import ort.da.Obligatorio.servicios.ServicioApuesta;
-import ort.da.Obligatorio.servicios.ServicioCarrera;
 
-public class FachadaServicios {
+public class FachadaServicios extends Observable {
     private static FachadaServicios instancia;
     private ServicioAutenticacion servicioAutenticacion;
     private ServicioJornada servicioJornada;
@@ -51,18 +51,32 @@ public class FachadaServicios {
 
     }
 
-    public Usuario autenticar(Credencial credencial) throws AutenticacionException {
-        return servicioAutenticacion.autenticar(credencial);
+    // usuarios conectados
+    public List<Login> getLogins() {
+        return servicioAutenticacion.getLogins();
     }
 
-    public Administrador autenticarAdministrador(Credencial credencial) throws AutenticacionException {
+    public Login autenticarAdministrador(Credencial credencial) throws AutenticacionException {
         return servicioAutenticacion.autenticarAdministrador(credencial);
     }
 
-    public Jugador autenticarJugador(Credencial credencial) throws AutenticacionException {
+    public Login autenticarJugador(Credencial credencial) throws AutenticacionException {
         return servicioAutenticacion.autenticarJugador(credencial);
     }
 
+    public void cerrarSesionAdministrador(Administrador administrador) {
+        servicioAutenticacion.cerrarSesionAdministrador(administrador);
+    }
+
+    public void cerrarSesionJugador(Jugador jugador) {
+        servicioAutenticacion.cerrarSesionJugador(jugador);
+    }
+
+    public void subscribirAutenticacion(Observador observador) {
+        servicioAutenticacion.subscribir(observador);
+    }
+
+    // tablero administrador
     public List<Jornada> getJornadas() throws HipodromoException {
         try {
             return servicioJornada.getJornadas();
@@ -169,11 +183,8 @@ public class FachadaServicios {
         }
         if (numeroCarrera <= 0) {
             throw new HipodromoException("Número de carrera inválido: " + numeroCarrera);
-        }
-        if (jornada.getCarreras() == null || jornada.getCarreras().isEmpty()) {/*
-                                                                                * las carreras se cargan en Jornadas en
-                                                                                * la precarga de datos.
-                                                                                */
+        } /* las carreras se cargan en Jornadas en la precarga de datos */
+        if (jornada.getCarreras() == null || jornada.getCarreras().isEmpty()) {
             throw new HipodromoException("La jornada seleccionada no tiene carreras");
         }
         for (Carrera carrera : jornada.getCarreras()) {
@@ -263,7 +274,7 @@ public class FachadaServicios {
         return servicioApuesta.buscarModalidadPorNumeroApuesta(carrera, numeroApuesta);
     }
 
-   public Participante obtenerParticipante(Caballo caballo, Carrera carrera) {
+    public Participante obtenerParticipante(Caballo caballo, Carrera carrera) {
         return servicioCarrera.obtenerParticipante(caballo, carrera);
     }
 }

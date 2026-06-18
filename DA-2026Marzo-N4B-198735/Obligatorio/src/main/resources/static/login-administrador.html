@@ -63,6 +63,15 @@
   <!-- JavaScript usando CommandDispatcher -->
   <script type="module">
     import dispatcher from './CommandDispatcher.js';
+    import SSECommandDispatcher from './SSECommandDispatcher.js';
+
+    // Conectar SSE automáticamente
+   window.sseConnection = new SSECommandDispatcher(
+  "/login-administrador/registrarSSE",
+  dispatcher,
+  () => console.log("Conexión cerrada")
+);
+
 
     // ================================
     // 1. Elementos del HTML
@@ -141,7 +150,7 @@
 
     // Conectar SSE automáticamente
     // window.sseConnection = new SSECommandDispatcher(
-    //   "/login-admin",
+    //   "/login-administrador",
     //   dispatcher,
     //   () => console.log("Conexion cerrada")
     // );
@@ -166,7 +175,7 @@
       bloquearBoton();
 
 
-      dispatcher.submit('/login-admin', {
+      dispatcher.submit('/login-administrador', {
         nombre: nombre,
         password: password
       });

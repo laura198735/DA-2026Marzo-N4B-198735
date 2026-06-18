@@ -3,6 +3,7 @@ package ort.da.Obligatorio.presentadores;
 import jakarta.servlet.http.HttpSession;
 import ort.da.Obligatorio.dominio.Credencial;
 import ort.da.Obligatorio.dominio.Jugador;
+import ort.da.Obligatorio.dominio.Login;
 import ort.da.Obligatorio.dtos.CredencialDto;
 import ort.da.Obligatorio.excepciones.AutenticacionException;
 import ort.da.Obligatorio.servicios.FachadaServicios;
@@ -29,11 +30,12 @@ public class LoginJugadorPresentador {
             System.out.println("Nombre recibido: " + credencial.getNombre());
             System.out.println("Password recibido: " + credencial.getPassword());
 
-            Jugador jugador = FachadaServicios.getInstancia().autenticarJugador(credencial);
-            session.removeAttribute("administradorLogueado");
+            Login loginJugador = FachadaServicios.getInstancia().autenticarJugador(credencial);
+            Jugador jugador = (Jugador) loginJugador.getUsuario();
+            session.removeAttribute("administradorLogueado");//elimino atributo de logueo previo
             session.setAttribute("jugadorLogueado", jugador);
 
-            System.out.println("Nombre recibido: " + jugador.getNombre());
+            System.out.println("Nombre recibido: " + jugador.getNombreUsuario());
             return Commands.create(new Command("redirigir-tablero-jugador", "/tablero-jugador.html"));
         } catch (AutenticacionException e) {
             return Commands.create(new Command("error", e.getMessage()));

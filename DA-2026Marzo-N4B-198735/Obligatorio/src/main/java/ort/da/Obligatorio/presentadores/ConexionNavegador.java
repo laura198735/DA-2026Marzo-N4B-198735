@@ -10,14 +10,15 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @Scope("session")
 public class ConexionNavegador {
 
+    private static final long TIMEOUT_SESION_MS = 45 * 1000;
+
     private SseEmitter conexionSSE;
 
     public void conectarSSE() {
         if (conexionSSE != null) { // si hay hay una conexion la cierro
             cerrarConexion();
         }
-        long timeOut = 30 * 60 * 1000; // 30 minutos de timeOut (igual al valor por defecto de la sesion)
-        conexionSSE = new SseEmitter(timeOut);
+        conexionSSE = new SseEmitter(TIMEOUT_SESION_MS);
     }
 
     public void cerrarConexion() {

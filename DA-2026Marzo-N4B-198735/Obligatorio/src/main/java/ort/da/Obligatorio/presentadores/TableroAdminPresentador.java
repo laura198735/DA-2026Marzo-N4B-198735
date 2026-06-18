@@ -100,7 +100,8 @@ public class TableroAdminPresentador implements Observador {
             return Commands.create(new Command("error", "No hay jornadas disponibles"));
         }
 
-        session.setAttribute("jornadaActual", jornadaActual);
+        session.setAttribute("jornadaActual", jornadaActual);//guarda la jormada actual en la session
+         subscribirACarreras(jornadaActual);
         return construirTablero(jornadas, jornadaActual);
     }
 
