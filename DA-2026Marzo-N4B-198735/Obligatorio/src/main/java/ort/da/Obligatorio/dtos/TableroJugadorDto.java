@@ -51,4 +51,12 @@ public class TableroJugadorDto {
             String estado) {
     }
 
+    public TableroJugadorDto(JugadorResumenDto jugador, List<ModalidadDisponibleDto> tiposApuesta, List<CarreraDisponibleDto> carrerasDisponibles, List<ApuestaRealizadaDto> apuestasRealizadas) {
+        this.jugador = jugador;
+        this.tiposApuesta = tiposApuesta;
+        this.carrerasDisponibles = carrerasDisponibles;
+        this.apuestasRealizadas = apuestasRealizadas;
+    }
+
+
 }

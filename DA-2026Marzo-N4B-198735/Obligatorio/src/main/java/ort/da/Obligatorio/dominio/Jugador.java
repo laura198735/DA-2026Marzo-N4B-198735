@@ -15,19 +15,20 @@ public class Jugador extends Usuario {
     @Getter
     private List<Apuesta> apuestas;
 
-   
     public Jugador() {
         super("", "");
         this.apuestas = new ArrayList<>();
     }
+
     public Jugador(String nombreUsuario, String password) {
         super(nombreUsuario, password);
         this.apuestas = new java.util.ArrayList<>();
     }
 
-        @Override
+    @Override
     public boolean validar(Credencial credencial) {
-        return this.getNombreUsuario().equals(credencial.getNombre()) && this.getPassword().equals(credencial.getPassword());
+        return this.getNombreUsuario().equals(credencial.getNombre())
+                && this.getPassword().equals(credencial.getPassword());
     }
 
     public void realizarApuesta(Apuesta apuesta) throws HipodromoException {
@@ -39,7 +40,7 @@ public class Jugador extends Usuario {
             throw new HipodromoException("Saldo insuficiente para realizar la apuesta.");
         }
 
-        saldo -= costo;//se resta el costo del saldo
+        saldo -= costo;// se resta el costo del saldo
         totalApostado += apuesta.getMonto();
         apuesta.asignarJugador(this);
         apuestas.add(apuesta);
@@ -66,7 +67,8 @@ public class Jugador extends Usuario {
         }
         return total;
     }
-    //actualiza saldo después de  que jugador apuesta
+
+    // actualiza saldo después de que jugador apuesta
     public void descontarSaldo(double monto) {
         if (monto < 0) {
             throw new IllegalArgumentException("El monto a descontar no puede ser negativo.");
@@ -77,4 +79,17 @@ public class Jugador extends Usuario {
         saldo -= monto;
         notificar(Evento.JUGADOR_SALDO_ACTUALIZADO);
     }
+  private double calcularMontoCobrado(Apuesta apuesta) {
+        if (!apuesta.esApuestaGanadora()) {
+            return 0.0;
+        }
+        try {
+            return apuesta.calcularGanancia();
+        } catch (HipodromoException e) {
+            return 0.0;
+        }
+    }
+
+ 
+   
 }

@@ -50,14 +50,15 @@ public class tableroJugadorPresentador implements Observador {
     public tableroJugadorPresentador(@Autowired ConexionNavegador conexionNavegador) {
         this.conexionNavegador = conexionNavegador;
     }
-    /**observa saldo, apuesta, historial de apuestas, total apostado */
+
+    /** observa saldo, apuesta, historial de apuestas, total apostado */
     private void suscribirAJugador(Jugador jugador) {
         if (jugador != null) {
             jugador.subscribir(this);
         }
     }
 
-    /**observa cambios en carrera por ej que hace el administrador */
+    /** observa cambios en carrera por ej que hace el administrador */
     private void suscribirACarreras(List<Carrera> carreras) {
         if (carreras == null) {
             return;
@@ -71,7 +72,7 @@ public class tableroJugadorPresentador implements Observador {
 
     @PostMapping("/cargar-datos-tablero")
     public Commands cargarDatosTablero(HttpSession session) throws HipodromoException {
-        if (!AuxiliarSesion.usuarioJugadorLogueado(session)) {//si no hay un jugador logueado, redirigir al login
+        if (!AuxiliarSesion.usuarioJugadorLogueado(session)) {// si no hay un jugador logueado, redirigir al login
             return AuxiliarSesion.redirigirLoginJugador();
         }
 
@@ -95,46 +96,8 @@ public class tableroJugadorPresentador implements Observador {
         this.session = session;
         Jugador jugador = AuxiliarSesion.obtenerJugadorLogueado(session);
         session.setAttribute("jugadorLogueado", jugador);
-        if (jugador == null) {
-            return Commands.create(new Command("error", "No hay un jugador logueado."));
-        }
-        suscribirAJugador(jugador);
-        suscribirACarreras(fachadaServicios.getCarreras());
-        if (monto <= 0) {
-            return Commands.create(new Command("error", "El monto de la apuesta debe ser mayor a cero."));
-        }
-        IModalidad modalidad = fachadaServicios.obtenerModalidadPorNombre(modalidadNombre);//
-        if (modalidad == null) {
-            return Commands.create(new Command("error", "Tipo de apuesta invalido."));
-        }
-        Carrera carrera = fachadaServicios.buscarCarreraPorNumero(numeroCarrera);
-        if (carrera == null) {
-            return Commands.create(new Command("error", "No se encontro la carrera seleccionada."));
-        }
-        if (!carrera.puedeApostar()) {
-            return Commands.create(new Command("error", "La carrera seleccionada no esta abierta para apostar."));
-        }
-        Participante participante = carrera.obtenerParticipanteEnCarrera(numeroCaballo);
-        if (participante == null) {
-            return Commands.create(new Command("error", "El caballo seleccionado no participa en la carrera."));
-        }
-        Caballo caballo = participante.getCaballo();
-        if (caballo == null) {
-            return Commands.create(new Command("error", "No se pudo identificar el caballo seleccionado."));
-        }
-
-        Apuesta apuesta = new Apuesta(monto, modalidad, participante);
-        if (apuesta.calcularCosto() > jugador.getSaldo()) {
-            return Commands.create(new Command("error", "Saldo insuficiente para realizar la apuesta."));
-        }
-
-        jugador.realizarApuesta(apuesta);
-        carrera.agregarApuesta(caballo, apuesta);
-        fachadaServicios.confirmarApuesta(apuesta);
-
-        return Commands.create(
-                new Command("mostrarMensaje", "Apuesta confirmada correctamente."),
-                new Command("mostrarTableroJugador", crearTableroJugadorDto(jugador)));
+        Apuesta apuesta = new Apuesta(jugador, monto, modalidadNombre, numeroCarrera, numeroCaballo);
+        return construirTablero(jugador);
     }
 
     @GetMapping(value = "/registrarSSE", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
@@ -168,8 +131,9 @@ public class tableroJugadorPresentador implements Observador {
                 .toList();
     }
 
+
     private JugadorResumenDto crearResumenJugador(Jugador jugador) {
-        String nombre = nombreVisible(jugador);
+        String nombre = fachadaServicios.nombreVisible(jugador);
         return new JugadorResumenDto(
                 nombre,
                 iniciales(nombre),
@@ -236,7 +200,8 @@ public class tableroJugadorPresentador implements Observador {
                         .forEach(apuesta -> apuestas.put(apuesta.getId(), apuesta));
             }
         } catch (HipodromoException e) {
-            // Si falla la reconstruccion global, se muestran al menos las apuestas del jugador en sesion.
+            // Si falla la reconstruccion global, se muestran al menos las apuestas del
+            // jugador en sesion.
         }
 
         List<Apuesta> apuestasConfirmadas = fachadaServicios.getApuestas();
@@ -247,7 +212,50 @@ public class tableroJugadorPresentador implements Observador {
         }
 
         return apuestas.values().stream()
-                .map(this::crearApuestaRealizadaDto)
+                .map(apuesta -> {
+                    Date fecha = null;
+                    int numeroCarrera = 0;
+                    String nombreCarrera = null;
+                    int numeroCaballo = 0;
+                    String nombreCaballo = null;
+                    Double montoCobrado = null;
+                    Double dividendoFinal = null;
+                    String estado = null;
+                    try {
+                        Participante p = apuesta.getParticipante();
+                        if (p != null) {
+                            Carrera c = p.getCarrera();
+                            if (c != null) {
+                                fecha = c.getJornada() == null ? null : c.getJornada().getDia();
+                                numeroCarrera = c.getNumeroCarrera();
+                                nombreCarrera = c.getNombre();
+                                estado = c.obtenerNombreEstadoCarrera();
+                            }
+                            Caballo cab = p.getCaballo();
+                            if (cab != null) {
+                                numeroCaballo = cab.getNumero();
+                                nombreCaballo = cab.getNombre();
+                            }
+                            dividendoFinal = p.getDividendoFinal() > 0 ? p.getDividendoFinal() : null;
+                        }
+                        if (apuesta.esApuestaGanadora()) {
+                            montoCobrado = apuesta.calcularGanancia();
+                        }
+                    } catch (Exception ex) {
+                        // ignorar errores de calculo
+                    }
+
+                    return new ApuestaRealizadaDto(fecha,
+                            numeroCarrera,
+                            nombreCarrera,
+                            numeroCaballo,
+                            nombreCaballo,
+                            apuesta.getMonto(),
+                            apuesta.getModalidadNombre(),
+                            montoCobrado,
+                            dividendoFinal,
+                            estado);
+                })
                 .sorted(Comparator.comparing(ApuestaRealizadaDto::fecha,
                         Comparator.nullsLast(Comparator.reverseOrder())))
                 .toList();
@@ -262,56 +270,7 @@ public class tableroJugadorPresentador implements Observador {
         String usuarioJugador = jugador.getNombreUsuario();
         return usuarioApuesta != null && usuarioApuesta.equals(usuarioJugador);
     }
-
-    private ApuestaRealizadaDto crearApuestaRealizadaDto(Apuesta apuesta) {
-        Participante participante = apuesta.getParticipante();
-        Carrera carrera = participante == null ? null : participante.getCarrera();
-        Caballo caballo = participante == null ? null : participante.getCaballo();
-        boolean finalizada = carrera != null && carrera.getEstadoCarrera() instanceof Finalizada;
-
-        Double montoCobrado = finalizada ? calcularMontoCobrado(apuesta) : null;
-        Double dividendoFinal = finalizada && participante != null ? participante.getDividendoFinal() : null;
-        Date fecha = carrera == null || carrera.getJornada() == null ? null : carrera.getJornada().getDia();
-
-        return new ApuestaRealizadaDto(
-                fecha,
-                carrera == null ? 0 : carrera.getNumeroCarrera(),
-                carrera == null ? "" : carrera.getNombre(),
-                caballo == null ? 0 : caballo.getNumero(),
-                caballo == null ? "" : caballo.getNombre(),
-                apuesta.getMonto(),
-                apuesta.getModalidad() == null ? "" : apuesta.getModalidad().getNombre(),
-                montoCobrado,
-                dividendoFinal,
-                finalizada ? "Finalizada" : "Por correr");
-    }
-
-    private double calcularMontoCobrado(Apuesta apuesta) {
-        if (!apuesta.esApuestaGanadora()) {
-            return 0.0;
-        }
-        try {
-            return apuesta.calcularGanancia();
-        } catch (HipodromoException e) {
-            return 0.0;
-        }
-    }
-
-    private String nombreVisible(Jugador jugador) {
-        if (jugador == null) {
-            return "Jugador";
-        }
-
-        String nombre = jugador.getNombre();
-        if (nombre != null && !nombre.isBlank()) {
-            return nombre;
-        }
-
-        String usuario = jugador.getNombreUsuario();
-        return usuario == null || usuario.isBlank() ? "Jugador" : usuario;
-    }
-
-    // mostrar iniciales ugador
+    // mostrar iniciales jugador
     private String iniciales(String nombre) {
         if (nombre == null || nombre.isBlank()) {
             return "JG";

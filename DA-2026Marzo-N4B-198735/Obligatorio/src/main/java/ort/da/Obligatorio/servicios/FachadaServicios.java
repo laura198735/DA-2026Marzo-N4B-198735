@@ -19,7 +19,7 @@ import ort.da.Obligatorio.excepciones.AutenticacionException;
 import ort.da.Obligatorio.excepciones.HipodromoException;
 import ort.da.Obligatorio.observer.Observable;
 import ort.da.Obligatorio.observer.Observador;
-import ort.da.Obligatorio.dominio.Simple;
+
 
 public class FachadaServicios extends Observable {
     private static FachadaServicios instancia;
@@ -27,10 +27,12 @@ public class FachadaServicios extends Observable {
     private ServicioJornada servicioJornada;
     private ServicioCarrera servicioCarrera;
     private ServicioApuesta servicioApuesta;
+    private ServicioJugador servicioJugador;
 
     private List<Usuario> usuarios; // Lista de usuarios para autenticación
     private List<Caballo> caballos; // Lista de caballos para gestión de carreras
     private List<IModalidad> modalidades; // Lista de modalidades de apuesta
+    private List<Apuesta> apuestas; // Lista de apuestas realizadas por Jugador
 
     public static FachadaServicios getInstancia() {
         if (instancia == null) {
@@ -287,4 +289,25 @@ public class FachadaServicios extends Observable {
     public Participante obtenerParticipante(Caballo caballo, Carrera carrera) {
         return servicioCarrera.obtenerParticipante(caballo, carrera);
     }
+
+    public void realizarApuesta(Apuesta apuesta) {
+        servicioJugador.realizarApuesta(apuesta);
+    }
+
+    public String nombreVisible(Jugador jugador) {
+        if (jugador == null) {
+            return "";
+        }
+        String nombre = jugador.getNombre();
+        if (nombre != null && !nombre.isBlank()) {
+            return nombre;
+        }
+        return jugador.getNombreUsuario() != null ? jugador.getNombreUsuario() : "";
+    }
+
+    public Carrera obtenerCarreraPorNumero(int numeroCarrera) throws HipodromoException {
+        return buscarCarreraPorNumero(numeroCarrera);
+    }
+
 }
+
