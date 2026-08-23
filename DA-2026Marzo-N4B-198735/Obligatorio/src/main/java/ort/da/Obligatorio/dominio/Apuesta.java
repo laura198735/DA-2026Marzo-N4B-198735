@@ -3,7 +3,7 @@ package ort.da.Obligatorio.dominio;
 import lombok.Getter;
 
 import ort.da.Obligatorio.excepciones.HipodromoException;
-import ort.da.Obligatorio.servicios.FachadaServicios;
+
 
 @Getter
 public class Apuesta {
@@ -22,18 +22,18 @@ public class Apuesta {
         this.jugador = null; // El jugador se asigna cuando se realiza la apuesta a través del método realizarApuesta del jugador
     }
 
-    public Apuesta(Jugador jugador2, double monto2, String modalidadNombre, int numeroCarrera, int numeroCaballo) {
+    public Apuesta(Jugador jugador2, double monto2, String modalidadNombre, int numeroCarrera, int numeroCaballo) throws HipodromoException {
         this.id = contadorId++;
         this.monto = monto2;
         this.jugador = jugador2;
         this.modalidad = ModalidadFactory.getModalidad(modalidadNombre);
-        Carrera carrera = FachadaServicios.getInstancia().obtenerCarreraPorNumero(numeroCarrera);
+        Carrera carrera = participante.getCarrera();
         if (carrera == null) {
             throw new HipodromoException("No se encontró la carrera con el número proporcionado.");
         }
         Participante participanteEncontrado = null;
         for (Participante participante : carrera.getRegistros()) {
-            if (participante.esCaballoDelRegistro(new Caballo(numeroCaballo))) {
+            if (participante.getCaballo().getNumero() == numeroCaballo) {
                 participanteEncontrado = participante;
                 break;
             }
