@@ -2,9 +2,10 @@ package ort.da.Obligatorio.dominio;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import lombok.Getter;
 import ort.da.Obligatorio.excepciones.HipodromoException;
+import ort.da.Obligatorio.servicios.ServicioAutenticacion;
+
 
 
 public class Jugador extends Usuario {
@@ -29,6 +30,22 @@ public class Jugador extends Usuario {
     public boolean validar(Credencial credencial) {
         return this.getNombreUsuario().equals(credencial.getNombre())
                 && this.getPassword().equals(credencial.getPassword());
+    }
+
+    @Override
+    public Evento eventoConexion() {
+        // El jugador resuelve el evento que corresponde a su propio tipo.
+        return Evento.JUGADOR_CONECTADO;
+    }
+
+    @Override
+    public void cerrarSesion(ServicioAutenticacion servicioAutenticacion) {
+        // El jugador también define cómo cerrar su sesión. El presentador solo
+        // llama a la operación polimórfica; no necesita saber si es administrador
+        // o jugador.
+        if (servicioAutenticacion != null) {
+            servicioAutenticacion.cerrarSesion(this);
+        }
     }
 
     public void realizarApuesta(Apuesta apuesta) throws HipodromoException {
@@ -79,7 +96,12 @@ public class Jugador extends Usuario {
         saldo -= monto;
         notificar(Evento.JUGADOR_SALDO_ACTUALIZADO);
     }
-  private double calcularMontoCobrado(Apuesta apuesta) {
+  /**
+     * Calcula el monto cobrado por una apuesta específica.
+     * @param apuesta La apuesta para la cual se calcula el monto cobrado.
+     * @return El monto cobrado por la apuesta, o 0.0 si no es ganadora.
+     */
+    private double calcularMontoCobrado(Apuesta apuesta) {// Calcula el monto cobrado por una apuesta específica ver si se usa
         if (!apuesta.esApuestaGanadora()) {
             return 0.0;
         }

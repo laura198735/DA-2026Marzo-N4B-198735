@@ -3,8 +3,6 @@ package ort.da.Obligatorio.servicios;
 import java.util.ArrayList;
 import java.util.List;
 
-import ort.da.Obligatorio.dominio.Administrador;
-import ort.da.Obligatorio.dominio.Jugador;
 import ort.da.Obligatorio.dominio.Usuario;
 import ort.da.Obligatorio.observer.Observable;
 
@@ -15,7 +13,7 @@ public class SistemaAcceso extends Observable {
     public List<Usuario> administradoresConectados = new ArrayList<>();
 
     private SistemaAcceso() {
-        // Constructor privado para evitar instanciación externa
+        // Constructor privado para evitar instanciación externa 
     }
 
     public static SistemaAcceso getInstancia() {
@@ -34,7 +32,7 @@ public class SistemaAcceso extends Observable {
 
     public void quitarAdministradorConectado(Usuario administrador) {
         if (administradoresConectados.remove(administrador)) {
-            this.notificar(Evento.ADMINISTRADOR_CONECTADO);
+            this.notificar(Evento.ADMINISTRADOR_CONECTADO);// Notificar que un administrador se ha desconectado
         }
     }
 
@@ -56,10 +54,10 @@ public class SistemaAcceso extends Observable {
     }
 
     private void notificarUsuario(Usuario usuario) {
-        if (usuario instanceof Administrador) {
-            notificarAdministradorConectado();
-        } else if (usuario instanceof Jugador) {
-            notificarJugadorConectado();
+        // Delegamos la decision al propio usuario para evitar instanceof.
+        // Si se agrega otro tipo de usuario, este metodo no necesita cambiar.
+        if (usuario != null) {
+            this.notificar(usuario.eventoConexion());
         }
     }
 

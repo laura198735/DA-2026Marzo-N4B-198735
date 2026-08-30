@@ -14,7 +14,6 @@ import ort.da.Obligatorio.dtos.CaballoDto;
 import ort.da.Obligatorio.dtos.CarreraDto;
 import ort.da.Obligatorio.dtos.ParticipanteDto;
 import ort.da.Obligatorio.excepciones.HipodromoException;
-import ort.da.Obligatorio.presentadores.auxiliar.AuxiliarSesion;
 import ort.da.Obligatorio.servicios.FachadaServicios;
 
 @RestController
@@ -27,8 +26,8 @@ public class GestionarCarreraPresentador {
   public Commands mostrarPantalla(@RequestParam(value = "numeroCarrera", required = false) Integer numeroCarrera,
       HttpSession session) throws HipodromoException {
 
-    if (!AuxiliarSesion.usuarioAdministradorLogueado(session)) {
-      return AuxiliarSesion.redirigirLoginAdmin();
+    if (!LoginAdminPresentador.usuarioAdministradorLogueado(session)) {
+      return Commands.create(new Command("redirigirLogin", "/login-administrador.html"));
     }
 
     if (numeroCarrera == null || numeroCarrera <= 0) {
@@ -53,8 +52,8 @@ public class GestionarCarreraPresentador {
   public Commands seleccionarCarrera(@RequestParam("carreraId") int carreraNumero, HttpSession session)
       throws HipodromoException {
 
-    if (!AuxiliarSesion.usuarioAdministradorLogueado(session)) {
-      return AuxiliarSesion.redirigirLoginAdmin();
+    if (!LoginAdminPresentador.usuarioAdministradorLogueado(session)) {
+      return Commands.create(new Command("redirigirLogin", "/login-administrador.html"));
     }
 
     try {
@@ -76,8 +75,8 @@ public class GestionarCarreraPresentador {
   public Commands seleccionarCaballo(@RequestParam("caballoId") int caballoNumero,
       HttpSession session) throws HipodromoException {
 
-    if (!AuxiliarSesion.usuarioAdministradorLogueado(session)) {
-      return AuxiliarSesion.redirigirLoginAdmin();
+    if (!LoginAdminPresentador.usuarioAdministradorLogueado(session)) {
+      return Commands.create(new Command("redirigirLogin", "/login-administrador.html"));
     }
 
     Carrera carreraSeleccionada = (Carrera) session.getAttribute("carreraSeleccionada");
@@ -109,8 +108,8 @@ public class GestionarCarreraPresentador {
   //acciones de carrera: abrir, cerrar, finalizar con ganador, finalizar y pagar.
   @PostMapping("/abrir-carrera")
   public Commands abrirCarrera(HttpSession session) throws HipodromoException {
-    if (!AuxiliarSesion.usuarioAdministradorLogueado(session)) {
-      return AuxiliarSesion.redirigirLoginAdmin();
+    if (!LoginAdminPresentador.usuarioAdministradorLogueado(session)) {
+      return Commands.create(new Command("redirigirLogin", "/login-administrador.html"));
     }
 
     try {
@@ -124,8 +123,8 @@ public class GestionarCarreraPresentador {
 
   @PostMapping("/cerrar-carrera")
   public Commands cerrarCarrera(HttpSession session) throws HipodromoException {
-    if (!AuxiliarSesion.usuarioAdministradorLogueado(session)) {
-      return AuxiliarSesion.redirigirLoginAdmin();
+    if (!LoginAdminPresentador.usuarioAdministradorLogueado(session)) {
+      return Commands.create(new Command("redirigirLogin", "/login-administrador.html"));
     }
 
     try {
@@ -139,8 +138,8 @@ public class GestionarCarreraPresentador {
 
   @PostMapping("/finalizar-carrera-con-ganador")
   public Commands finalizarCarreraConGanador(HttpSession session) throws HipodromoException {
-    if (!AuxiliarSesion.usuarioAdministradorLogueado(session)) {
-      return AuxiliarSesion.redirigirLoginAdmin();
+    if (!LoginAdminPresentador.usuarioAdministradorLogueado(session)) {
+      return Commands.create(new Command("redirigirLogin", "/login-administrador.html"));
     }
 
     try {
@@ -155,8 +154,8 @@ public class GestionarCarreraPresentador {
 
   @PostMapping("/finalizar-carrera-y-pagar")
   public Commands finalizarCarreraYPagar(HttpSession session) throws HipodromoException {
-    if (!AuxiliarSesion.usuarioAdministradorLogueado(session)) {
-      return AuxiliarSesion.redirigirLoginAdmin();
+    if (!LoginAdminPresentador.usuarioAdministradorLogueado(session)) {
+      return Commands.create(new Command("redirigirLogin", "/login-administrador.html"));
     }
 
     try {

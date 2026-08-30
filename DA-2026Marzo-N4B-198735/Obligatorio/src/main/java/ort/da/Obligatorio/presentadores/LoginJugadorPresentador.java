@@ -4,12 +4,13 @@ import jakarta.servlet.http.HttpSession;
 import ort.da.Obligatorio.dominio.Credencial;
 import ort.da.Obligatorio.dominio.Jugador;
 import ort.da.Obligatorio.dominio.Login;
+import ort.da.Obligatorio.dominio.Usuario;
 import ort.da.Obligatorio.dtos.CredencialDto;
 import ort.da.Obligatorio.excepciones.AutenticacionException;
-import ort.da.Obligatorio.presentadores.auxiliar.AuxiliarSesion;
 import ort.da.Obligatorio.servicios.FachadaServicios;
 
 import org.springframework.context.annotation.Scope;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -20,6 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginJugadorPresentador {
 
     public LoginJugadorPresentador() {
+    }
+
+    @GetMapping("/login-jugador")
+    public Commands mostrarLogin() {
+        return Commands.create(new Command("redirigirLogin", "/login-jugador.html"));
     }
 
     @PostMapping("/login-jugador")
@@ -45,9 +51,18 @@ public class LoginJugadorPresentador {
 
     @PostMapping("/logout-jugador")
     public Commands logout(HttpSession session) {
-        Jugador jugador = AuxiliarSesion.obtenerJugadorLogueado(session);
-        FachadaServicios.getInstancia().cerrarSesionJugador(jugador);
+        // Se recupera el usuario actual desde la sesión y se llama al cierre
+        // genérico, que resuelve la implementación concreta mediante polimorfismo.
+        Usuario usuarioLogueado = (Usuario) session.getAttribute("jugadorLogueado");
+        if (usuarioLogueado != null) {
+            FachadaServicios.getInstancia().cerrarSesion(usuarioLogueado);
+        }
         session.removeAttribute("jugadorLogueado");
         return Commands.create(new Command("redirigirLogin", "/login-jugador.html"));
     }
+
+       public static boolean usuarioJugadorLogueado(HttpSession session) {
+        return session.getAttribute("jugadorLogueado") != null;
+    }
+
 }

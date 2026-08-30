@@ -22,7 +22,6 @@ import ort.da.Obligatorio.dtos.JornadaTableroDto;
 import ort.da.Obligatorio.excepciones.HipodromoException;
 import ort.da.Obligatorio.observer.Observable;
 import ort.da.Obligatorio.observer.Observador;
-import ort.da.Obligatorio.presentadores.auxiliar.AuxiliarSesion;
 import ort.da.Obligatorio.servicios.FachadaServicios;
 
 /* Fecha de la jornada actual (inicialmente es la jornada de la fecha actual o la más próxima anterior si no hay 
@@ -35,6 +34,11 @@ jornada en el día, luego podrá ser cambiada por el usuario)
 • Cantidad de carreras Finalizadas en la jornada actual 
 • Cantidad de carreras que faltan por correr en la jornada actual 
  */
+
+
+
+
+
 @RestController
 @RequestMapping("/tablero-administrador")
 @Scope("session")
@@ -64,9 +68,9 @@ public class TableroAdminPresentador implements Observador {
     @PostMapping("/seleccionar-jornada")
     public Commands seleccionarJornada(@RequestParam("jornadaId") int numeroJornada, HttpSession session)throws HipodromoException {
         this.session = session;
-      
-        if (!AuxiliarSesion.usuarioAdministradorLogueado(session)) {
-            return AuxiliarSesion.redirigirLoginAdmin();
+
+        if (!LoginAdminPresentador.usuarioAdministradorLogueado(session)) {
+            return Commands.create(new Command("redirigirLogin", "/login-administrador.html"));
         }
 
         Jornada jornadaSeleccionada = fachadaServicios.buscarJornadaPorNumero(numeroJornada);
@@ -84,8 +88,8 @@ public class TableroAdminPresentador implements Observador {
     @PostMapping("/cargar-datos-tablero")
     public Commands cargarDatosTablero(HttpSession session) throws HipodromoException {
         this.session = session;
-        if (!AuxiliarSesion.usuarioAdministradorLogueado(session)) {
-            return AuxiliarSesion.redirigirLoginAdmin();
+        if (!LoginAdminPresentador.usuarioAdministradorLogueado(session)) {
+            return Commands.create(new Command("redirigirLogin", "/login-administrador.html"));
         }
 
         List<Jornada> jornadas = fachadaServicios.getJornadas();

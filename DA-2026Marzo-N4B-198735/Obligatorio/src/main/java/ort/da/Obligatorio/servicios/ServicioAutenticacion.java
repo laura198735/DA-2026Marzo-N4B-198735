@@ -35,7 +35,7 @@ public class ServicioAutenticacion {
     }
 
     public ServicioAutenticacion(List<Administrador> administradores, List<Jugador> jugadores) {
-        // Inicializar con la lista proporcionada (hacer copia defensiva)
+        // Inicializar con la lista proporcionada 
         this.administradores = administradores == null ? new ArrayList<>() : new ArrayList<>(administradores);
         this.jugadores = jugadores == null ? new ArrayList<>() : new ArrayList<>(jugadores);
         this.logins = new ArrayList<>();
@@ -95,29 +95,19 @@ public class ServicioAutenticacion {
     }
 
     public void cerrarSesionAdministrador(Administrador administrador) {
-        cerrarSesion(administrador);
+        // Este método se mantiene por compatibilidad, pero delega en la
+        // implementación polimórfica del usuario.
+        cerrarSesion((Usuario) administrador);
     }
 
     public void cerrarSesionJugador(Jugador jugador) {
-        cerrarSesion(jugador);
+        // El cierre de sesión del jugador usa el mismo flujo genérico.
+        cerrarSesion((Usuario) jugador);
     }
 
-    // Un mismo administrador no podrá ingresar a la aplicación simultáneamente con
-    // las mismas credenciales.
-    private boolean yaTieneSesionActiva(Usuario usuario) {
-        for (Login login : logins) {
-            if (login != null
-                    && login.getUsuario() != null
-                    && login.getUsuario().getClass().equals(usuario.getClass())
-                    && login.getUsuario().getNombreUsuario().equals(usuario.getNombreUsuario())) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private void cerrarSesion(Usuario usuario) {
+    public void cerrarSesion(Usuario usuario) {
+        // La lógica de eliminación es única para todos los usuarios, pero la
+        // invocación se realiza a través del polimorfismo.
         if (usuario == null) {
             return;
         }
@@ -134,5 +124,19 @@ public class ServicioAutenticacion {
         }
     }
 
+    // Un mismo administrador no podrá ingresar a la aplicación simultáneamente con
+    // las mismas credenciales.
+    private boolean yaTieneSesionActiva(Usuario usuario) {
+        for (Login login : logins) {
+            if (login != null
+                    && login.getUsuario() != null
+                    && login.getUsuario().getClass().equals(usuario.getClass())
+                    && login.getUsuario().getNombreUsuario().equals(usuario.getNombreUsuario())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
 }

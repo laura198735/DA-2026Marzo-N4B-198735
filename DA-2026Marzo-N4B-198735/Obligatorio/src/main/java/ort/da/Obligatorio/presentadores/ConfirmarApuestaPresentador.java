@@ -1,6 +1,5 @@
 package ort.da.Obligatorio.presentadores;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,7 +11,6 @@ import jakarta.servlet.http.HttpSession;
 import ort.da.Obligatorio.dominio.Apuesta;
 import ort.da.Obligatorio.dominio.Caballo;
 import ort.da.Obligatorio.dominio.Carrera;
-import ort.da.Obligatorio.dominio.Credencial;
 import ort.da.Obligatorio.dominio.IModalidad;
 import ort.da.Obligatorio.dominio.Jugador;
 import ort.da.Obligatorio.dominio.Participante;
@@ -21,7 +19,6 @@ import ort.da.Obligatorio.dtos.ParticipanteDto;
 import ort.da.Obligatorio.dtos.TableroJugadorDto.ApuestaRealizadaDto;
 import ort.da.Obligatorio.dtos.TableroJugadorDto.ModalidadDisponibleDto;
 import ort.da.Obligatorio.excepciones.HipodromoException;
-import ort.da.Obligatorio.presentadores.auxiliar.AuxiliarSesion;
 import ort.da.Obligatorio.servicios.FachadaServicios;
 
 @RestController
@@ -29,13 +26,7 @@ import ort.da.Obligatorio.servicios.FachadaServicios;
 @Scope("session")
 public class ConfirmarApuestaPresentador {
 
-    private ConexionNavegador conexionNavegador;
-
     private final FachadaServicios fachadaServicios = FachadaServicios.getInstancia();
-
-    public ConfirmarApuestaPresentador(@Autowired ConexionNavegador conexionNavegador) {
-        this.conexionNavegador = conexionNavegador;
-    }
 
     @PostMapping("/confirmar")
     public Commands confirmarApuesta(
@@ -46,18 +37,13 @@ public class ConfirmarApuestaPresentador {
             @RequestParam("monto") double monto,
             @RequestParam("password") String password) throws HipodromoException {
 
-        if (!AuxiliarSesion.usuarioJugadorLogueado(session)) {
-            return AuxiliarSesion.redirigirLoginJugador();
+        if (!LoginJugadorPresentador.usuarioJugadorLogueado(session)) {
+            return Commands.create(new Command("redirigirLogin", "/login-jugador.html"));
         }
 
-        Jugador jugador = AuxiliarSesion.obtenerJugadorLogueado(session);
+        Jugador jugador = (Jugador) session.getAttribute("jugadorLogueado");
         if (jugador == null) {
             return Commands.create(new Command("error", "No hay un jugador logueado."));
-        }
-
-        Credencial credencial = new Credencial(jugador.getNombreUsuario(), password);
-        if (!jugador.validar(credencial)) {
-            return Commands.create(new Command("error", "La contraseña ingresada no es correcta."));
         }
 
         if (monto <= 0) {
@@ -83,12 +69,15 @@ public class ConfirmarApuestaPresentador {
         }
 
         Apuesta apuesta = new Apuesta(monto, modalidad, participante);
-        if (apuesta.calcularCosto() > jugador.getSaldo()) {
-            return Commands.create(new Command("error", "Saldo insuficiente para realizar la apuesta."));
-        }
-
         Caballo caballo = participante.getCaballo();
-        jugador.realizarApuesta(apuesta);
+        try {
+            // El presentador solo orquesta el caso de uso y delega la regla de negocio
+            // al servicio de aplicación. El servicio coordina el agregado Jugador
+            // y valida la contraseña antes de registrar la apuesta.
+            fachadaServicios.realizarApuesta(jugador, apuesta, password);
+        } catch (HipodromoException e) {
+            return Commands.create(new Command("error", e.getMessage()));
+        }
         carrera.agregarApuesta(caballo, apuesta);
         fachadaServicios.confirmarApuesta(apuesta);
         session.setAttribute("jugadorLogueado", jugador);
@@ -112,8 +101,8 @@ public class ConfirmarApuestaPresentador {
     public Commands mostrarPantalla(@RequestParam(value = "numeroApuesta", required = false) Integer numeroApuesta,
             HttpSession session) throws HipodromoException {
 
-        if (!AuxiliarSesion.usuarioJugadorLogueado(session)) {
-            return AuxiliarSesion.redirigirLoginJugador();
+        if (!LoginJugadorPresentador.usuarioJugadorLogueado(session)) {
+            return Commands.create(new Command("redirigirLogin", "/login-jugador.html"));
         }
 
         if (numeroApuesta == null || numeroApuesta <= 0) {
@@ -136,7 +125,8 @@ public class ConfirmarApuestaPresentador {
                 : new ModalidadDisponibleDto(modalidadApuestaSeleccionada.getNombre());
         double dividendoActual = participante != null ? participante.getDividendoActual() : 0.0;
         double montoApostado = participante != null ? participante.getTotalApostadoAlCaballo() : 0.0;
-        double saldoJugador = AuxiliarSesion.obtenerJugadorLogueado(session).getSaldo();
+        Jugador jugadorLogueado = (Jugador) session.getAttribute("jugadorLogueado");
+        double saldoJugador = jugadorLogueado != null ? jugadorLogueado.getSaldo() : 0.0;
 
         session.setAttribute("carreraSeleccionada", carreraSeleccionada);
         session.removeAttribute("caballoSeleccionado");

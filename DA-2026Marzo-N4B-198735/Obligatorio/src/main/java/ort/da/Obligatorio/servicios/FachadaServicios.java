@@ -46,6 +46,7 @@ public class FachadaServicios extends Observable {
         this.servicioAutenticacion = new ServicioAutenticacion();
         this.servicioJornada = new ServicioJornada();
         this.servicioApuesta = new ServicioApuesta();
+        this.servicioJugador = new ServicioJugador();
         this.servicioCarrera = new ServicioCarrera(this.servicioJornada, this.servicioApuesta);
         this.caballos = new ArrayList<>();
         this.usuarios = new ArrayList<>();
@@ -71,13 +72,23 @@ public class FachadaServicios extends Observable {
     }
 
     public void cerrarSesionAdministrador(Administrador administrador) {
-        servicioAutenticacion.cerrarSesionAdministrador(administrador);
+        if (administrador != null) {
+            administrador.cerrarSesion(servicioAutenticacion);
+        }
         notificar(Evento.ADMINISTRADOR_CONECTADO);
     }
 
     public void cerrarSesionJugador(Jugador jugador) {
-        servicioAutenticacion.cerrarSesionJugador(jugador);
+        if (jugador != null) {
+            jugador.cerrarSesion(servicioAutenticacion);
+        }
         notificar(Evento.JUGADOR_CONECTADO);
+    }
+
+    public void cerrarSesion(Usuario usuario) {
+        if (usuario != null) {
+            usuario.cerrarSesion(servicioAutenticacion);
+        }
     }
 
     public void subscribirAutenticacion(Observador observador) {
@@ -290,8 +301,8 @@ public class FachadaServicios extends Observable {
         return servicioCarrera.obtenerParticipante(caballo, carrera);
     }
 
-    public void realizarApuesta(Apuesta apuesta) {
-        servicioJugador.realizarApuesta(apuesta);
+    public void realizarApuesta(Jugador jugador, Apuesta apuesta, String password) throws HipodromoException {
+        servicioJugador.realizarApuesta(jugador, apuesta, password);
     }
 
     public String nombreVisible(Jugador jugador) {
@@ -310,4 +321,3 @@ public class FachadaServicios extends Observable {
     }
 
 }
-

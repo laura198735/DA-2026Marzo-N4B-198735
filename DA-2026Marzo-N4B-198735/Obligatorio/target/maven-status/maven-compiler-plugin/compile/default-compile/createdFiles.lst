@@ -22,13 +22,14 @@ ort\da\Obligatorio\dominio\Participante.class
 ort\da\Obligatorio\dominio\Credencial.class
 ort\da\Obligatorio\dtos\CaballoDto.class
 ort\da\Obligatorio\servicios\ServicioCarrera.class
+ort\da\Obligatorio\dominio\ModalidadFactory.class
 ort\da\Obligatorio\dtos\JornadaDto.class
 ort\da\Obligatorio\presentadores\tableroJugadorPresentador.class
-ort\da\Obligatorio\presentadores\auxiliar\AuxiliarSesion.class
 ort\da\Obligatorio\servicios\ServicioAutenticacion.class
 ort\da\Obligatorio\dtos\ApuestaDto.class
 ort\da\Obligatorio\dominio\Cerrada.class
 ort\da\Obligatorio\presentadores\Commands.class
+ort\da\Obligatorio\servicios\ServicioJugador.class
 ort\da\Obligatorio\dominio\Abierta.class
 ort\da\Obligatorio\dominio\Jugador.class
 ort\da\Obligatorio\dominio\Apuesta.class
@@ -55,6 +56,7 @@ ort\da\Obligatorio\servicios\ServicioJornada.class
 ort\da\Obligatorio\dtos\CarreraDto$CarreraProximaDto.class
 ort\da\Obligatorio\presentadores\TableroAdminPresentador$1.class
 ort\da\Obligatorio\dominio\Super.class
+ort\da\Obligatorio\servicios\SistemaAcceso.class
 ort\da\Obligatorio\dominio\IModalidad.class
 ort\da\Obligatorio\presentadores\ConexionNavegador.class
 ort\da\Obligatorio\dtos\CarreraDto.class

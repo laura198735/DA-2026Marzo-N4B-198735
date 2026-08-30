@@ -117,11 +117,14 @@
     // 4. Handlers que responde el backend
     // ================================
 
+    view.handler('redirigirLogin', (url) => {
+      window.location.href = url;
+    });
+
     view.handler('redirigir-tablero-jugador', (url) => {
       window.location.href = url;
     });
 
-   
     view.handler('error', (mensaje) => {
       desbloquearBoton();
       mostrarError(mensaje);

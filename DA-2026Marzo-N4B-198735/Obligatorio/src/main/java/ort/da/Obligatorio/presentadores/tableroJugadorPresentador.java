@@ -34,7 +34,6 @@ import ort.da.Obligatorio.dtos.TableroJugadorDto.ModalidadDisponibleDto;
 import ort.da.Obligatorio.excepciones.HipodromoException;
 import ort.da.Obligatorio.observer.Observable;
 import ort.da.Obligatorio.observer.Observador;
-import ort.da.Obligatorio.presentadores.auxiliar.AuxiliarSesion;
 import ort.da.Obligatorio.servicios.FachadaServicios;
 
 @RestController
@@ -72,12 +71,13 @@ public class tableroJugadorPresentador implements Observador {
 
     @PostMapping("/cargar-datos-tablero")
     public Commands cargarDatosTablero(HttpSession session) throws HipodromoException {
-        if (!AuxiliarSesion.usuarioJugadorLogueado(session)) {// si no hay un jugador logueado, redirigir al login
-            return AuxiliarSesion.redirigirLoginJugador();
+        this.session = session;
+
+        if (!LoginJugadorPresentador.usuarioJugadorLogueado(session)) {
+            return Commands.create(new Command("redirigirLogin", "/login-jugador.html"));
         }
 
-        this.session = session;
-        Jugador jugador = AuxiliarSesion.obtenerJugadorLogueado(session);
+        Jugador jugador = (Jugador) session.getAttribute("jugadorLogueado");
         suscribirAJugador(jugador);
         suscribirACarreras(fachadaServicios.getCarreras());
         return construirTablero(jugador);
@@ -90,11 +90,12 @@ public class tableroJugadorPresentador implements Observador {
             @RequestParam("numeroCaballo") int numeroCaballo,
             @RequestParam("modalidad") String modalidadNombre,
             @RequestParam("monto") double monto) throws HipodromoException {
-        if (!AuxiliarSesion.usuarioJugadorLogueado(session)) {
-            return AuxiliarSesion.redirigirLoginJugador();
+        if (!LoginJugadorPresentador.usuarioJugadorLogueado(session)) {
+            return Commands.create(new Command("redirigirLogin", "/login-jugador.html"));
         }
+
         this.session = session;
-        Jugador jugador = AuxiliarSesion.obtenerJugadorLogueado(session);
+        Jugador jugador = (Jugador) session.getAttribute("jugadorLogueado");
         session.setAttribute("jugadorLogueado", jugador);
         Apuesta apuesta = new Apuesta(jugador, monto, modalidadNombre, numeroCarrera, numeroCaballo);
         return construirTablero(jugador);
@@ -318,7 +319,7 @@ public class tableroJugadorPresentador implements Observador {
 
         Jugador jugador = origen instanceof Jugador jugadorOrigen
                 ? jugadorOrigen
-                : AuxiliarSesion.obtenerJugadorLogueado(session);
+                : (Jugador) session.getAttribute("jugadorLogueado");
         if (jugador == null) {
             return;
         }
